@@ -1,12 +1,11 @@
 # b) Multivariate proposal for logit(mu), log(tau) --- easy
-mh_multivariate <- function(log_lik_plus_prior, propose, cand_S, init, B=10000, burn=1000) {
+mh_multivariate <- function(log_lik_plus_prior, propose, cand_S, init, col.names=NULL, B=10000, burn=1000) {
 
-  # Precomputes
   p <- ncol(cand_S)
 
   # Initialize
   posterior_draws <- matrix(0,B+burn,p)
-  colnames(posterior_draws) <- c("v","theta")
+  if (!is.na(col.names[1])) colnames(posterior_draws) <- col.names
   posterior_draws[1,] <- init
   acceptance_rate <- 0
 
