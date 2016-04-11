@@ -1,6 +1,9 @@
 #install.packages("LearnBayes")
 library(LearnBayes)
 source("plotmap.R")
+source("mh.R")
+
+mvrnorm <- function(M,S,n=nrow(S)) M + t(chol(S)) %*% rnorm(n)
 
 dat <- cancermortality
 
@@ -21,6 +24,19 @@ loglike_plus_logprior <- function(uv) {
   v - 2*log(1+exp(v)) + sum(lbeta(mu*tau+y, n+tau-mu*tau-y) - lbeta(mu*tau,tau-mu*tau))
 }
 
+proposal <- function(current_param) mvrnorm(current_param,cand_S)
+cand_S <- diag(2)
+
+source("mh.R")
+out <- mh_multivariate(loglike_plus_logprior,proposal,cand_S,init=c(0,0))
+
+
+
+
+
+
+
+#########################################################################
 
 optim(c(-7,7),fn=function(x) -loglike_plus_logprior(x),hessian=TRUE)
 s <- expand.grid(seq(-10,10,len=100), seq(0,100,len=100))
