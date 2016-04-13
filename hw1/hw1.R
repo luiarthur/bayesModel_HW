@@ -50,28 +50,32 @@ plot.posts(param.transform(out$post),names=c("mu","tau"))
 
 
 #########################################################################
+# http://www-leland.stanford.edu/~shachter/pubs/laplace.pdf
 
 opt <- optim(c(0,0),fn=function(x) -loglike_plus_logprior(x),hessian=TRUE)
 s <- expand.grid(seq(-20,20,len=100), seq(-20,20,len=100))
 ys <- apply(s,1,function(x) loglike_plus_logprior(x))
 plotmap(ys,s,bks=c(-1000,-550))
 
-(log_posterior_mode <- opt$par)
+(log_posterior_mode <- opt$par) # logit(mu) = -6.82, log(tau) = 7.57
 (log_posterior_cov <- solve(opt$hess)) # note that we don't need to negate again because the hessian is already negated because we are minimizing -loglike
 
 h <- function(uv) {
   loglike_plus_logprior(uv) / -J
 }
 
-h.star <- function(uv) {
+h.star <- function(uv,i) {
   v <- uv[2]
-  h(uv) - log(uv) / J # ???
+  h(uv) - uv[i] / J # ???
 }
 
 opt1 <- optim(c(0,0),fn=function(x) h(x),hessian=TRUE)
-opt2 <- optim(c(0,0),fn=function(x) h.star(x),hessian=TRUE)
+opt2.u <- optim(c(1,1),fn=function(x) h.star(x,1),hessian=TRUE)
+opt2.v <- optim(c(1,1),fn=function(x) h.star(x,2),hessian=TRUE)
+opt2.u$par
+opt2.v$par
 
-theta.star <- opt2$par
+theta.star <- opt2.u$par
 S.star <- opt2$hess
 theta.hat <- opt1$par
 S <- opt1$hess
