@@ -40,7 +40,6 @@ quantile(sapply(post.S,function(i) i[1,2]),c(.025,.5,.975))
 )
 
 out.summary <- rbind(post.mu.info[1:2,],post.S.info)
-out.summary
 rownames(out.summary) <- c("Sepal Length", "Sepal Width", "SL Var", "SW Var", "SLW CoVar")
 out.summary
 

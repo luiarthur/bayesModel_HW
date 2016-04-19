@@ -1,19 +1,24 @@
 logdet <- function(V) determinant(V,log=TRUE)$mod[1]
 tr <- function(M) sum(diag(M))
 
-rwishart <- function(v,S) {
-  k <- nrow(S)
+rwishart <- function(v,P) { # P = Precision Matrix
+  k <- nrow(P)
   ii <- 1:k
   A <- matrix(0,k,k)
   diag(A) <- sqrt(rchisq(k,v-ii+1))
   ltA <- lower.tri(A)
   #A[ltA] <- rnorm(sum(ltA))
   A[ltA] <- rnorm((k-1)*k/2)
-  L <- chol(S)
+  U <- chol(P)
+  L <- t(U)
   LA <- L %*% A
-  LA %*% t(LA)
+  LA %*% t(LA) # LAA'L'
 }
-riwishart <- function(v,S) solve(rwishart(v,S))
+
+# S = Scale Matrix. S.inv = Precision Matrix
+riwishart <- function(v,S.inv) solve(rwishart(v,S.inv)) 
+
+                     # L = Lower Tri = t(chol(S))
 rmvnorm <- function(M,S,n=nrow(S)) M + t(chol(S)) %*% rnorm(n)
 
 rniw <- function(m,s,r,S) {
