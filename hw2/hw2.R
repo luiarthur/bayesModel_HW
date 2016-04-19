@@ -22,12 +22,12 @@ m <- Y.bar
 m.post <- (s*m + n*Y.bar) / (s+n) 
 s.post <- s+n
 r.post <- r+n
-S.post <- S + C.mat + s*n/(s+n) * (Y.bar-m) %*% t(Y.bar-m)
-iS.post <- solve(S.post) # IMPORTANT!!!
+iS.post <- solve(S) + C.mat + s*n/(s+n) * (Y.bar-m) %*% t(Y.bar-m)
+S.post <- solve(iS.post) # IMPORTANT!!!
 
 B <- 100000
 
-postpred.y <- lapply(as.list(1:B),function(i) rniw.postpred(m.post,s.post,r.post,iS.post,brief=FALSE))
+postpred.y <- lapply(as.list(1:B),function(i) rniw.postpred(m.post,s.post,r.post,S.post,brief=FALSE))
 
 post.mu <- t(sapply(postpred.y,function(xx) xx$mu))
 post.mu.info <- t(apply(post.mu,2,quantile,c(.025,.5,.975)))
