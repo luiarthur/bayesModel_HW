@@ -34,22 +34,35 @@ gibbs.niw.hier <- function(Y,priors,B=10000,burn=B*.1) {
   # Hyper Priors
   m0 <- priors$m # prior mean vector for mu_i
   S0 <- priors$S # prior param for Sigma
-  r0 <- prior$r
-  v0 <- prior$v
+  r0 <- priors$r
+  v0 <- priors$v
 
   # Precomputes
   k <- ncol(Y)
   n <- nrow(Y)
 
-  mu.list <- as.list(1:n) 
-  #lapply(as.list(1:n),function(i) matrix(0,B,k))
+  mu.3d <- array(0,c(n,k,B)) # row, col, slice
+  S <- array(0,c(k,k,B)) # row, col, slice
+  S[,,1] <- diag(k)
+  mu <- matrix(0,B,k)
 
-  #for (b in 2:B) {
-  #  for (i in 1:n) {
-  #     mu.pp.list <- sample.niw(mu,priors)
-  #  }
-  #}
- 
+  for (b in 2:B) {
+    # Update mu_i's
+    for (i in 1:n) {
+      tmp <- rmvnorm( (mu[b-1,]+Y[i,])/2, S[,,b-1]/2)
+      mu.3d[i,,b] <- as.matrix(tmp)
+    }
+    
+    # Update mu, Sigma
+    priors.list <- list("m"=m0,"s"=v0,"S"=S0,"r"=r0)
+    pp <- sample.niw(mu.3d[,,b],priors.list,B=1)
+    mu[b,] <- pp[[1]]$mu
+    S[,,b] <- pp[[1]]$S
+
+    cat("\rProgress: ",b,"/",B)
+  }
+  
+  list("mu.3d"=mu.3d,"S"=S,"mu"=mu)
 }
 
 

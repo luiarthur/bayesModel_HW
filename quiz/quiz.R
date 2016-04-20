@@ -28,3 +28,16 @@ plot.posts(post.mu,cex.a=1,names=colnames(dat)[-c(1:2)])
 #31 -> Santa Cruz
 plot.posts(exp(post.pred)*dat[31,2],cex.a=1,names=colnames(dat)[-c(1:2)])
 plot.posts(exp(post.pred)*dat[31,2],cex.a=1,names=colnames(dat)[-c(1:2)],rng.x=c(0,.975))
+plot.posts(exp(post.pred)*dat[1,2],cex.a=1,names=colnames(dat)[-c(1:2)],rng.x=c(0,.975))
+
+plot(sort(X[,2]))
+points(post.pred[order(X[,2]),2],col="grey",pch=20)
+
+### HIERARCHICAL VERSION:
+priors.hier <- list("m"=apply(X,2,mean),"v"=1,"S"=diag(4),"r"=10)
+source("gibbs.R",chdir=TRUE)
+out.hier <- gibbs.niw.hier(X,priors.hier,B=100)
+
+out.hier$mu
+apply(out.hier$mu.3d,1:2,mean)
+apply(out.hier$S,1:2,mean)
