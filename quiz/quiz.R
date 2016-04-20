@@ -3,12 +3,12 @@ source("gibbs.R",chdir=TRUE)
 dat <- read.csv("ca_theft.csv")
 colnames(dat) <- gsub("\\."," ",colnames(dat))
 
-pairs(dat[,-1])
-pairs(log(dat[,-c(1:2)]/dat[,2]))
-pairs(X)
-
 Y <- dat[,-c(1:2)]
 X <- log( Y / dat[,2] )
+
+pairs(dat[,-1])
+pairs(log(Y))
+pairs(X)
 
 plot.posts(log(Y),cex.a=1)
 plot.posts(X,cex.a=1)
