@@ -1,5 +1,5 @@
 
-plot.per.county <- function(x, county.names, measure, dig=1,
+plot.per.county <- function(x, state.name,county.names, measure, dig=1,
                             col.pal=colorRampPalette(c("blue","white","red"))(3),
                             bks=NULL,percent=FALSE)
 {
@@ -21,13 +21,18 @@ plot.per.county <- function(x, county.names, measure, dig=1,
     cols[ind] <- col.pal[i]
   } 
 
-  map('county','california',col="grey90",mar=rep(0,4))
-  map('county',county.names,names=TRUE,add=TRUE,fill=TRUE,
+  cs <- paste0(state.name,",",county.names)
+  map('county',state.name,col="grey90",mar=rep(0,4))
+  map('county',cs,names=TRUE,add=TRUE,fill=TRUE,
       border="grey90",col=cols)
 
-  for (i in 1:length(county.names)) {
-    rng <- map('county',county.names[i],plot=FALSE)$range
+  for (i in 1:length(cs)) {
+    rng <- map('county',cs[i],plot=FALSE)$range
     text((rng[1]+rng[2])/2, (rng[3]+rng[4])/2,dat[i,1],cex=.7)
+    # dat[i,1]...
+    #rng <- map('county',cs[i],plot=FALSE)
+    #rng <- c(mean(rng$x,na.rm=TRUE),mean(rng$y,na.rm=TRUE))
+    #text(rng[1],rng[2],dat[i,1],cex=.7)
   }
 
   #(leg.txt <- paste(">",round(quantile(x,c((cp.len-1):0)/cp.len),dig)))

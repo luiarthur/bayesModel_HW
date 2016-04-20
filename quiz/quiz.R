@@ -14,18 +14,18 @@ X <- log( Y / dat[,2] )
 # VISUALIZE: ##############################################################
 my.pairs(log(dat[,-1]))
 
-state.county <- paste0('california,',dat[,1])
-state.county[14] <- "california,Marin"
-state.county <- gsub(pattern = '([[:upper:]])', perl = TRUE, replacement = '\\L\\1', state.county)
+county <- paste(dat[,1])
+county[14] <- "Marin"
+state <- "California"
 
 col.pal <- colorRampPalette(c("chartreuse3","pink","brown1"))(5)
-plot.per.county(log(dat[,2]),state.county,m="log Population",col=col.pal)
+plot.per.county(log(dat[,2]),state,county,m="log Population",col=col.pal)
 
 source("plotmap.R")
-plot.per.county(dat[,3]/dat[,2]*100,state.county,dig=3,col=col.pal,m="Robb",per=T)
-plot.per.county(dat[,4]/dat[,2]*100,state.county,dig=3,col=col.pal,m="Burg",per=T)
-plot.per.county(dat[,5]/dat[,2]*100,state.county,dig=3,col=col.pal,m="Larc",per=T)
-plot.per.county(dat[,6]/dat[,2]*100,state.county,dig=3,col=col.pal,m="Vehi",per=T)
+plot.per.county(dat[,3]/dat[,2]*100,state,county,dig=3,col=col.pal,m="Robb",per=T)
+plot.per.county(dat[,4]/dat[,2]*100,state,county,dig=3,col=col.pal,m="Burg",per=T)
+plot.per.county(dat[,5]/dat[,2]*100,state,county,dig=3,col=col.pal,m="Larc",per=T)
+plot.per.county(dat[,6]/dat[,2]*100,state,county,dig=3,col=col.pal,m="Vehi",per=T)
 ############################################################################
 
 
@@ -47,9 +47,9 @@ plot.posts(exp(post.pred)*dat[1,2],cex.a=1,names=colnames(dat)[-c(1:2)],rng.x=c(
 
 plot(sort(X[,4]))
 points(post.pred[order(X[,4]),4],col="grey",pch=20)
-plot.per.county(post.pred[,4],state.county,m="postpred",col=col.pal)
+plot.per.county(post.pred[,4],state,county,m="postpred",col=col.pal)
 X11();
-plot.per.county(X[,4],state.county,dig=5,col=col.pal,m="Data")
+plot.per.county(X[,4],state,county,dig=5,col=col.pal,m="Data")
 
 ### HIERARCHICAL VERSION:
 priors.hier <- list("m"=apply(X,2,mean),"v"=1,"S"=diag(4),"r"=10)
@@ -68,9 +68,10 @@ priors.hier.2 <- list("m"=apply(log(Y),2,mean),"v"=1,"S"=diag(4),"r"=10)
 out.hier.2 <- gibbs.niw.hier(log(Y),priors.hier.2,B=100)
 mu.2 <- apply(out.hier.2$mu.3d,1:2,mean)
 
+source("plotmap.R")
 par(mfrow=c(1,2))
-plot.per.county(log(dat[,6]),state.county,m="log num of Stolen Vehicles",col=col.pal)
-plot.per.county(mu.2[,4],state.county,"H-post",col=col.pal,bks=c(0,1.8,2.7,3.7,5.4,10))
+plot.per.county(log(dat[,6]),state,county,m="log num of Stolen Vehicles",col=col.pal)
+plot.per.county(mu.2[,4],state,county,"H-post",col=col.pal,bks=c(0,1.8,2.7,3.7,5.4,10))
 par(mfrow=c(1,1))
 
 
