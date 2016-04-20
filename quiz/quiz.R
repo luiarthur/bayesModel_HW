@@ -21,6 +21,10 @@ post.S <- lapply(postpred,function(xx) xx$S)
 post.pred <- t(sapply(postpred,function(xx) xx$postpred))
 
 plot.posts(post.pred,cex.a=1,names=colnames(dat)[-c(1:2)])
+plot.posts(post.mu,cex.a=1,names=colnames(dat)[-c(1:2)])
 (post.S.mean <- func.matrices(post.S,mean))
 (post.S.sd <- func.matrices(post.S,sd))
 
+#31 -> Santa Cruz
+plot.posts(exp(post.pred)*dat[31,2],cex.a=1,names=colnames(dat)[-c(1:2)])
+plot.posts(exp(post.pred)*dat[31,2],cex.a=1,names=colnames(dat)[-c(1:2)],rng.x=c(0,.975))
