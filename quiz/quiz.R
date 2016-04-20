@@ -35,7 +35,6 @@ points(post.pred[order(X[,2]),2],col="grey",pch=20)
 
 ### HIERARCHICAL VERSION:
 priors.hier <- list("m"=apply(X,2,mean),"v"=1,"S"=diag(4),"r"=10)
-source("gibbs.R",chdir=TRUE)
 out.hier <- gibbs.niw.hier(X,priors.hier,B=100)
 
 out.hier$mu
