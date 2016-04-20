@@ -40,3 +40,9 @@ out.hier <- gibbs.niw.hier(X,priors.hier,B=100)
 out.hier$mu
 apply(out.hier$mu.3d,1:2,mean)
 apply(out.hier$S,1:2,mean)
+
+#cbind(dat[,2],apply(exp(out.hier$mu.3d) * dat[,2],1:2,mean)-Y)
+#apply(exp(out.hier$mu.3d) * dat[,2],1:2,sd)
+#
+#exp(apply(out.hier$mu.3d,1:2,mean)) * dat[,2]
+#exp(apply(out.hier$mu.3d,1:2,sd)) * dat[,2]
