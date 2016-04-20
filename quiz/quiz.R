@@ -1,18 +1,33 @@
+source("mypairs.R")
 source("../R_Functions/plotPost.R",chdir=TRUE)
 source("gibbs.R",chdir=TRUE)
+source("plotmap.R")
+library(maps)
+
+# READ DATA: ######################################
 dat <- read.csv("ca_theft.csv")
 colnames(dat) <- gsub("\\."," ",colnames(dat))
 
 Y <- dat[,-c(1:2)]
 X <- log( Y / dat[,2] )
 
-pairs(dat[,-1])
-pairs(log(Y))
-pairs(X)
-pairs(log(dat[,-1]))
+# VISUALIZE: ##############################################################
+my.pairs(log(dat[,-1]))
 
-plot.posts(log(Y),cex.a=1)
-plot.posts(X,cex.a=1)
+state.county <- paste0('california,',dat[,1])
+state.county[14] <- "california,Marin"
+state.county <- gsub(pattern = '([[:upper:]])', perl = TRUE, replacement = '\\L\\1', state.county)
+
+col.pal <- colorRampPalette(c("chartreuse3","pink","brown1"))(5)
+plot.per.county(log(dat[,2]),state.county,m="log Population",col=col.pal)
+
+source("plotmap.R")
+plot.per.county(dat[,3]/dat[,2]*100,state.county,dig=3,col=col.pal,m="Robb",per=T)
+plot.per.county(dat[,4]/dat[,2]*100,state.county,dig=3,col=col.pal,m="Burg",per=T)
+plot.per.county(dat[,5]/dat[,2]*100,state.county,dig=3,col=col.pal,m="Larc",per=T)
+plot.per.county(dat[,6]/dat[,2]*100,state.county,dig=3,col=col.pal,m="Vehi",per=T)
+############################################################################
+
 
 priors.list <- list("m"=apply(X,2,mean),"s"=1,"S"=diag(4),"r"=10)
 postpred <- sample.niw(X,priors.list,B=10000)
@@ -27,16 +42,18 @@ plot.posts(post.mu,cex.a=1,names=colnames(dat)[-c(1:2)])
 (post.S.sd <- func.matrices(post.S,sd))
 
 #31 -> Santa Cruz
-plot.posts(exp(post.pred)*dat[31,2],cex.a=1,names=colnames(dat)[-c(1:2)])
 plot.posts(exp(post.pred)*dat[31,2],cex.a=1,names=colnames(dat)[-c(1:2)],rng.x=c(0,.975))
 plot.posts(exp(post.pred)*dat[1,2],cex.a=1,names=colnames(dat)[-c(1:2)],rng.x=c(0,.975))
 
-plot(sort(X[,2]))
-points(post.pred[order(X[,2]),2],col="grey",pch=20)
+plot(sort(X[,4]))
+points(post.pred[order(X[,4]),4],col="grey",pch=20)
+plot.per.county(post.pred[,4],state.county,m="postpred",col=col.pal)
+X11();
+plot.per.county(X[,4],state.county,dig=5,col=col.pal,m="Data")
 
 ### HIERARCHICAL VERSION:
 priors.hier <- list("m"=apply(X,2,mean),"v"=1,"S"=diag(4),"r"=10)
-out.hier <- gibbs.niw.hier(X,priors.hier,B=1000)
+out.hier <- gibbs.niw.hier(X,priors.hier,B=100)
 
 out.hier$mu
 apply(out.hier$mu.3d,1:2,mean)
@@ -46,21 +63,20 @@ l <- 1
 plot(sort(X[,l]))
 points(apply(out.hier$mu.3d,1:2,mean)[order(X[,l]),l],pch=20,col="blue")
 
-library(maps)
-state.county <- paste0('california,',dat[,1])
-state.county[14] <- "california,Marin"
-state.county <- gsub(pattern = '([[:upper:]])', perl = TRUE, replacement = '\\L\\1', state.county)
+# HIER on log(Y)
+priors.hier.2 <- list("m"=apply(log(Y),2,mean),"v"=1,"S"=diag(4),"r"=10)
+out.hier.2 <- gibbs.niw.hier(log(Y),priors.hier.2,B=100)
+mu.2 <- apply(out.hier.2$mu.3d,1:2,mean)
 
-map('county','california',col="grey90")
-map('county',state.county,names=TRUE,col="red",add=TRUE,fill=TRUE,border="grey90")
-for (i in 1:length(state.county)) {
-  rng <- map('county',state.county[i],plot=FALSE)$range
-  text((rng[1]+rng[2])/2, (rng[3]+rng[4])/2,dat[i,1],cex=.5)
-  Sys.sleep(1)
-}
-cnty.info <- map('county',state.county,plot=FALSE)
-cnty.info$y
+par(mfrow=c(1,2))
+plot.per.county(log(dat[,6]),state.county,m="log num of Stolen Vehicles",col=col.pal)
+plot.per.county(mu.2[,4],state.county,"H-post",col=col.pal,bks=c(0,1.8,2.7,3.7,5.4,10))
+par(mfrow=c(1,1))
 
+
+
+
+# Regression with unknown covariance matrix (p.370)
 
 # This is how you get the fips
 #data(county.fips)
