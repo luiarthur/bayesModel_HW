@@ -21,13 +21,13 @@ riwishart <- function(v,S.inv) solve(rwishart(v,S.inv))
                      # L = Lower Tri = t(chol(S))
 rmvnorm <- function(M,S,n=nrow(S)) M + t(chol(S)) %*% rnorm(n)
 
-rniw <- function(m,s,r,S) {
-  iW <- riwishart(r,S)
+rniw <- function(m,s,r,iS) {
+  iW <- riwishart(r,iS)
   rmvnorm(m,iW/s)
 }
 
-rniw.postpred <- function(m,s,r,S,brief=TRUE) {
-  iW <- riwishart(r,S)
+rniw.postpred <- function(m,s,r,iS,brief=TRUE) {
+  iW <- riwishart(r,iS)
   mu <- rmvnorm(m,iW/s)
   postpred.y <- rmvnorm(mu,iW)
 
@@ -64,3 +64,16 @@ log.dniw <- function(Y,mu,V,m,s,r,S) {
 #for (r in rr) r_sum <- r_sum + r / N
 #r_sum
 #diag(3) / (5-3-1)
+
+func.matrices <- function(list.M,func) {
+  B <- length(list.M)
+  n <- nrow(list.M[[1]])
+  k <- ncol(list.M[[1]])
+
+  M <- matrix(0,n,k)
+  for (i in 1:n) for (j in 1:k) {
+    M[i,j] <- func(unlist(lapply(list.M,function(m) m[i,j])))
+  }
+
+  M
+}
