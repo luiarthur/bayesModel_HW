@@ -10,20 +10,24 @@ my.pairs <- function(M,digits=3) {
              main=paste0("Corr (",cnames[i],",",cnames[j],")")) # empty plot
         r <- round(corrs[i,j],digits)
         cex.cor <- max(.8/strwidth(format(r)) * abs(r),1)
-        text(1,labels=r,cex=cex.cor)
+        text(1,labels=r,cex=cex.cor,col="grey")
       }  
     }
     
-    hist(M[,i],prob=TRUE,main=paste("Histogram of",cnames[i]))
+    hist(M[,i],prob=TRUE,main=paste("Histogram of",cnames[i]),bty="n",fg="grey",
+         col="grey",border="white",xlab="")
 
     if (i<k) {
       for (j in (i+1):k) {
         plot(M[,c(j,i)],xlab=cnames[j],ylab=cnames[i],pch=20,
-             main=paste(cnames[i],"-",cnames[j]))
+             main=paste(cnames[i],"-",cnames[j]),
+             bty="n",fg="grey")
       }
     }  
   }
   par(mfrow=c(1,1))
 }
 
-my.pairs(matrix(rnorm(100),ncol=4))
+#X <- matrix(rnorm(100),ncol=4)
+#colnames(X) <- c("I","II","III","IV")
+#my.pairs(X)
