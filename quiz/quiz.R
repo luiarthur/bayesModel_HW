@@ -26,6 +26,8 @@ plot.per.county(dat[,3]/dat[,2]*100,state,county,dig=3,col=col.pal,m="Robb",per=
 plot.per.county(dat[,4]/dat[,2]*100,state,county,dig=3,col=col.pal,m="Burg",per=T)
 plot.per.county(dat[,5]/dat[,2]*100,state,county,dig=3,col=col.pal,m="Larc",per=T)
 plot.per.county(dat[,6]/dat[,2]*100,state,county,dig=3,col=col.pal,m="Vehi",per=T)
+
+plot.per.county(log(dat[,6]/dat[,2]),state,county,dig=3,col=col.pal,m="Vehi")
 ############################################################################
 
 

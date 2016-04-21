@@ -1,7 +1,7 @@
 
 plot.per.county <- function(x, state.name,county.names, measure, dig=1,
                             col.pal=colorRampPalette(c("blue","white","red"))(3),
-                            bks=NULL,percent=FALSE)
+                            bks=NULL,percent=FALSE,paren=TRUE)
 {
 
   mar <- par()$mar
@@ -39,10 +39,16 @@ plot.per.county <- function(x, state.name,county.names, measure, dig=1,
   #leg.txt <- paste(">",round(rev(qq)[-1],dig))
 
   rq <- round(rev(qq),dig)
-  leg.txt <- paste(rq[-1],"-",rq[-length(rq)])
+  leg.txt <- NULL
+  if (percent) paren <- FALSE
+  if (paren) {
+    leg.txt <- paste0("(",rq[-1],", ",rq[-length(rq)],")")
+  } else {
+    leg.txt <- paste0(rq[-1],"-",rq[-length(rq)])
+  }
   leg.txt[1] <- paste(">",rq[2])
-  #leg.txt[length(leg.txt)] <- paste("≤",rq[length(rq)-1])
   leg.txt[length(leg.txt)] <- paste("<",rq[length(rq)-1])
+  #leg.txt[length(leg.txt)] <- paste("≤",rq[length(rq)-1])
   leg.txt <- ifelse(rep(percent,length(leg.txt)),paste0(leg.txt,"%"),leg.txt)
 
   legend("topright",leg.txt,bty="n",pch=20,pt.cex=3,col=rev(col.pal),title=measure,
