@@ -48,7 +48,6 @@ plot.per.county <- function(x, state.name,county.names, measure, dig=1,
   }
   leg.txt[1] <- paste(">",rq[2])
   leg.txt[length(leg.txt)] <- paste("<",rq[length(rq)-1])
-  #leg.txt[length(leg.txt)] <- paste("≤",rq[length(rq)-1])
   leg.txt <- ifelse(rep(percent,length(leg.txt)),paste0(leg.txt,"%"),leg.txt)
 
   legend("topright",leg.txt,bty="n",pch=20,pt.cex=3,col=rev(col.pal),title=measure,

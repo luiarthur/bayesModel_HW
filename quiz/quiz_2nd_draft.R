@@ -5,6 +5,7 @@ source("plotmap.R")
 library(maps)
 
 # READ DATA: ######################################
+system("mkdir -p out")
 dat <- read.csv("ca_theft.csv")
 colnames(dat) <- gsub("\\."," ",colnames(dat))
 
@@ -55,18 +56,19 @@ plot.per.county(pm.crime[,1],state,county,dig=0,paren=F,bks=c(0,15,50,100,300,60
 plot.per.county(pm.crime[,2],state,county,dig=0,paren=F,bks=c(0,15,50,100,300,600),col=col.pal,m="Posterior Predictive - Burglary")
 plot.per.county(pm.crime[,3],state,county,dig=0,paren=F,bks=c(0,15,50,100,300,600),col=col.pal,m="Posterior Predictive - Larceny")
 plot.per.county(pm.crime[,4],state,county,dig=0,paren=F,bks=c(0,15,50,100,300,600),col=col.pal,m="Posterior Predictive - Vehicle")
-plot.per.county(Y[,1],state,county,dig=0,bks=c(0,15,50,100,300,600),col=col.pal,paren=F,m="Data - Robbery\t\t\t")
-plot.per.county(Y[,2],state,county,dig=0,bks=c(0,15,50,100,300,600),col=col.pal,paren=F,m="Data - Burglary\t\t\t")
-plot.per.county(Y[,3],state,county,dig=0,bks=c(0,15,50,100,300,600),col=col.pal,paren=F,m="Data - Larceny\t\t\t")
-plot.per.county(Y[,4],state,county,dig=0,bks=c(0,15,50,100,300,600),col=col.pal,paren=F,m="Data - Vehicle\t\t\t")
+plot.per.county(Y[,1],state,county,dig=0,bks=c(0,15,50,100,300,600),col=col.pal,paren=F,m="Data - Robbery                   ")
+plot.per.county(Y[,2],state,county,dig=0,bks=c(0,15,50,100,300,600),col=col.pal,paren=F,m="Data - Burglary                  ")
+plot.per.county(Y[,3],state,county,dig=0,bks=c(0,15,50,100,300,600),col=col.pal,paren=F,m="Data - Larceny                   ")
+plot.per.county(Y[,4],state,county,dig=0,bks=c(0,15,50,100,300,600),col=col.pal,paren=F,m="Data - Vehicle                   ")
 par(mfrow=c(1,1))
 
 # Postpred. Expected Total Number of Thefts in each county.
+#pdf("tmp.pdf",w=13,h=9)
 par(mfrow=c(1,2))
 plot.per.county(apply(pm.crime,1,sum),state,county,dig=0,paren=F,bks=seq(0,4000,len=6),col=col.pal,m="Posterior Predictive - Thefts")
-plot.per.county(apply(Y,1,sum),state,county,dig=0,bks=seq(0,4000,len=6),col=col.pal,paren=F,m="Data - Thefts\t\t\t")
+plot.per.county(apply(Y,1,sum),state,county,dig=0,bks=seq(0,4000,len=6),col=col.pal,paren=F,m="Data - Thefts               ")
 par(mfrow=c(1,1))
-
+#dev.off()
 
 # Santa Cruz Thefts
 pp.sc <- apply(post.pred,2,function(x) exp(x) * dat[31,2])
