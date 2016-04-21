@@ -9,13 +9,13 @@ dat <- read.csv("ca_theft.csv")
 colnames(dat) <- gsub("\\."," ",colnames(dat))
 
 Y <- dat[,-c(1:2)]
-X <- log( Y / dat[,2] )
+X <- log( Y / dat[,2] ) # log(crimes per capita)
 
 # VISUALIZE: ##############################################################
 my.pairs(log(dat[,-1])) # Obviously, if number of one crime is high, 
                         # the number of any other crime will be high as well
                         # because there is a confounding with popluation.
-my.pairs(X)             # A better measure of crime is crime rates.
+my.pairs(X)             # A better measure of crime is crime per capita
 
 county <- paste(dat[,1])
 county[14] <- "Marin"
@@ -23,14 +23,16 @@ state <- "California"
 
 col.pal <- colorRampPalette(c("chartreuse3","pink","brown1"))(5)
 plot.per.county(log(dat[,2]),state,county,m="log Population",col=col.pal)
+dev.off()
 
-source("plotmap.R")
-plot.per.county(dat[,3]/dat[,2]*100,state,county,dig=3,col=col.pal,m="Robb",per=T)
-plot.per.county(dat[,4]/dat[,2]*100,state,county,dig=3,col=col.pal,m="Burg",per=T)
-plot.per.county(dat[,5]/dat[,2]*100,state,county,dig=3,col=col.pal,m="Larc",per=T)
-plot.per.county(dat[,6]/dat[,2]*100,state,county,dig=3,col=col.pal,m="Vehi",per=T)
+par(mfrow=c(1,4))
+plot.per.county(dat[,3]/dat[,2]*100000,state,county,dig=0,col=col.pal,paren=F,m="Robbery")
+plot.per.county(dat[,4]/dat[,2]*100000,state,county,dig=0,col=col.pal,paren=F,m="Burglary")
+plot.per.county(dat[,5]/dat[,2]*100000,state,county,dig=0,col=col.pal,paren=F,m="Larceny")
+plot.per.county(dat[,6]/dat[,2]*100000,state,county,dig=0,col=col.pal,paren=F,m="Vehicle")
+par(mfrow=c(1,1))
+title("Crimes per 100000",cex.main=4)
 
-plot.per.county(log(dat[,6]/dat[,2]),state,county,dig=3,col=col.pal,m="Vehi")
 ############################################################################
 
 
