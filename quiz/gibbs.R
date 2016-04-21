@@ -1,6 +1,6 @@
 source("../hw2/rwishert.R")
 
-sample.niw <- function(Y,priors,B=1) {
+sample.niw <- function(Y,priors,B=1,printProgress=FALSE) {
   # Hyper Priors
   m0 <- priors$m # prior mean vector for mu_i
   S0 <- priors$S # prior param for Sigma
@@ -23,7 +23,11 @@ sample.niw <- function(Y,priors,B=1) {
   S.post <- solve(S0) + C.mat + s0*n/(s0+n) * (Y.bar-m0) %*% t(Y.bar-m0)
   iS.post <- solve(S.post) # IMPORTANT!!!
 
-  postpred.y <- lapply(as.list(1:B),function(i) rniw.postpred(m=m.post,s=s.post,r=r.post,iS=iS.post,brief=FALSE))
+  one.sample <- function(i) {
+    if (printProgress && i%%(B/100)==0) cat("\rProgress: ",i,"/",B)
+    rniw.postpred(m=m.post,s=s.post,r=r.post,iS=iS.post,brief=FALSE)
+  }
+  postpred.y <- lapply(as.list(1:B),one.sample)
 
   postpred.y
 }
