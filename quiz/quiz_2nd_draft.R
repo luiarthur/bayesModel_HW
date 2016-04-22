@@ -5,7 +5,7 @@ source("plotmap.R")
 library(maps)
 
 # READ DATA: ######################################
-system("mkdir -p out")
+system("mkdir -p report/figs")
 dat <- read.csv("ca_theft.csv")
 colnames(dat) <- gsub("\\."," ",colnames(dat))
 
@@ -63,7 +63,7 @@ plot.per.county(Y[,4],state,county,dig=0,bks=c(0,15,50,100,300,600),col=col.pal,
 par(mfrow=c(1,1))
 
 # Postpred. Expected Total Number of Thefts in each county.
-#pdf("tmp.pdf",w=13,h=9)
+#pdf("report/figs/tmp.pdf",w=13,h=9)
 par(mfrow=c(1,2))
 plot.per.county(apply(pm.crime,1,sum),state,county,dig=0,paren=F,bks=seq(0,4000,len=6),col=col.pal,m="Posterior Predictive - Thefts")
 plot.per.county(apply(Y,1,sum),state,county,dig=0,bks=seq(0,4000,len=6),col=col.pal,paren=F,m="Data - Thefts               ")
