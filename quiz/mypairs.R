@@ -92,3 +92,23 @@ simple.plot.posts <- function(M,digits=3,trace=TRUE,...) {
 #M <- matrix(rnorm(1000),ncol=4)
 #colnames(M) <- 1:4
 #simple.plot.posts(M)
+
+
+add.errbar <- function(ci,...) {
+  x <- 1:nrow(ci)
+  segments(x,ci[,1],x,ci[,2],...)
+}
+
+plot_err <- function(M,org,theft,mar=NULL,lab=TRUE,...) {
+  par.org <- par()$mar
+  if (is.null(mar)) mar=c(8,3,0,0)+1 
+  par(mar=mar)
+  ci <- t(apply(M,2,quantile,c(.025,.975)))
+  plot(apply(M,2,mean),fg="grey",bty="n",xaxt="n",...)
+  points(org,cex=2,col="red",pch=17)
+  add.errbar(ci,col="grey",lwd=3)
+  if (lab) axis(1,at=1:ncol(M),labels=colnames(M),las=2,fg='grey')
+  else axis(1,at=1:ncol(M),lab=FALSE,las=2,fg='grey')
+  mtext(theft,side=4,las=2)
+  par(mar=par.org)
+}

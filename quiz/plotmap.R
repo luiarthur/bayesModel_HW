@@ -60,14 +60,3 @@ plot.per.county <- function(x, state.name,county.names, measure, dig=1,
   
   par(mar=mar)
 }
-
-add.errbar <- function(ci,...) {
-  x <- 1:nrow(ci)
-  segments(x,ci[,1],x,ci[,2],...)
-}
-
-plot_err <- function(M,...) {
-  plot(apply(M,2,mean),fg="grey",bty="n",...)
-  add.errbar(M)
-}
-

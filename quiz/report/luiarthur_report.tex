@@ -10,6 +10,8 @@
 \newcommand{\bc}[1]{ \left\{#1\right\} }
 \newcommand{\abs}[1]{ \left|#1\right| }
 \newcommand{\E}{ \text{E} }
+\newcommand{\Y}{ \bm Y }
+\newcommand{\ds}{ \displaystyle }
 
 %\usepackage{times}
 %If you have times installed on your system, please
@@ -20,14 +22,6 @@
 %\begin{table*}\end{table*}
 % please place figures & tables as close as possible
 % to text references
-
-% To combine plots:
-%\begin{figure*}
-%  \subfloat[][]{\includegraphics[scale=.22]{figs/mapDatRob.pdf}}\quad
-%  \subfloat[][]{\includegraphics[scale=.22]{figs/mapDatRob.pdf}}\quad
-%  \subfloat[][]{\includegraphics[scale=.22]{figs/mapDatRob.pdf}}\quad
-%  \subfloat[][]{\includegraphics[scale=.22]{figs/mapDatRob.pdf}}\quad
-%\end{figure*}
 
 \newcommand{\be}{\begin{equation}}
 \newcommand{\ee}{\end{equation}}
@@ -51,75 +45,121 @@
 
 
 \begin{abstract}
- This abstract should contain a short description of the problem and the main findings.
+% This abstract should contain a short description of the problem and the main findings.
+Given a data set containing the number of 4 seperate categories of thefts in
+California counties, we would like to model the expected number of each theft
+in each county. We would also like to know the probability that the total
+number of thefts in Santa Cruz county exceeds 3000. A multivariate Normal
+sampling distribution was placed on the logit of the proportion of each theft
+per each county. A Normal Inverse Wishart prior was placed on the mean vector
+and covariance matrix respectively. The posterior distribution of the parameters
+are explored in this paper. The posterior probability that the number of thefts 
+in Santa Cruz exceeds 3000 was computed to be 12.8\%.
 \begin{keywords}
-Please place 3--5 key words here.
+Normal likelihood, Normal-Inverse-Wishart prior.
 \end{keywords}
 \end{abstract}
 
 
 \section{Introduction}
-This intro should also contain a description of the problem and an exploratory data analysis.
+The data provided contains 6 columns: a column containing the names of 39
+counties in California, a column indicating the population of each of the
+counties, and 4 columns consisting counts of 4 types of thefts (I) robbery,
+(II) burglary, (III) larceny, and (Iv) motor vehicle theft. The goal is to
+answer some questions about the pattern of theft in the state. Some exploratory
+analysis of the data shows that the number of each theft is highly correlated.
+This is not surprising because the numbers of different thefts are confounded
+by population sizes of the counties. That is, if a county (say Los Angeles) has
+a larger population than another (say Santa Cruz), then the number of all
+thefts are going to be high (simply because there are more people and hence
+more crimes). To construct a somewhat sensible model, the number of thefts per
+county needs first to be transformed to the number of crimes per capita in each
+county. Still, since crime rates tend to have a small order of magnitude, some
+kind of transfomation on a log scale is needed to make computation more
+reasonable. The log of the crimes per capita seemed linear. We could model
+these log probabilities with a multivariate normal sampling distribution. But,
+modeling the log odds would be more sensible because log odds truly have infinite
+support; while log probabilities only have negative support. Figure \ref{fig:logOdds}
+shows the log odds of each theft per county. The diagonals are the histograms for 
+each theft. The upper traingle shows the scatter plots of the logged odds for each 
+pair of thefts. The lower triangle shows the correlation. The logged odds
+are somewhat linear. Vehicle thefts do not seem to be very much correlated to any
+other theft. Larceny and burglary are highly correlated (.93).
 
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/pairsLogRate.pdf}
-  \label{fig:logRate}
-  \caption{\small Histogram for logged number of each theft per capita on diagonals. Scatter plots
+  \caption{\small Histogram for logit of number of each theft per capita on diagonals. Scatter plots
   of each pair of variables in upper triangle. Correlation between each pair of variables in
   lower triangle. All correlations are positive. Larceny and burglary are highly correlated (.93). 
   Motor vehicle theft is not strongly correlated with any other thefts.}
+  \label{fig:logOdds}
 \end{figure}
 
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+To provide additional intuition for the data, Figure \ref{fig:mapDat} displays the 
+the number of thefts per 100,000 people for each county studied. The counties are 
+colored in a way such that areas that are greener having fewer thefts; and areas
+that are more red have more thefts. Each color corresponds to a bin of numbers
+which are simply the 20, 40, 60, and 80 $^{th}$ percentiles of the data.
+Larceny and burglary are the most common thefts. Vehicle thefts and robberies
+are not as common. 
+
 \begin{figure*}
   \centering
   \includegraphics[scale=.55]{figs/mapDat.pdf}
   \vspace{-7em}
-  \caption{Map of California thefts per 100,000 people for a selected of counties. The left-most plot
-  shows the number of robberies per 100,100 for each of the counties. The color code in the shows that
-greener areas have fewer robberies (safer) and redder areas have more robberies (more dangerous).}
+  \caption{\small Map of California thefts per 100,000 people for a selection of
+  counties. The left-most plot shows the number of thefts per 100,000 people for
+  each of the counties. The color code shows that greener areas have fewer
+  robberies (safer) and redder areas have more robberies (more dangerous). The
+  different color bins also represent the 20, 40, 60, and 80$^{th}$ percentile
+  cut-offs.}
   \label{fig:mapDat}
 \end{figure*}
 
 
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-
 \section{Methods}
-This section contains the methods. Normal Inverse Wisahrt.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
-Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+The log odds can be modeled with a Normal distribution with dimension 4.  Let
+$\bm Y$ be a $39\times 4$ matrix where each row represents a county and each
+column represents a theft category. $\bm Y_{i,j}$ will denote the logit of the
+number of theft $j$ per population size in county $i$. Moreover, let $\bm Y_i$
+denote the $i^{th}$ row of matrix $\bm Y$, and let $\bar{\bm Y}$ be the 4
+column averages of the matrix.  Then,
+\[
+  \Y_i^T | \bm{\mu,\Sigma} \sim \mathcal{N}_4(\bm{\mu,\Sigma})
+\]
+for $i=1,...,n$ where $n=39$ is the sampling model. A Normal-Inverse-Wishart prior is
+placed on $(\bm{\mu,\Sigma})$. This simplifies computation as the prior is
+conjugate and the posterior can be directly sampled from. Specifially, if
+$\bm\mu | \bm\Sigma \sim \mathcal{N}(\bm{m,\Sigma}/\kappa)$ and $\bm \Sigma
+\sim \mathcal{IW}(v,\bm S^{-1})$, we can sample from the posterior by
+first drawing $\bm \Sigma | \bm Y \sim \mathcal{IW}(v_n,\bm S_n^{-1})$, then 
+drawing $\bm{\mu | \Sigma, Y} \sim \mathcal{N}(\bm{m_n,\Sigma}/\kappa_n)$.
+The values of the updated parameters are
+\[
+\begin{array}{rcl}
+  \bm m_n &=& \ds\frac{\kappa\bm m + n\bar{\bm Y}}{\kappa+n} \\
+  \kappa_n &=& \kappa + n \\
+  v_n &=& v + n \\
+  \bm S_n &=& \bm{S + C} + \ds\frac{\lambda n}{\lambda+n} 
+  (\boldsymbol{\bm{\bar{Y}-m}})^T(\boldsymbol{\bm{\bar{Y}-m}}) \\
+  \\
+  \text{where } \boldsymbol{C} &=& \sum_{i=1}^{n} (\boldsymbol{y_i-\bar{y}})^T(\boldsymbol{y_i-\bar{y}}) \\
+\end{array}
+\]
+To sample from the posterior predictive distribution, we can simply draw
+$\tilde{\bm Y} | \bm{\mu,\Sigma,Y} \sim \mathcal{N}(\bm{\mu,\Sigma})$ using the newly drawn
+values for $\bm\mu$ and $\bm\Sigma$.
+
+In this analysis, $(\bm m, \kappa, v, \bm S) = ()$
+
+
 
 \section{Analysis}
 This part is the actual analysis and results.
 Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
 \begin{figure}
   \centering
-  \includegraphics[scale=.3]{figs/postMu.pdf}
+  \includegraphics[scale=.2]{figs/postMu.pdf}
   \caption{Posterior distribution of the mean parameter.}
   \label{fig:postMu}
 \end{figure}
@@ -144,6 +184,35 @@ Words words words.  Words words words.  Words words words.  Words words words.  
 Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
 Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
 Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+
+
+\begin{figure*}
+  \centering
+  \includegraphics[scale=.55]{figs/expTheftCounty.pdf}
+  \caption{Map of California thefts per 100,000 people for a selected of counties. The left-most plot
+  shows the number of robberies per 100,100 for each of the counties. The color code in the shows that
+greener areas have fewer robberies (safer) and redder areas have more robberies (more dangerous).}
+  \label{fig:eachtheft}
+\end{figure*}
+
+\begin{figure*}
+  \centering
+  \includegraphics[scale=.55]{figs/expAllTheft.pdf}
+  \caption{Map of California thefts per 100,000 people for a selected of counties. The left-most plot
+  shows the number of robberies per 100,100 for each of the counties. The color code in the shows that
+greener areas have fewer robberies (safer) and redder areas have more robberies (more dangerous).}
+  \label{fig:alltheft}
+\end{figure*}
+
+
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=.5]{figs/sc.pdf}
+  \caption{Posterior distribution of the mean parameter.}
+  \label{fig:scprob}
+\end{figure}
+
 Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
 
 

@@ -49,7 +49,8 @@ dev.off()
 #title("Thefts per 100000",cex.main=4,line=-2)
 
 # Modeling log(Crime / Capita):  ################################
-priors.list <- list("m"=apply(X,2,mean),"s"=1,"S"=diag(4),"r"=10)
+#priors.list <- list("m"=apply(X,2,mean),"s"=1,"S"=diag(4),"r"=10)
+priors.list <- list("m"=rep(0,4),"s"=1,"S"=diag(4),"r"=10)
 postpred <- sample.niw(X,priors.list,B=100000,print=TRUE)
 postpred <- tail(postpred,10000)
 
@@ -104,7 +105,32 @@ bk.m <- seq(0,180,len=6)
 list.ipp <- lapply(as.list(dat[,2]), function(pop) pop * inv.logit(post.pred))
 pm.crime <- t(sapply(list.ipp,apply,2,mean))
 
-apply(list.ipp[[1]],2,quantile,c(.025,.975))
+
+ord <- order(apply(Y,1,sum))
+tmp1 <- sapply(list.ipp,function(x) x[,1])
+tmp2 <- sapply(list.ipp,function(x) x[,2])
+tmp3 <- sapply(list.ipp,function(x) x[,3])
+tmp4 <- sapply(list.ipp,function(x) x[,4])
+colnames(tmp1) <- county
+colnames(tmp2) <- county
+colnames(tmp3) <- county
+colnames(tmp4) <- county
+
+pdf("report/figs/expTheftCounty.pdf",w=13,h=7)
+source("mypairs.R")
+par(mfrow=c(4,1),oma=c(5,0,0,3)+2)
+plot_err(tmp1[,ord],Y[ord,1],"Robbery",col="blue",pch=20,cex=3,xlab="",mar=c(0,0,0,0)+2,lab=F)
+plot_err(tmp2[,ord],Y[ord,2],"Burglary",col="blue",pch=20,cex=3,xlab="",mar=c(0,0,0,0)+2,lab=F)
+plot_err(tmp3[,ord],Y[ord,3],"Larceny",col="blue",pch=20,cex=3,xlab="",mar=c(0,0,0,0)+2,lab=F)
+plot_err(tmp4[,ord],Y[ord,4],"Vehicle",col="blue",pch=20,cex=3,xlab="",mar=c(0,0,0,0)+2)
+par(mfrow=c(1,1))
+dev.off()
+
+pdf("report/figs/expAllTheft.pdf",w=13,h=5)
+par(oma=c(5,0,0,3)+2)
+plot_err(tmp1[,ord]+tmp2[,ord]+tmp3[,ord]+tmp4[,ord],apply(Y[ord,],1,sum),"All Thefts",col="blue",pch=20,cex=3,ylab="",xlab="",mar=c(0,0,0,0)+2)
+dev.off()
+
 
 par(mfrow=c(2,4))
 plot.per.county(pm.crime[,1],state,county,dig=0,paren=F,bks=bk.r,col=col.pal,m="Posterior Predictive - Robbery")
@@ -130,14 +156,14 @@ par(mfrow=c(1,1))
 dev.off()
 
 # Santa Cruz Thefts
-pp.sc <- apply(post.pred,2,function(x) exp(x) * dat[31,2])
-plot.posts(pp.sc,rng.x=c(0,.999),cex.a=1,cex.l=1,names=colnames(dat[,3:6]))
+pp.sc <- list.ipp[[31]] #apply(post.pred,2,function(x) inv.logit(x) * dat[31,2])
 
 pp.sum.sc <- apply(pp.sc,1,sum)
-plot.post(pp.sum.sc,stay=TRUE)
 
-my.color(density(pp.sum.sc),from=-5,to=3000,lwd=6,bty="n",main="",
-         col.area="cornflowerblue",col.den="cornflowerblue",fg="grey")
-my.color(density(pp.sum.sc),from=3000,to=50000,col.area="blue",add=TRUE,col.den="blue",lwd=6)
-(prob.sc.above.3000 <- mean(pp.sum.sc > 3000))
-text(15000,1e-04, paste0("Prob. Santa Cruz Thefts > 3000 is ",prob.sc.above.3000*100,"%"),cex=1)
+pdf("report/figs/sc.pdf")
+color.den(density(pp.sum.sc,from=0),from=-5,to=4000,lwd=1,bty="n",main="",
+          col.area="cornflowerblue",col.den="cornflowerblue",fg="grey",xlim=c(0,10000))
+color.den(density(pp.sum.sc),from=3000,to=50000,col.area="blue",add=TRUE,col.den="blue",lwd=6)
+(prob.sc.above.3000 <- mean(pp.sum.sc > 3000)) # 12.7 %
+dev.off()
+#text(4000,1e-04, paste0("Prob. Santa Cruz Thefts > 3000 is ",prob.sc.above.3000*100,"%"),cex=2)
