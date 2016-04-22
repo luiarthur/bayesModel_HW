@@ -1,0 +1,173 @@
+\documentclass{../../tex_template/asaproc}
+
+
+%\usepackage{times}
+%If you have times installed on your system, please
+%uncomment the line above
+
+%For figures and tables to stretch across two columns
+%use \begin{figure*} \end{figure*} and
+%\begin{table*}\end{table*}
+% please place figures & tables as close as possible
+% to text references
+
+
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+
+\title{Quiz 1 --- California County Thefts}
+
+%input all authors' names
+
+\author{
+  Arthur Lui$^1$\\
+  University California -- Santa Cruz$^1$\\
+}
+
+%input affiliations
+
+%{USDA Forest Service Forest Products Laboratory}
+
+\begin{document}
+
+\maketitle
+
+
+\begin{abstract}
+This is sample text in 10-point Times New Roman type and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+\begin{keywords}
+Please place 3--5 key words here.
+\end{keywords}
+\end{abstract}
+
+
+\section{Primary Subhead Centered, Title Case in 10-Point Bold}
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.  This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text in 10-point Times New Roman type and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+\subsection{Secondary Head}
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.  This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text in 10-point Times New Roman type and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.  This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text in 10-point Times New Roman type and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+\begin{table*}
+\caption{\enspace Possible Rankings of $A$, $B$, and $C$ and Corresponding 
+Posterior Probabilities.  Because of rounding, not all columns sum to 
+one.}\label{tab1}
+\begin{tabular*}{\hsize}{@{\extracolsep{\fill}}ccccccc}
+\\[-5pt]
+                 & 
+\multicolumn{1}{c}{\it Errors} & 
+\multicolumn{1}{c}{\it Posterior probability} & 
+\multicolumn{4}{c}{\it Posterior probability for specified $\beta$}\\
+\cline{4-7}
+\\[-7pt]
+\multicolumn{1}{c}{\it $(R_A,R_B,R_C)$}  & 
+\multicolumn{1}{c}{\it $g({\bf R})$} & 
+\multicolumn{1}{c}{\it as a function of $\beta$} & 
+\multicolumn{1}{c}{\it $\beta =$ .5} & 
+\multicolumn{1}{c}{\it $\beta =$ .3} & 
+\multicolumn{1}{c}{\it $\beta =$ .1} & 
+\multicolumn{1}{c}{\it $\beta =$ .01}\\
+\hline
+\\[-5pt]
+(1, 2, 3)& $0$ & $1 / (1 + 2\beta + 2\beta^{\,2} + \beta^{\,3})$ & 
+        .381 & .553 & .819 & .980 \\ 
+(1, 3, 2)& $1$ & $\beta/ (1 + 2\beta + 2\beta^{\,2} + \beta^{\,3})$ & 
+        .190 & .166 & .082 & .010 \\
+(2, 1, 3)& $1$ & $\beta/ (1 + 2\beta + 2\beta^{\,2} + \beta^{\,3})$ & 
+        .190 & .166 & .082 & .010 \\
+(2, 3, 1)& $2$ & $\beta^{\,2}/ (1 + 2\beta + 2\beta^{\,2} + \beta^{\,3})$ & 
+        .095 & .050 & .008 & .000 \\
+(3, 1, 2)& $2$ & $\beta^{\,2}/ (1 + 2\beta + 2\beta^{\,2} + \beta^{\,3})$ &  
+         .095 &  .050 &  .008 &  .000 \\
+(3, 2, 1)& $3$ & $\beta^{\,3}/ (1 + 2\beta + 2\beta^{\,2} + \beta^{\,3})$ & 
+         .048 &  .015 &  .001 &   .000 \\
+\hline
+\end{tabular*}
+\end{table*} 
+
+\subsubsection{This is a tertiary head} 
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.  This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text in 10-point Times New Roman type and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+\section{Another Primary Subhead}
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.  This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text in 10-point Times New Roman type and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.\begin{eqnarray}
+\hat{\rho} & \equiv & \sum_{j=1}^J
+\sum_{i=1}^n (x_{ij} - \bar{x}_{\cdot \cdot})(y_{ij} - \bar{y}_{\cdot
+j}) \nonumber \\
+& \div & \sqrt{
+\sum_{j=1}^J \sum_{i=1}^n (x_{ij} - \bar{x}_{\cdot \cdot})^2
+\sum_{j=1}^J \sum_{i=1}^n (y_{ij} - \bar{y}_{\cdot j})^2
+}
+. \nonumber
+\end{eqnarray}
+Version 2 uses the maximum likelihood estimate of $\rho$.
+
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.  This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text in 10-point Times New Roman type and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+
+
+\begin{figure*}
+%\includegraphics{fig1.3.ps}}%
+\vspace{12pc}
+\caption{Actual confidence interval coverages,
+$J = 4$, $\rho = .85$, nominal confidence level = .75,
+quantile = .01}
+\end{figure*}
+However, for large $J$ and small $n$, the version 1 approach does not perform as well.
+
+
+\begin{table}[b]
+\caption{\enspace Possible Rankings of $A$, $B$, and $C$ and Corresponding 
+Posterior Probabilities.  Because of rounding, not all columns sum to 
+one.}\label{tab1}
+\begin{tabular*}{\hsize}{@{\extracolsep{\fill}}cccc}
+\\[-5pt]
+\multicolumn{1}{c}{\it $\beta =$ .5} & 
+\multicolumn{1}{c}{\it $\beta =$ .3} & 
+\multicolumn{1}{c}{\it $\beta =$ .1} & 
+\multicolumn{1}{c}{\it $\beta =$ .01}\\
+\hline
+\\[-5pt]
+.381 & .553 & .819 & .980 \\ 
+        .190 & .166 & .082 & .010 \\
+        .190 & .166 & .082 & .010 \\
+        .095 & .050 & .008 & .000 \\
+         .095 &  .050 &  .008 &  .000 \\
+         .048 &  .015 &  .001 &   .000 \\
+\hline
+\end{tabular*}
+\end{table} 
+
+
+
+
+\end{document}
+
