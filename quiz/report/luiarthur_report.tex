@@ -45,7 +45,7 @@
 
 
 \begin{abstract}
-Given a data set containing the number of 4 seperate categories of thefts in
+Given a data set containing the number of 4 separate categories of thefts in
 California counties, we would like to model the expected number of each theft
 in each county. We would also like to know the probability that the total
 number of thefts in Santa Cruz county exceeds 3000. A multivariate Normal
@@ -74,13 +74,13 @@ thefts are going to be high (simply because there are more people and hence
 more crimes). To construct a somewhat sensible model, the number of thefts per
 county needs first to be transformed to the number of crimes per capita in each
 county. Still, since crime rates tend to have a small order of magnitude, some
-kind of transfomation on a log scale is needed to make computation more
+kind of transformation on a log scale is needed to make computation more
 reasonable. The log of the crimes per capita seemed linear. We could model
 these log probabilities with a multivariate normal sampling distribution. But,
 modeling the log odds would be more sensible because log odds truly have infinite
 support; while log probabilities only have negative support. Figure \ref{fig:logOdds}
 shows the log odds of each theft per county. The diagonals are the histograms for 
-each theft. The upper traingle shows the scatter plots of the logged odds for each 
+each theft. The upper triangle shows the scatter plots of the logged odds for each 
 pair of thefts. The lower triangle shows the correlation. The logged odds
 are somewhat linear. Vehicle thefts do not seem to be very much correlated to any
 other theft. Larceny and burglary are highly correlated (.93).
@@ -128,7 +128,7 @@ column averages of the matrix.  Then,
 \]
 for $i=1,...,n$ where $n=39$ is the sampling model. A Normal-Inverse-Wishart prior is
 placed on $(\bm{\mu,\Sigma})$. This simplifies computation as the prior is
-conjugate and the posterior can be directly sampled from. Specifially, if
+conjugate and the posterior can be directly sampled from. Specifically, if
 $\bm\mu | \bm\Sigma \sim \mathcal{N}(\bm{m,\Sigma}/\kappa)$ and $\bm \Sigma
 \sim \mathcal{IW}(v,\bm S^{-1})$, we can sample from the posterior by
 first drawing $\bm \Sigma | \bm Y \sim \mathcal{IW}(v_n,\bm S_n^{-1})$, then 
@@ -156,7 +156,7 @@ The posterior distribution of the parameters are provided here. Figure
 \ref{fig:postMu} shows the posterior distribution and trace plots of the mean
 parameter $\bm{\mu | y}$ in the diagonals. Contour and trace plots of each
 pair of parameters are in the upper triangle. The correlation between each pair of
-variables are in lower triangle.  All correlations are positive. The mean paramters
+variables are in lower triangle.  All correlations are positive. The mean parameters
 for larceny and burglary are highly correlated again (.90). Motor vehicle theft
 is not strongly correlated with any other thefts. The shaded regions are the 95\% 
 HPD's. The trace plots don't show strong suggestions of non-convergence. Note that
@@ -169,7 +169,7 @@ diagnostics.
   \caption{\small Posterior distribution and trace plots of the mean parameter
     $\bm\mu$ on the on diagonals. Contour and trace plots of each pair of
     parameters in upper triangle.  Correlation between each pair of variables
-    in lower triangle.  All correlations are positive. The mean paramters for
+    in lower triangle.  All correlations are positive. The mean parameters for
     larceny and burglary are highly correlated again (.90). Motor vehicle theft
     is not strongly correlated with any other thefts.}
   \label{fig:postMu}
