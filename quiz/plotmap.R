@@ -1,14 +1,15 @@
-
 plot.per.county <- function(x, state.name,county.names, measure, dig=1,
                             col.pal=colorRampPalette(c("blue","white","red"))(3),
-                            bks=NULL,percent=FALSE,paren=TRUE)
+                            bks=NULL,percent=FALSE,paren=TRUE,text.names=TRUE,
+                            text.cex=.7,num=NULL)
 {
 
   mar <- par()$mar
   cp.len <- length(col.pal)
   cols <- rep(0,length(x))
 
-  qq <- quantile(x,(0:cp.len)/cp.len)
+  #qq <- quantile(x,(0:cp.len)/cp.len)
+  qq <- quantile(x,seq(0,1,len=cp.len+1))
   if (!is.null(bks)) qq <- bks
 
   if (length(qq) != cp.len+1) {
@@ -26,13 +27,17 @@ plot.per.county <- function(x, state.name,county.names, measure, dig=1,
   map('county',cs,names=TRUE,add=TRUE,fill=TRUE,
       border="grey90",col=cols)
 
-  for (i in 1:length(cs)) {
-    rng <- map('county',cs[i],plot=FALSE)$range
-    text((rng[1]+rng[2])/2, (rng[3]+rng[4])/2,dat[i,1],cex=.7)
-    # dat[i,1]...
-    #rng <- map('county',cs[i],plot=FALSE)
-    #rng <- c(mean(rng$x,na.rm=TRUE),mean(rng$y,na.rm=TRUE))
-    #text(rng[1],rng[2],dat[i,1],cex=.7)
+  if (text.names) {
+    if (length(text.cex)==1) text.cex <- rep(text.cex,length(cs))
+    if (!is.null(num)) county.names <- num
+    for (i in 1:length(cs)) {
+      rng <- map('county',cs[i],plot=FALSE)$range
+      text((rng[1]+rng[2])/2, (rng[3]+rng[4])/2,county.names[i],cex=text.cex[i])
+      # dat[i,1]...
+      #rng <- map('county',cs[i],plot=FALSE)
+      #rng <- c(mean(rng$x,na.rm=TRUE),mean(rng$y,na.rm=TRUE))
+      #text(rng[1],rng[2],dat[i,1],cex=.7)
+    }
   }
 
   #(leg.txt <- paste(">",round(quantile(x,c((cp.len-1):0)/cp.len),dig)))
@@ -55,3 +60,14 @@ plot.per.county <- function(x, state.name,county.names, measure, dig=1,
   
   par(mar=mar)
 }
+
+add.errbar <- function(ci,...) {
+  x <- 1:nrow(ci)
+  segments(x,ci[,1],x,ci[,2],...)
+}
+
+plot_err <- function(M,...) {
+  plot(apply(M,2,mean),fg="grey",bty="n",...)
+  add.errbar(M)
+}
+

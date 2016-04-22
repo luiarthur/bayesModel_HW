@@ -1,5 +1,15 @@
 \documentclass{../../tex_template/asaproc}
-
+\usepackage{graphicx} % \includegraphics
+\usepackage{float}    % To keep figures in right place. 
+                      % Usage: \being{figure}[H] \includegraphics{tmp.pdf} \end{figure}
+\usepackage{subfig}   % \subfloat
+\usepackage{amsmath}  % bmatrix, pmatrix, etc
+\usepackage{bm}
+\newcommand{\p}[1]{\left(#1\right)}
+\newcommand{\bk}[1]{\left[#1\right]}
+\newcommand{\bc}[1]{ \left\{#1\right\} }
+\newcommand{\abs}[1]{ \left|#1\right| }
+\newcommand{\E}{ \text{E} }
 
 %\usepackage{times}
 %If you have times installed on your system, please
@@ -11,6 +21,13 @@
 % please place figures & tables as close as possible
 % to text references
 
+% To combine plots:
+%\begin{figure*}
+%  \subfloat[][]{\includegraphics[scale=.22]{figs/mapDatRob.pdf}}\quad
+%  \subfloat[][]{\includegraphics[scale=.22]{figs/mapDatRob.pdf}}\quad
+%  \subfloat[][]{\includegraphics[scale=.22]{figs/mapDatRob.pdf}}\quad
+%  \subfloat[][]{\includegraphics[scale=.22]{figs/mapDatRob.pdf}}\quad
+%\end{figure*}
 
 \newcommand{\be}{\begin{equation}}
 \newcommand{\ee}{\end{equation}}
@@ -34,137 +51,100 @@
 
 
 \begin{abstract}
-This is sample text in 10-point Times New Roman type and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+ This abstract should contain a short description of the problem and the main findings.
 \begin{keywords}
 Please place 3--5 key words here.
 \end{keywords}
 \end{abstract}
 
 
-\section{Primary Subhead Centered, Title Case in 10-Point Bold}
+\section{Introduction}
+This intro should also contain a description of the problem and an exploratory data analysis.
 
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
+\begin{figure}[H]
+  \includegraphics[scale=.5]{figs/pairsLogRate.pdf}
+  \label{fig:logRate}
+  \caption{\small Histogram for logged number of each theft per capita on diagonals. Scatter plots
+  of each pair of variables in upper triangle. Correlation between each pair of variables in
+  lower triangle. All correlations are positive. Larceny and burglary are highly correlated (.93). 
+  Motor vehicle theft is not strongly correlated with any other thefts.}
+\end{figure}
 
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.  This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text in 10-point Times New Roman type and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-\subsection{Secondary Head}
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.  This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text in 10-point Times New Roman type and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.  This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text in 10-point Times New Roman type and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-\begin{table*}
-\caption{\enspace Possible Rankings of $A$, $B$, and $C$ and Corresponding 
-Posterior Probabilities.  Because of rounding, not all columns sum to 
-one.}\label{tab1}
-\begin{tabular*}{\hsize}{@{\extracolsep{\fill}}ccccccc}
-\\[-5pt]
-                 & 
-\multicolumn{1}{c}{\it Errors} & 
-\multicolumn{1}{c}{\it Posterior probability} & 
-\multicolumn{4}{c}{\it Posterior probability for specified $\beta$}\\
-\cline{4-7}
-\\[-7pt]
-\multicolumn{1}{c}{\it $(R_A,R_B,R_C)$}  & 
-\multicolumn{1}{c}{\it $g({\bf R})$} & 
-\multicolumn{1}{c}{\it as a function of $\beta$} & 
-\multicolumn{1}{c}{\it $\beta =$ .5} & 
-\multicolumn{1}{c}{\it $\beta =$ .3} & 
-\multicolumn{1}{c}{\it $\beta =$ .1} & 
-\multicolumn{1}{c}{\it $\beta =$ .01}\\
-\hline
-\\[-5pt]
-(1, 2, 3)& $0$ & $1 / (1 + 2\beta + 2\beta^{\,2} + \beta^{\,3})$ & 
-        .381 & .553 & .819 & .980 \\ 
-(1, 3, 2)& $1$ & $\beta/ (1 + 2\beta + 2\beta^{\,2} + \beta^{\,3})$ & 
-        .190 & .166 & .082 & .010 \\
-(2, 1, 3)& $1$ & $\beta/ (1 + 2\beta + 2\beta^{\,2} + \beta^{\,3})$ & 
-        .190 & .166 & .082 & .010 \\
-(2, 3, 1)& $2$ & $\beta^{\,2}/ (1 + 2\beta + 2\beta^{\,2} + \beta^{\,3})$ & 
-        .095 & .050 & .008 & .000 \\
-(3, 1, 2)& $2$ & $\beta^{\,2}/ (1 + 2\beta + 2\beta^{\,2} + \beta^{\,3})$ &  
-         .095 &  .050 &  .008 &  .000 \\
-(3, 2, 1)& $3$ & $\beta^{\,3}/ (1 + 2\beta + 2\beta^{\,2} + \beta^{\,3})$ & 
-         .048 &  .015 &  .001 &   .000 \\
-\hline
-\end{tabular*}
-\end{table*} 
-
-\subsubsection{This is a tertiary head} 
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.  This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text in 10-point Times New Roman type and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-\section{Another Primary Subhead}
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.  This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text in 10-point Times New Roman type and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.\begin{eqnarray}
-\hat{\rho} & \equiv & \sum_{j=1}^J
-\sum_{i=1}^n (x_{ij} - \bar{x}_{\cdot \cdot})(y_{ij} - \bar{y}_{\cdot
-j}) \nonumber \\
-& \div & \sqrt{
-\sum_{j=1}^J \sum_{i=1}^n (x_{ij} - \bar{x}_{\cdot \cdot})^2
-\sum_{j=1}^J \sum_{i=1}^n (y_{ij} - \bar{y}_{\cdot j})^2
-}
-. \nonumber
-\end{eqnarray}
-Version 2 uses the maximum likelihood estimate of $\rho$.
-
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.  This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper. This is sample text in 10-point Times New Roman type and needs to be completely replaced before submitting your paper. This is sample text and needs to be completely replaced before submitting your paper.
-
-
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
 \begin{figure*}
-%\includegraphics{fig1.3.ps}}%
-\vspace{12pc}
-\caption{Actual confidence interval coverages,
-$J = 4$, $\rho = .85$, nominal confidence level = .75,
-quantile = .01}
+  \centering
+  \includegraphics[scale=.55]{figs/mapDat.pdf}
+  \vspace{-7em}
+  \caption{Map of California thefts per 100,000 people for a selected of counties. The left-most plot
+  shows the number of robberies per 100,100 for each of the counties. The color code in the shows that
+greener areas have fewer robberies (safer) and redder areas have more robberies (more dangerous).}
+  \label{fig:mapDat}
 \end{figure*}
-However, for large $J$ and small $n$, the version 1 approach does not perform as well.
 
 
-\begin{table}[b]
-\caption{\enspace Possible Rankings of $A$, $B$, and $C$ and Corresponding 
-Posterior Probabilities.  Because of rounding, not all columns sum to 
-one.}\label{tab1}
-\begin{tabular*}{\hsize}{@{\extracolsep{\fill}}cccc}
-\\[-5pt]
-\multicolumn{1}{c}{\it $\beta =$ .5} & 
-\multicolumn{1}{c}{\it $\beta =$ .3} & 
-\multicolumn{1}{c}{\it $\beta =$ .1} & 
-\multicolumn{1}{c}{\it $\beta =$ .01}\\
-\hline
-\\[-5pt]
-.381 & .553 & .819 & .980 \\ 
-        .190 & .166 & .082 & .010 \\
-        .190 & .166 & .082 & .010 \\
-        .095 & .050 & .008 & .000 \\
-         .095 &  .050 &  .008 &  .000 \\
-         .048 &  .015 &  .001 &   .000 \\
-\hline
-\end{tabular*}
-\end{table} 
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+
+\section{Methods}
+This section contains the methods. Normal Inverse Wisahrt.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+
+\section{Analysis}
+This part is the actual analysis and results.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+\begin{figure}
+  \centering
+  \includegraphics[scale=.3]{figs/postMu.pdf}
+  \caption{Posterior distribution of the mean parameter.}
+  \label{fig:postMu}
+\end{figure}
+
+
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+\[
+\begin{array}{lll}
+  \E[\bm\Sigma | \bm Y] &=& \p{\input{figs/postmeanS.tex}} \\
+    \\
+  (\bm\Sigma_{2.5\%}| \bm Y) &=& \p{\input{figs/postLoS.tex}} \\
+    \\
+    (\bm\Sigma_{97.5\%} | \bm Y) &=& \p{\input{figs/postHiS.tex}} \\
+\end{array}
+\]
+
+
+
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
+Words words words.  Words words words.  Words words words.  Words words words.  Words words words.
 
 
 
