@@ -1,4 +1,3 @@
-println("Loading Libraries...")
 using RCall, Distributions, PyPlot
 
 R"
@@ -30,27 +29,19 @@ S_post <- solve(iS_post) # IMPORTANT!!!
 B <- 100000
 "
 @rget Y Y_bar C_mat m_post s_post r_post iS_post S_post B
-var_names = ["Sepal Length", "Sepal Width"]
 plot_posts = R"plot.posts"
+plot_posts(Y) 
 
-function rniw(m,s,r,iS,brief=true)
-  iW = rand(InverseWishart(r,iS))
-  mu = rand(MultivariateNormal(m,iW/s))
-  postpred = rand(MultivariateNormal(mu,iW))
-  out =  brief ? postpred : (mu,iW,postpred)
-  out
+for color in ["red", "green", "blue"]
+    n = 750
+    sims = randn(n,2)
+    x = sims[:,1]; y = sims[:,2]
+    scale = 200 * rand(n)
+    scatter(x, y, c=color, s=scale, label=color,
+            alpha=0.3, edgecolors="none")
 end
 
-par = m_post, s_post, r_post, iS_post, false
-@time par_list = [par for i in 1:B]
-println("Sampling...")
-@time out = map(x -> rniw(x[1],x[2],x[3],x[4],x[5]), par_list);
-
-post_mu = map(x -> float(x), 
-              hcat(map(x -> x[1][1], out), 
-                   map(x -> x[1][2], out)))
-#=
-include("hw2.jl")
-plot_posts(Y,names=var_names) 
-plot_posts(post_mu[B*.95:end,:],names=var_names)
-=#
+legend()
+PyPlot.xlabel("X")
+PyPlot.ylabel("my Y")
+grid(true)
