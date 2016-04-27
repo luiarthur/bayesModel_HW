@@ -32,11 +32,16 @@ B <- 100000
 plot_posts = R"plot.posts"
 plot_posts(Y) 
 
-fig = figure("tt",figsize=(10,10))
-p = plot(Y[:,1],Y[:,2])
-xlabel="Sepal Length"
-ylabel="Sepal Width"
-title="hi"  
-grid("on")
-legend(loc="upper right")
-show.p
+for color in ["red", "green", "blue"]
+    n = 750
+    sims = randn(n,2)
+    x = sims[:,1]; y = sims[:,2]
+    scale = 200 * rand(n)
+    scatter(x, y, c=color, s=scale, label=color,
+            alpha=0.3, edgecolors="none")
+end
+
+legend()
+PyPlot.xlabel("X")
+PyPlot.ylabel("my Y")
+grid(true)
