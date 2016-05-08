@@ -72,12 +72,9 @@ function plotposts(M; spacing=.1, plot_hpd=true,c_main="cornflowerblue",c_hpd="g
                                   "zeroline"=>false,"showgrid"=>false)
 
     if i==j
-      #out = scatter(x=randn(5),y=randn(5),xaxis=xi,yaxis=yi)
       gl = plotpost(collect(M[:,i]),xaxis=xi,yaxis=yi,showplot=false,name=names[i])
-      #out = gl[1][1]
       out = gl[1]
     elseif i<j
-      #out = scatter(x=randn(5),y=randn(5),xaxis=xi,yaxis=yi,name=string(i,",",j))
       out = histogram2dcontour(x=collect(M[:,i]),y=collect(M[:,j]),showscale=false,
                                xaxis=xi,yaxis=yi,
                                reversescale=true,colorscale=:Hot)
@@ -95,12 +92,8 @@ function plotposts(M; spacing=.1, plot_hpd=true,c_main="cornflowerblue",c_hpd="g
     out
   end
 
-  #diag_plot = [plotpost(collect(M[i,:]),showplot=false) for i in 1:n]
-  #s = [makeplot(i,j) for i in 1:n, j in 1:n]
   for i in 1:n, j in 1:n
-    #s[(i-1)*n + j] = makeplot(i,j)
     mp = makeplot(i,j)
-    #push!(s,mp)
     try
       for k in mp
         push!(s,k)
@@ -109,7 +102,6 @@ function plotposts(M; spacing=.1, plot_hpd=true,c_main="cornflowerblue",c_hpd="g
       push!(s,mp)
     end
   end
-
 
   m = 30
   p = plot(s,Layout(l))
