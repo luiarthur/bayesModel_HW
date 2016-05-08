@@ -10,15 +10,15 @@ function hpd(x ;a=.05,len=1e3)
   quants[indmin(d)]
 end
 
-function plotpost(post;plot_hpd=true,c_main="cornflowerblue",c_hpd="grey",showplot=true,xaxis=0,yaxis=0)
+function plotpost(post;plot_hpd=true,c_main="cornflowerblue",c_hpd="grey",showplot=true,xaxis=0,yaxis=0,name="",title=name)
   # Take a function argument "post" which is an array of 
   # posterior draws and plots the posterior density
   # To do: Add vertical line: Posterior mean
   #        http://spencerlyon.com/PlotlyJS.jl/examples/shapes/
   k = KernelDensity.kde(post)
   a = attr(zeroline=false,showgrid=false)
-  l = Layout(yaxis=a, xaxis=a, showlegend=false)
-  p = scatter(x=k.x, y=k.density, name="posterior", marker=attr(color=c_main),
+  l = Layout(yaxis=a, xaxis=a, showlegend=false,title=title)
+  p = scatter(x=k.x, y=k.density, name=name, marker=attr(color=c_main),
               fill=:tozeroy, line_width=0)
 
   if xaxis != 0
@@ -51,7 +51,7 @@ end
 
 
 
-function plotposts(M; spacing=.1, plot_hpd=true,c_main="cornflowerblue",c_hpd="grey")
+function plotposts(M; spacing=.1, plot_hpd=true,c_main="cornflowerblue",c_hpd="grey",names=fill("Posterior",size(M)[2]))
   n = size(M)[2]
   l = Dict{AbstractString,Any}()
   #l = Dict{Symbol,Any}()
@@ -73,12 +73,12 @@ function plotposts(M; spacing=.1, plot_hpd=true,c_main="cornflowerblue",c_hpd="g
 
     if i==j
       #out = scatter(x=randn(5),y=randn(5),xaxis=xi,yaxis=yi)
-      gl = plotpost(collect(M[:,i]),xaxis=xi,yaxis=yi,showplot=false)
+      gl = plotpost(collect(M[:,i]),xaxis=xi,yaxis=yi,showplot=false,name=names[i])
       #out = gl[1][1]
       out = gl[1]
     elseif i<j
       #out = scatter(x=randn(5),y=randn(5),xaxis=xi,yaxis=yi,name=string(i,",",j))
-      out = histogram2dcontour(x=M[:,i],y=M[:,j],showscale=false,
+      out = histogram2dcontour(x=collect(M[:,i]),y=collect(M[:,j]),showscale=false,
                                xaxis=xi,yaxis=yi,
                                reversescale=true,colorscale=:Hot)
     else
@@ -125,5 +125,6 @@ end
 
 #=
 include("bayes.jl")
-Bayes.plotposts(randn(100,4),spacing=.03)
+Bayes.plotposts(randn(100,4),spacing=.03,names=["I","II","III","IV"])
+Bayes.plotpost(randn(100),name="yup")
 =#
