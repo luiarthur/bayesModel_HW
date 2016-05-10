@@ -8,3 +8,5 @@ y = dat[1][:,3]
 n = length(y)
 
 plot([Float64(x) for x in y[1:n-1]], xlab="", ylab="")
+
+# NOTE THAT THE LAST OBSERVATION IS MISSING!
