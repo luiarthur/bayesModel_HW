@@ -2,6 +2,23 @@ module Bayes
 using PlotlyJS, KernelDensity
 export plotpost, hpd, plotposts
 
+"""
+function hpd (x: Array{Real,1}; a=.05, len=1000) 
+returns the Highest Posterior Density (HPD) of level 1-`a`, based on a grid
+of `len` quantiles.
+i.e. if `a` = .05, then hpd(x,a,1000) returns the 95% HPD of `x`. 
+`len` simply creates a grid of points to compute the quantiles. The larger
+it is, the greater the accuracy of the HPD intervals.
+
+## Example usage
+```julia
+# To install the package,
+# Pkg.clone("http://github.com/luiarthur/Bayes.jl")
+using Bayes
+
+Bayes.hpd(randn(100))
+```
+"""
 function hpd(x ;a=.05,len=1e3)
   A = linspace(0,a,len)
   quants = [quantile(x,[i,i+1-a]) for i in A]
