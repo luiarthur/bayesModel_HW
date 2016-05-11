@@ -67,7 +67,7 @@ function sample_t_hier(y ;B=2000, burn=100000-B,
     numer_new = s2*sum(mu_vec_curr) + tau2_curr*m
     m_new = numer_new / denom_new
     v_new = s2*tau2_curr / denom_new
-    rand(Normal(m_new,v_new))
+    rand(Normal(m_new,sqrt(v_new)))
   end
 
   function updateMuVec(mu_curr,lambda_curr,sig2_curr,tau2_curr)
@@ -77,7 +77,7 @@ function sample_t_hier(y ;B=2000, burn=100000-B,
       numer_new = y[i]*tau2_curr + mu_curr*vi2
       m_new = numer_new / denom_new
       v_new = tau2_curr*vi2 / denom_new
-      rand(Normal(m_new,v_new))
+      rand(Normal(m_new,sqrt(v_new)))
     end
 
     [updateMuVec_at(i) for i in 1:n]
@@ -101,10 +101,9 @@ function sample_t_hier(y ;B=2000, burn=100000-B,
     lambda = updateLambda(mu_vec[:,i], sig2[i])
 
     if (j+2) % ((B+burn)/10) == 0 print("\rProgress: ",j+2,"/",B+burn) end
-    #print("\r",j+2)
   end
   
-  return Dict(:sig2=>sig2, :tau2=>tau2, :mu=>mu, :mu_vec=>mu_vec')
+  return Dict(:sig2=>sig2, :tau2=>tau2, :mu=>mu, :mu_vec=>mu_vec', :lambda=>lambda)
 end
 
 end
