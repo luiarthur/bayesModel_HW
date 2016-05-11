@@ -62,7 +62,7 @@ simple.plot.posts <- function(M,digits=3,tckdig=3,trace=TRUE,tracelab=FALSE,
   par.org <- par(no.readonly=TRUE)
   k <- ncol(M)
   corrs <- cor(M)
-  par(mfrow=c(k,k),mar=c(0,0,0,0)+2)
+  par(mfrow=c(k,k),mar=c(0,0,0,-2)+2)
   for (i in 1:k) {
     if (i>1) {
       for (j in 1:(i-1)) { 
@@ -82,7 +82,7 @@ simple.plot.posts <- function(M,digits=3,tckdig=3,trace=TRUE,tracelab=FALSE,
       for (j in (i+1):k) {
         plot(M[,c(j,i)],xlab=cnames[j],ylab=cnames[i],pch=20,
              bty="n",fg="grey",main="",col="grey",type='l')
-        plot.contour(M[,c(j,i)],add=TRUE)
+        plot.contour(M[,c(j,i)],col=col.mult("cornflowerblue"),add=TRUE)
       }
     }  
   }
