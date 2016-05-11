@@ -35,7 +35,7 @@ my.pairs <- function(M,digits=3) {
 
 source("../R_Functions/plotPost.R",chdir=TRUE)
 source("../R_Functions/plotinplot.R",chdir=TRUE)
-simple.plot.post <- function(x,tck.dig=3,cex.a=1,...) {
+simple.plot.post <- function(x,tckdig=3,cex.a=1,...) {
   maj.col <- "cornflowerblue"
   min.col <- col.mult(maj.col)
   xbar <- mean(x)
@@ -43,7 +43,7 @@ simple.plot.post <- function(x,tck.dig=3,cex.a=1,...) {
   hpd.x <- get.hpd(x,a=.05,len=1e3)
   color.den(den.x,from=min(den.x$x),to=max(den.x$x),
             col.area=maj.col,col.den=maj.col,fg="grey",bty="n",xaxt="n",...)
-  axis(1,at=c(hpd.x,xbar),labels=round(c(hpd.x,xbar),tck.dig),las=0,fg="grey",
+  axis(1,at=c(hpd.x,xbar),labels=round(c(hpd.x,xbar),tckdig),las=0,fg="grey",
        cex.axis=cex.a)
   color.den(den.x,from=hpd.x[1],to=hpd.x[2],
             col.area=min.col,col.den=min.col,add=TRUE)
@@ -57,9 +57,9 @@ simple.plot.post <- function(x,tck.dig=3,cex.a=1,...) {
 #}
 #par(mfrow=c(1,1))
 
-simple.plot.posts <- function(M,digits=3,trace=TRUE,...) {
+simple.plot.posts <- function(M,digits=3,tckdig=3,trace=TRUE,tracelab=FALSE,
+                              cnames=colnames(M),...) {
   par.org <- par(no.readonly=TRUE)
-  cnames <- colnames(M)
   k <- ncol(M)
   corrs <- cor(M)
   par(mfrow=c(k,k),mar=c(0,0,0,0)+2)
@@ -73,10 +73,10 @@ simple.plot.posts <- function(M,digits=3,trace=TRUE,...) {
       }  
     }
     
-    simple.plot.post(M[,i],main=cnames[i],...)
+    simple.plot.post(M[,i],main=cnames[i],tckdig=tckdig,...)
     if (trace) plot.in.plot(function(x) 
                             plot(M[,i],fg="grey",bty="n",col="grey",type='l',
-                                 col.axis="grey"),stay=F)
+                                 col.axis="grey",axes=tracelab),stay=F)
 
     if (i<k) {
       for (j in (i+1):k) {
