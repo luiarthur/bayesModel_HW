@@ -7,6 +7,10 @@ function sample_t_hier(y ;B=2000, burn=100000-B,
   init=Dict(:mu_vec=>zeros(length(y)), :sig2=>1, :mu=>1, :tau2=>1, :nu=>5),
   priors=Dict(:m=>0, :s2=>1, :a_tau=>3, :b_tau=>3, :a_sig=>3, :b_sig=>3))
 
+Perform Gibbs sampling for a t-distributed model by introducing an auxiliary 
+variable, λᵢ distributed Gamma apriori. The collapsed version of the model yields
+a t-distributed model. In statistical notation,
+
 Note: 
 > yᵢ | λᵢ ~ Normal(μᵢ, (σ^²/√λᵢ))
 > 

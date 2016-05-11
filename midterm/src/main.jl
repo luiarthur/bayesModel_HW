@@ -2,6 +2,7 @@
 # Review: BDA3 p. 294
 
 using Distributions, RCall, DataFrames
+include("auxGibbs.jl")
 
 R"source('../../R_Functions/plotPost.R',chdir=TRUE)"
 plotposts = R"plot.posts"
