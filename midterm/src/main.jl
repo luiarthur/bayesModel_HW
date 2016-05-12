@@ -41,35 +41,18 @@ plotposts(post_smt,tckdig=2,cnames=["σ²","μ","τ²"])
 mu_vec_mean = mean(post[:mu_vec],1)'
 mu_vec_hpd = hcat([hpd(post[:mu_vec][:,i]) for i in 1:n]...)'
 
-@time postpred = auxGibbs.postpred_t_hier(post)
-postpred_mean = mean(postpred,1)'
-postpred_hpd = hcat([hpd(postpred[:,i]) for i in 1:n]...)'
+rng(x) = [minimum(x), maximum(x)+1]
 
-rng(x) = [minimum(x), maximum(x)+3]
-
-R"par(mfrow=c(1,2))"
 plot(mu_vec_mean, 1:n, xlab="Log Days",ylab="", xlim=rng(log(y)), pch=20,
      col="navy",cex=2.5,main="",bty="n",fg="grey",yaxt="n")
 R"title(main='Interevent Times', cex.main=2)"
 points(log(y),1:n, xlab="",ylab="",col="orange",pch=20,cex=1.5)
 adderrbar(mu_vec_hpd,col="grey",lwd=3,trans=true)
 R"axis(2,label=$years,at=1:$n,las=2,cex.axis=.7,col='grey',col.axis='grey30')"
-R"legend('topright',legend=c(expression(Posterior~mu[i]),expression(log ~T[i])),
+R"legend('topright',legend=c('Post Pred',expression(log ~T[i])),
          col=c('navy','orange'),pch=20,cex=1.1,bg=rgb(.9,.8,.9,.5),box.lwd=0)"
 abline(h=collect(round( linspace(1,n,20) )),col="grey80",lwd=.5)
 
-plot(postpred_mean, 1:n, xlab="Log Days",ylab="", xlim=rng(log(y)), pch=20,
-     col="navy",cex=2.5,main="",bty="n",fg="grey",yaxt="n")
-R"title(main='Interevent Times', cex.main=2)"
-points(log(y),1:n, xlab="",ylab="",col="orange",pch=20,cex=1.5)
-R"axis(2,label=$years,at=1:$n,las=2,cex.axis=.7,col='grey',col.axis='grey30')"
-R"legend('topright',legend=c(expression(hat(y)[i]),expression(y[i])),
-         col=c('navy','orange'),pch=20,cex=1.1,bg=rgb(.9,.8,.9,.5),box.lwd=0)"
-abline(h=collect(round( linspace(1,n,20) )),col="grey80",lwd=.5)
-R"par(mfrow=c(1,1))"
-
-plot(log(y),mu_vec_mean,pch=20,cex=2,col=rgb(1,.3,.1,.5),xlab="",ylab="")
-points(log(y),postpred_mean,pch=20,cex=2,col=rgb(.1,1,.1,.5),xlab="",ylab="")
 R"myqqplot <- function(x,y,...) {
   qx <- quantile(x,1:100/100)
   qy <- quantile(y,1:100/100)
