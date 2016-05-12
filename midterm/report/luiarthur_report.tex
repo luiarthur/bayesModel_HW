@@ -26,34 +26,53 @@
 \newcommand{\be}{\begin{equation}}
 \newcommand{\ee}{\end{equation}}
 
-\title{Quiz 1 --- California County Thefts}
+\title{Midterm --- Etna Volcano Interevent Times}
 
 %input all authors' names
-
 \author{
   Arthur Lui$^1$\\
   University California -- Santa Cruz$^1$\\
 }
 
 %input affiliations
-
 %{USDA Forest Service Forest Products Laboratory}
 
 \begin{document}
-
 \maketitle
-
-
 \begin{abstract}
-Abstract goes here.
+Don't forget to add an abstract!  Don't forget to add an abstract!  Don't forget to add an abstract!
+Don't forget to add an abstract!  Don't forget to add an abstract!  Don't forget to add an abstract!
+Don't forget to add an abstract!  Don't forget to add an abstract!  Don't forget to add an abstract!
+Don't forget to add an abstract!  Don't forget to add an abstract!  Don't forget to add an abstract!
+Don't forget to add an abstract!  Don't forget to add an abstract!  Don't forget to add an abstract!
+Don't forget to add an abstract!  Don't forget to add an abstract!  Don't forget to add an abstract!
 \begin{keywords}
-Keywords go here
+Hierarchical Bayesian models, auxiliary Gibbs sampling, data augmentation, t-distribution.
 \end{keywords}
 \end{abstract}
 
-
 \section{Introduction}
+
 \section{Methods}
+The proposed model is
+$$
+\begin{array}{rclcll}
+  \log T_i &=& \mu_i &+&\epsilon_i, & \epsilon_i \sim St_\nu(0,\sigma^2)\\
+  \mu_i &=& \mu &+& \nu_i, & \nu_i \sim N(0,\tau^2).
+\end{array}
+$$
+The full conditional for the parameters (e.g. $mu_i$) in this model are not all
+available in closed form. And while standard MCMC methods (e.g.
+metropolis-hastings) can be used to sample from the joint posterior of the
+parameters, we can simplyfy computation by introducing auxiliary variables
+$\lambda_i$ for each observation and sample from the posterior using only Gibbs.
+The augmentation is outline as follows:
+$$
+\begin{array}{rclcl}
+  \log T_i &|& \lambda_i &\sim& N(\mu_i,(\sigma / \sqrt\lambda_i)^2) \\
+           & & \lambda_i &\sim& \text{Gamma}(\nu/2,\nu/2)
+\end{array}
+$$
 \section{Analysis}
 \section{Conclusions}
 
