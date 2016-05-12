@@ -1,6 +1,6 @@
 module auxGibbs
 using Distributions
-export sample_t_hier
+export sample_t_hier, postpred_t_hier
 
 """
 function sample_t_hier(y ;B=2000, burn=100000-B, 
@@ -103,7 +103,28 @@ function sample_t_hier(y ;B=2000, burn=100000-B,
     if (j+2) % ((B+burn)/10) == 0 print("\rProgress: ",j+2,"/",B+burn) end
   end
   
-  return Dict(:sig2=>sig2, :tau2=>tau2, :mu=>mu, :mu_vec=>mu_vec', :lambda=>lambda)
+  return Dict(:sig2=>sig2, :tau2=>tau2, :mu=>mu, :mu_vec=>mu_vec', 
+              :lambda=>lambda, :priors=>priors, :init=>init, :B=>B, :burn=>burn)
+end
+
+function postpred_t_hier(samps)
+  sig2 = samps[:sig2]
+  mu_v = samps[:mu_vec]
+  nu = samps[:init][:nu]
+  B = samps[:B]
+  n = size(mu_v)[2]
+  pp = zeros(Float64,B,n)
+  
+  #[rand( Normal(mu_v[b,i],  sqrt(sig2[b]/rand(Gamma(nu/2,2/nu))) )) for b in 1:B, i in 1:n]
+  for b in 1:B
+    for i in 1:n
+      mi = mu_v[b,i]
+      lam_i = rand(Gamma(nu/2,2/nu))
+      si = sqrt( sig2[b] / lam_i )
+      pp[b,i] = rand(Normal(mi,si))
+    end
+  end
+  pp
 end
 
 end

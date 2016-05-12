@@ -94,9 +94,12 @@ simple.plot.posts <- function(M,digits=3,tckdig=3,trace=TRUE,tracelab=FALSE,
 #simple.plot.posts(M)
 
 
-add.errbar <- function(ci,...) {
-  x <- 1:nrow(ci)
-  segments(x,ci[,1],x,ci[,2],...)
+add.errbar <- function(ci,transpose=FALSE,x=NULL,...) {
+  if (any(is.null(x))) x <- 1:nrow(ci)
+  if (!transpose)
+    segments(x,ci[,1],x,ci[,2],...)
+  else
+    segments(ci[,1],x,ci[,2],x,...)
 }
 
 plot_err <- function(M,org,theft,mar=NULL,lab=TRUE,...) {
