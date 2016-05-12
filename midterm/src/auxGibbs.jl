@@ -118,10 +118,11 @@ function postpred_t_hier(samps)
   #[rand( Normal(mu_v[b,i],  sqrt(sig2[b]/rand(Gamma(nu/2,2/nu))) )) for b in 1:B, i in 1:n]
   for b in 1:B
     for i in 1:n
-      mi = mu_v[b,i]
-      lam_i = rand(Gamma(nu/2,2/nu))
-      si = sqrt( sig2[b] / lam_i )
-      pp[b,i] = rand(Normal(mi,si))
+      #mi = mu_v[b,i]
+      #lam_i = rand(Gamma(nu/2,2/nu))
+      #si = sqrt( sig2[b] / lam_i )
+      #pp[b,i] = rand(Normal(mi,si))
+      pp[b,i] = rand(TDist(5)) * sqrt(sig2[b]) + mu_v[b,i]
     end
   end
   pp

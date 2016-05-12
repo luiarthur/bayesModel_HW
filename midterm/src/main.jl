@@ -36,22 +36,36 @@ R"par(mfrow=c(1,1))"
 priors=Dict(:m=>0.0, :s2=>1.0, :a_tau=>1.0, :b_tau=>1.0,:a_sig=>1.0, :b_sig=>1.0)
 @time post = auxGibbs.sample_t_hier(log(y), priors=priors)
 post_smt = hcat(post[:sig2], post[:mu], post[:tau2])
+# Plot 1: Posterior for parameters ################
 plotposts(post_smt,tckdig=2,cnames=["σ²","μ","τ²"])
+###################################################
 
 mu_vec_mean = mean(post[:mu_vec],1)'
 mu_vec_hpd = hcat([hpd(post[:mu_vec][:,i]) for i in 1:n]...)'
 
-rng(x) = [minimum(x), maximum(x)+1]
+postpred = auxGibbs.postpred_t_hier(post)
+postpred_mean = mean(postpred,1)'
+@time pp_hpd = hcat([hpd(postpred[:,i]) for i in 1:n]...)'
 
-plot(mu_vec_mean, 1:n, xlab="Log Days",ylab="", xlim=rng(log(y)), pch=20,
-     col="navy",cex=2.5,main="",bty="n",fg="grey",yaxt="n")
-R"title(main='Interevent Times', cex.main=2)"
-points(log(y),1:n, xlab="",ylab="",col="orange",pch=20,cex=1.5)
-adderrbar(mu_vec_hpd,col="grey",lwd=3,trans=true)
-R"axis(2,label=$years,at=1:$n,las=2,cex.axis=.7,col='grey',col.axis='grey30')"
-R"legend('topright',legend=c('Post Pred',expression(log ~T[i])),
-         col=c('navy','orange'),pch=20,cex=1.1,bg=rgb(.9,.8,.9,.5),box.lwd=0)"
-abline(h=collect(round( linspace(1,n,20) )),col="grey80",lwd=.5)
+function prettyPlot(x,y,ci;xlab="Log Days",pch=20,colx="navy",coly="orange",
+                    colhpd="grey",cex=2.5,main="",xlim=[minimum(y),maximum(y)+1],
+                    label=years,title="Interevent Times",
+                    legendx="PostPred")
+  n = length(x)
+  plot(x, 1:n, xlab=xlab,ylab="", xlim=xlim, pch=20,
+       col=colx,cex=2.5,main="",bty="n",fg="grey",yaxt="n")
+  R"title(main=$title, cex.main=2)"
+  points(y,1:n, xlab="",ylab="",col=coly,pch=20,cex=1.5)
+  adderrbar(ci,col=colhpd,lwd=3,trans=true)
+  R"axis(2,label=$label,at=1:$n,las=2,cex.axis=.7,col='grey',col.axis='grey30')"
+  R"legend('topright',legend=c($legendx,expression(log ~T[i])),
+           col=c($colx,$coly),pch=20,cex=1.1,bg=rgb(.9,.8,.9,.5),box.lwd=0)"
+  abline(h=collect(round( linspace(1,n,20) )),col="grey80",lwd=.5)
+end
+# Plot 2: Posterior Predictives #############################################
+prettyPlot(postpred_mean,log(y),pp_hpd,xlim=[minimum(pp_hpd),maximum(pp_hpd)],
+           colhpd=rgb(.9,.5,.5,.5))
+#############################################################################
 
 R"myqqplot <- function(x,y,...) {
   qx <- quantile(x,1:100/100)
