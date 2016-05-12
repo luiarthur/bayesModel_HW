@@ -35,7 +35,8 @@ function sample_t_hier(y ;B=2000, burn=100000-B,
             :sig2=>1.0, :mu=>1.0, :tau2=>1.0, :nu=>5.0, 
             :lambda=>ones(Float64,length(y))),
   priors=Dict(:m=>0.0, :s2=>1.0, :a_tau=>3.0, :b_tau=>3.0, 
-              :a_sig=>3.0, :b_sig=>3.0))
+              :a_sig=>3.0, :b_sig=>3.0),
+  normal_approx=false)
 
   # Initialize:
   n = length(y)

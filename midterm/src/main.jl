@@ -56,15 +56,17 @@ function prettyPlot(x,y,ci;xlab="Log Days",pch=20,colx="navy",coly="orange",
        col=colx,cex=2.5,main="",bty="n",fg="grey",yaxt="n")
   R"title(main=$title, cex.main=2)"
   points(y,1:n, xlab="",ylab="",col=coly,pch=20,cex=1.5)
-  adderrbar(ci,col=colhpd,lwd=3,trans=true)
+  adderrbar(ci,col=colhpd,lwd=2,trans=true)
   R"axis(2,label=$label,at=1:$n,las=2,cex.axis=.7,col='grey',col.axis='grey30')"
   R"legend('topright',legend=c($legendx,expression(log ~T[i])),
            col=c($colx,$coly),pch=20,cex=1.1,bg=rgb(.9,.8,.9,.5),box.lwd=0)"
-  abline(h=collect(round( linspace(1,n,20) )),col="grey80",lwd=.5)
+  #abline(h=collect(round( linspace(1,n,20) )),col="grey80",lwd=.5)
 end
 # Plot 2: Posterior Predictives #############################################
 prettyPlot(postpred_mean,log(y),pp_hpd,xlim=[minimum(pp_hpd),maximum(pp_hpd)],
-           colhpd=rgb(.9,.5,.5,.5))
+           colhpd=rgb(1,0,0,.6))
+#prettyPlot(mu_vec_mean,log(y),mu_vec_hpd,xlim=[minimum(pp_hpd),maximum(pp_hpd)],
+#           colhpd=rgb(1,0,0,.6))
 #############################################################################
 
 R"myqqplot <- function(x,y,...) {
