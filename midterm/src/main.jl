@@ -102,3 +102,12 @@ R"dev.off()"
 dev_hier = auxGibbs.deviance_t_hier(post[:mu_vec],post[:sig2],log(y),5) # 189
 dev_simp = auxGibbs.deviance_simple(post_simple[:mu],post_simple[:sig2],log(y)) # 206
 
+# Plot 5: qqplot ####################
+R"myqqplot <- function(x,y,...) {
+  qx <- quantile(x,1:100/100)
+  qy <- quantile(y,1:100/100)
+  plot(qx,qy,...)
+}"
+R"myqqplot(log($y),$postpred_mean)"
+R"abline(0,1)"
+#####################################
