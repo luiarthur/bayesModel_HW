@@ -12,7 +12,8 @@ adderrbar = R"add.errbar"
 density = R"density"
 @rlibrary(graphics)
 @rlibrary(xtable)
-histo = R"function(x,...) hist(x,prob=TRUE,col='grey',border='white',...)"
+histo = R"function(x,color='grey',bordercol='white',...) 
+                   hist(x,prob=TRUE,col=color,border=bordercol,...)"
 rgb(r,b,g,a=1) = rcopy(R"rgb"(r,g,b,a))
 
 dat = readdlm("../resources/etna.dat",',',header=true)
@@ -78,20 +79,13 @@ R"myqqplot(log($y),$postpred_mean)"
 histo(log(y),ylim=[0,1])
 R"lines(density($postpred_mean))"
 
-# PlotlyJS
-# using PlotlyJS, Rsvg
-#p_post_mu = scatter(x=collect(mu_vec_mean),y=years,
-#                    mode=:markers,name="posterior draws: local mu_i",
-#                    marker_size=10,marker_color=:cornflowerblue)
-#p_log_y = scatter(x=log(y),y=years,mode=:markers,name="data: log T_i",
-#                  marker_size=10,marker_color=:orange)
-#lines = [scatter(y=fill(years[i],2), x=collect(mu_vec_hpd[i,:]), 
-#                 mode=:lines, showlegend=false, line_color=:grey) 
-#                 for i in 1:n]
-#plotdata = Base.typed_vcat(PlotlyJS.GenericTrace, p_post_mu, p_log_y, lines)
-##https://plot.ly/julia/error-bars/
-#interevent = PlotlyJS.plot(plotdata,Layout(title="Interevent Times",width=600,height=800,
-#                           legend=attr(x=0,y=1,bgcolor=rgb(.5,.5,.5,.5)),
-#                           yaxis=attr(zeroline=false),yaxis_type=:category,margin_l=80))
-#interevent
-#PlotlyJS.savefig3(interevent,"tmp.pdf")
+@time post_simple = auxGibbs.sample_Normal(log(y),B=2000,burn=100000)
+# Plot 3: Posterior for parameters (SIMPLE MODEL)##
+plotposts([post_simple[:mu] post_simple[:sig2]])
+################################################### 
+
+pp_simple = auxGibbs.postpred_Normal(post_simple)
+# Plot 4: Posterior Predictives (SIMPLE MODEL)#####
+plotpost(pp_simple,main="",trace=true)
+histo(log(y),col=rgb(1,0,0,.3),bordercol=rgb(1,1,1,.1),add=true)
+################################################### 

@@ -35,7 +35,7 @@ my.pairs <- function(M,digits=3) {
 
 source("../R_Functions/plotPost.R",chdir=TRUE)
 source("../R_Functions/plotinplot.R",chdir=TRUE)
-simple.plot.post <- function(x,tckdig=3,cex.a=1,...) {
+simple.plot.post <- function(x,tckdig=3,cex.a=1,trace=FALSE,...) {
   maj.col <- "cornflowerblue"
   min.col <- col.mult(maj.col)
   xbar <- mean(x)
@@ -48,6 +48,10 @@ simple.plot.post <- function(x,tckdig=3,cex.a=1,...) {
   color.den(den.x,from=hpd.x[1],to=hpd.x[2],
             col.area=min.col,col.den=min.col,add=TRUE)
   lines(c(xbar,xbar),c(0,bound(xbar,den.x,ret=F)),lwd=2,col="red")
+  if (trace) plot.in.plot(function() 
+                          plot(x,fg="grey",bty="n",col="grey",type='l',
+                               col.axis="grey",axes=FALSE),stay=F)
+
 }
 
 #par(mfrow=c(2,2),mar=c(0,0,0,0)+2)

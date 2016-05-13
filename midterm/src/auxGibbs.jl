@@ -1,6 +1,6 @@
 module auxGibbs
 using Distributions
-export sample_t_hier, postpred_t_hier
+export sample_t_hier, postpred_t_hier, sample_Normal
 
 """
 function sample_t_hier(y ;B=2000, burn=100000-B, 
@@ -35,8 +35,7 @@ function sample_t_hier(y ;B=2000, burn=100000-B,
             :sig2=>1.0, :mu=>1.0, :tau2=>1.0, :nu=>5.0, 
             :lambda=>ones(Float64,length(y))),
   priors=Dict(:m=>0.0, :s2=>1.0, :a_tau=>3.0, :b_tau=>3.0, 
-              :a_sig=>3.0, :b_sig=>3.0),
-  normal_approx=false)
+              :a_sig=>3.0, :b_sig=>3.0))
 
   # Initialize:
   n = length(y)
@@ -91,9 +90,9 @@ function sample_t_hier(y ;B=2000, burn=100000-B,
     [updateLambda_at(i) for i in 1:n]
   end
 
-  for j in 1:B+burn-2
-    i = j<burn? 1 : j-burn+2
-    i_prev = i==1? 1 : i-1
+  for j in 1:B+burn
+    i = j<=burn? 1 : j-burn
+    i_prev = i<=2? 1 : i-1
 
     sig2[i] = updateSig2(mu_vec[:,i_prev], lambda)
     tau2[i] = updateTau2(mu_vec[:,i_prev], mu[i_prev])
@@ -101,7 +100,7 @@ function sample_t_hier(y ;B=2000, burn=100000-B,
     mu_vec[:,i] = updateMuVec(mu[i], lambda, sig2[i], tau2[i])
     lambda = updateLambda(mu_vec[:,i], sig2[i])
 
-    if (j+2) % ((B+burn)/10) == 0 print("\rProgress: ",j+2,"/",B+burn) end
+    if (j) % ((B+burn)/10) == 0 print("\rProgress: ",j,"/",B+burn) end
   end
   
   return Dict(:sig2=>sig2, :tau2=>tau2, :mu=>mu, :mu_vec=>mu_vec', 
@@ -127,6 +126,59 @@ function postpred_t_hier(samps)
     end
   end
   pp
+end
+
+
+"""
+Gibbs sampler for 
+> yᵢ | μ  ~ Normal(μ, σ^²)
+>
+>      μ  ~ Normal(m, s²)
+>
+>      σ² ~ IG(a,b)
+
+function sample_Normal(y; B=2000, burn=Int(round(B*.3)), 
+                       init=Dict(:mu=>2.0,:sig2=>1.0),
+                       priors=Dict(:m=>2,:s2=>1,:a=>3,:b=>3))
+"""
+function sample_Normal(y; B=2000, burn=Int(round(B*.3)), 
+                       init=Dict(:mu=>2.0,:sig2=>1.0),
+                       priors=Dict(:m=>2,:s2=>1,:a=>3,:b=>3))
+
+  s2 = priors[:s2]
+  m = priors[:m]
+  a = priors[:a]
+  b = priors[:b]
+  sum_y = sum(y)
+  n = length(y)
+
+  function updateMu(sig2_curr)
+    denom_new = s2*n + sig2_curr
+    numer_new = s2*sum_y + sig2_curr*m
+    m_new = numer_new / denom_new
+    v_new = s2*sig2_curr / denom_new
+    rand(Normal(m_new,sqrt(v_new)))
+  end
+
+  sig2 = fill(init[:sig2],B)
+  mu = fill(init[:mu],B)
+
+  for j in 1:B+burn
+    i = j<=burn? 1 : j-burn
+    i_prev = i<=2? 1 : i-1
+
+    mu[i] = updateMu(sig2[i_prev])
+    sig2[i] = rand(InverseGamma(a+n/2, b+sum((y-mu[i]).^2)/2))
+
+    if j % ((B+burn)/10) == 0 print("\rProgress: ",j,"/",B+burn) end
+  end
+  
+  Dict(:mu=>mu, :sig2=>sig2)
+end
+
+function postpred_Normal(samps)
+  n = length(samps[:mu])
+  [rand(Normal(samps[:mu][i], samps[:sig2][i])) for i in 1:n]
 end
 
 end

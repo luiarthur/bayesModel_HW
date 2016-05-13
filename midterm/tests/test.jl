@@ -15,3 +15,30 @@
 #                           yaxis=attr(zeroline=false),yaxis_type=:category,margin_l=80))
 #interevent
 #PlotlyJS.savefig3(interevent,"tmp.pdf")
+
+#R"myqqplot <- function(x,y,...) {
+#  qx <- quantile(x,1:100/100)
+#  qy <- quantile(y,1:100/100)
+#  plot(qx,qy,...)
+#}"
+#R"myqqplot(log($y),$postpred_mean)"
+#histo(log(y),ylim=[0,1])
+#R"lines(density($postpred_mean))"
+
+
+
+#include("../src/auxGibbs.jl")
+#using auxGibbs, RCall
+#?auxGibbs.sample_Normal
+#x = auxGibbs.sample_Normal(randn(1000)+3,B=2000,burn=100000)
+#mean(x[:mu])
+#mean(x[:sig2])
+#pp = auxGibbs.postpred_Normal(x)
+#R"curve(dnorm(x,3,1),col='red',lwd=2,from=0,to=6)"
+#R"hist($pp,prob=TRUE,add=TRUE)"
+
+
+using RCall
+R"source('../../quiz/mypairs.R',chdir=TRUE)"
+plotpost = R"simple.plot.post"
+plotpost(randn(1009),trace=true)
