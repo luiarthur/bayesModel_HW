@@ -1,6 +1,6 @@
 module auxGibbs
 using Distributions
-export sample_t_hier, postpred_t_hier, sample_Normal
+export sample_t_hier, postpred_t_hier, sample_Normal, deviance_t_hier, deviance_simple
 
 """
 function sample_t_hier(y ;B=2000, burn=100000-B, 
@@ -85,7 +85,7 @@ function sample_t_hier(y ;B=2000, burn=100000-B,
 
   function updateLambda(mu_vec_curr, sig2_curr)
     updateLambda_at(i) = 
-      rand(Gamma( (nu+1)/2, nu/2 + (y[i]-mu_vec_curr[i])^2 / 2sig2_curr ))
+      rand(Gamma( (nu+1)/2, 1/(nu/2 + (y[i]-mu_vec_curr[i])^2 / 2sig2_curr)))
 
     [updateLambda_at(i) for i in 1:n]
   end
@@ -114,17 +114,11 @@ function postpred_t_hier(samps)
   B = samps[:B]
   n = size(mu_v)[2]
   pp = zeros(Float64,B,n)
-  
-  #[rand( Normal(mu_v[b,i],  sqrt(sig2[b]/rand(Gamma(nu/2,2/nu))) )) for b in 1:B, i in 1:n]
-  for b in 1:B
-    for i in 1:n
-      #mi = mu_v[b,i]
-      #lam_i = rand(Gamma(nu/2,2/nu))
-      #si = sqrt( sig2[b] / lam_i )
-      #pp[b,i] = rand(Normal(mi,si))
-      pp[b,i] = rand(TDist(5)) * sqrt(sig2[b]) + mu_v[b,i]
-    end
+
+  for b in 1:B, i in 1:n
+    pp[b,i] = rand(TDist(nu)) * sqrt(sig2[b]) + mu_v[b,i]
   end
+
   pp
 end
 
@@ -179,6 +173,24 @@ end
 function postpred_Normal(samps)
   n = length(samps[:mu])
   [rand(Normal(samps[:mu][i], samps[:sig2][i])) for i in 1:n]
+end
+
+function deviance_t_hier(mu_vec_post, sig2_post, y, nu)
+  B = length(sig2_post)
+  n = length(y)
+
+  lf(mi,ss,yi) = logpdf(TDist(nu),(yi-mi)/sqrt(ss)) - .5log(ss)
+  D(mb,ss) = -2sum([lf(mb[i],ss,y[i]) for i in 1:n])
+  D_bar = mean([D(mu_vec_post[b,:],sig2_post[b]) for b in 1:B])
+  2D_bar - D(mean(mu_vec_post,1),mean(sig2_post))
+end
+
+function deviance_simple(mu_post,sig2_post,y)
+  n = length(y)
+  B = length(sig2_post)
+  D(m,s2) = -2sum(logpdf(Normal(m,sqrt(s2)), y))
+  D_bar = mean([D(mu_post[b],sig2_post[b]) for b in 1:B])
+  2D_bar - D(mean(mu_post),mean(sig2_post))
 end
 
 end
