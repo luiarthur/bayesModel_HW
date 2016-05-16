@@ -1,0 +1,307 @@
+\documentclass{../../tex_template/asaproc}
+\usepackage{graphicx} % \includegraphics
+\usepackage{float}    % To keep figures in right place. 
+                      % Usage: \being{figure}[H] \includegraphics{tmp.pdf} \end{figure}
+\usepackage{subfig}   % \subfloat
+\usepackage{amsmath}  % bmatrix, pmatrix, etc
+\usepackage{bm}
+\newcommand{\p}[1]{\left(#1\right)}
+\newcommand{\bk}[1]{\left[#1\right]}
+\newcommand{\bc}[1]{ \left\{#1\right\} }
+\newcommand{\abs}[1]{ \left|#1\right| }
+\newcommand{\E}{ \text{E} }
+\newcommand{\N}{ \mathcal N }
+\newcommand{\ds}{ \displaystyle }
+
+%\usepackage{times}
+%If you have times installed on your system, please
+%uncomment the line above
+
+%For figures and tables to stretch across two columns
+%use \begin{figure*} \end{figure*} and
+%\begin{table*}\end{table*}
+% please place figures & tables as close as possible
+% to text references
+
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+
+\title{Midterm --- Etna Volcano Inter-event Times}
+
+%input all authors' names
+\author{
+  Arthur Lui$^1$\\
+  University California -- Santa Cruz$^1$\\
+}
+
+%input affiliations
+%{USDA Forest Service Forest Products Laboratory}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Hierarchical Bayesian models can be used to model grouped data to add structure
+to models. In this study, the performances of the hierarchical model (with one
+observation per group) is compared to a simpler non-hierarchical model. The
+data set used for the study is the Etna volcano inter-event-time data set
+provided in the paper by Passarelli, et al(2010). The log inter-event days are
+modeled with a $t$-distribution to model the heavy-tail behavior of volcano
+eruptions. While MCMC methods such as Metropolis-Hastings can be used to obtain
+posterior samples for model parameters, a data augmentation strategy is used to
+enable the use of a fully-Gibbs sampler to simplify computation.
+
+\begin{keywords}
+Hierarchical Bayesian models, auxiliary Gibbs sampling, data augmentation,
+t-distribution, Etna volcano inter-event times.
+\end{keywords}
+\end{abstract}
+
+\section{Introduction}
+When modeling symmetric data with heavy tails, a normal distribution model,
+while symmetric, may not be adequate in capturing tail behavior. A
+$t$-distribution model can be a good alternative as it is both symmetric and
+has heavy tails. Being in a location-scale family, the $t$ offers some other
+desirable modeling properties. Evaluating the likelihood of the $t$ is also a
+simple procedure, which allows it to be used conveniently in standard MCMC
+methods (like Metropolis-Hastings). While convenient, at times using MCMC can
+lead to computation problems such as selecting appropriate tuning parameters.
+Through using a simple data augmentation strategy, a fully Gibbs implementation
+to sample from the joint posterior of the parameters can be executed. Often
+avoiding the computation of the likelihood (in Metropolis-Hastings) by using
+Gibbs sampling can also lead to speed-ups in sampling. Another alternative to
+modeling the data with Gibbs sampling is to replace the model with a Normal
+distribution, simplifying the model while sacrificing the heavy-tail-capturing
+capabilities of the $t$. In this study, the performances of both models
+described are compared using the Etna volcano inter-event times provided in
+Passarelli, et al (2010). The data are summarized in Figure \ref{fig:hist}.
+\begin{figure}[H]
+  \includegraphics[scale=.5]{figs/hist.pdf}
+  \caption{\small Histograms of the volcano Etna inter-event times in days (left). Histogram of the 
+  of the log data (right). The y-axis shows the probabilities of each bin.}
+  \label{fig:hist}
+\end{figure}
+The inter-event times are not symmetric and span a large scale. The log observations
+appear more symmetric but has heavy tails. Hence, the log inter-event times serves
+as a good data set to explore the two models of interest. The sampling schemes
+are provided and the posterior distribution of parameters are explored in this
+paper.
+
+\section{Methods}
+In the provided data, there is much variation between inter-event times.
+Consequently, a model that incorporates the individuality of each eruption is
+desirable.  We can capture this individuality with a hierarchical model with
+only one observation per group. In hierarchical settings, using a location
+model where the parameter is sampled from a location prior is natural. To
+incorporate the heavy-tail behaviors observed in the data, a $t$ model is used,
+with individual location parameters for each inter-event time. However, the
+observations are modeled in a way to share the same variance. Concretely, the
+proposed model for fitting the data is
+$$
+\begin{array}{rclclc}
+  \log T_i &=& \mu_i &+&\epsilon_i, & \epsilon_i \sim t_\nu(0,\sigma^2)\\
+  \mu_i &=& \mu &+& v_i, & v_i \sim \N(0,\tau^2),
+\end{array}
+$$
+where $\nu=5$ is the degrees of freedom of the $t$-distribution.\\
+
+The full conditional for the parameters (e.g. $\mu_i$) in this model are not all
+available in closed form. And while standard MCMC methods (e.g.
+Metropolis-Hastings) can be used to sample from the joint posterior of the
+parameters, we can simplify computation by introducing auxiliary variables
+$\lambda_i$ for each observation and sample from the posterior using only Gibbs
+sampling. The augmentation is outline as follows:
+$$
+\begin{array}{rclcl}
+  \log T_i &|& \lambda_i &\sim& \N(\mu_i,\sigma^2 / \lambda_i) \\
+           & & \lambda_i &\sim& \mathcal{G}(\nu/2,\nu/2).
+\end{array}
+$$
+Note that the Gamma distribution uses the shape-and-rate parameterization.
+The model specifications are completed by the following priors:
+$$
+\begin{array}{rclcl}
+  \mu_i &|& \mu &\sim& \N(\mu, \tau^2) \\
+        & & \mu &\sim& \N(m,s^2) \\
+        & & \tau^2 &\sim& \mathcal{IG}(a_\tau,b_\tau) \\
+        & & \sigma^2 &\sim& \mathcal{IG}(a_\sigma,b_\sigma), \\
+\end{array}
+$$
+where $\nu=5$, $m=8$, $s^2=100$, $a_\tau=1$, $b_\tau=1$, $a_\sigma=1$, and $b_\sigma=1$.
+The priors used here are very non-informative. The mean parameter $m$ for the prior
+mean for the individual log inter-event days is 8, which corresponds to about 10 years.
+The prior variance is 100. This expresses my prior belief that inter-event times
+may be around 10 years while incorporating great uncertainty. Both $\tau^2$ and $\sigma^2$
+have priors that correspond to expected values and variances of infinity, due to my
+lack of knowledge in the subject.
+
+The complete conditionals under the specified model are all available in closed form.
+Hence, a fully-Gibbs implementation is possible. The complete conditionals are provided
+below.
+$$
+\begin{array}{rlcl}
+  \mu ~|& \bm\mu,\tau^2 &\sim& \N(\frac{s^2\sum_i\mu_i + \tau^2m}{ns^2+\tau^2},\frac{s^2\tau^2}{ns^2+\tau^2}) \\
+  \\
+  \sigma^2 ~|& \bm y, \bm \mu, \bm \lambda &\sim& \mathcal{IG}(a_\sigma+n/2,~b_\sigma + \frac{\sum_{i=1}^n(y_i-\mu_i)^2\lambda_i}{2}) \\
+  \\
+  \tau^2 ~|& \bm\mu, \mu&\sim& \mathcal{IG}(a_\tau+n/2,~b_\tau + \frac{\sum_{i=1}^n(\mu_i-\mu)^2}{2}) \\
+  \\
+  \mu_i ~|& \bm{y,\mu,\lambda},\sigma^2 &\sim& \N(\frac{\tau^2 y_i + \mu v_i^2}{\tau^2+v_i^2},\frac{\tau^2 v_i^2}{\tau^2+v_i^2}) \\
+  \\
+  \lambda_i ~|& \sigma^2, y_i, \mu_i &\sim& \mathcal{G}(\frac{\nu+1}{2},\frac{((y_i-\mu_i)/\sigma)^2+\nu}{2})\\
+\end{array}
+$$
+where $v_i^2 = \sigma^2/\lambda_i$.
+
+A simpler model was created to study the behavior of the model above. The alternative simple model is:
+$$
+\begin{array}{rclclc}
+  \log T_i &=& \mu &+&\epsilon_i, & \epsilon_i \sim \N(0,\sigma^2).\\
+\end{array}
+$$
+The priors used were
+$$
+\begin{array}{rcl}
+  \mu &\sim& \N(m,s^2) \\
+  \sigma^2 &\sim& \mathcal{IG}(a_\sigma,b_\sigma), \\
+\end{array}
+$$
+where the hyperparameters are the same as previously specified. The full conditionals
+for this model are
+$
+\begin{array}{rlcl}
+  \mu ~|& \bm{y},\sigma^2 &\sim& \N(\frac{s^2\sum_i y_i + m\sigma^2}{\sigma^2+ns^2},\frac{s^2\sigma^2}{\sigma^2+ns^2}) \\
+  \sigma^2 ~|& \bm y, \mu &\sim& \mathcal{IG}(a_\sigma+n/2,~b_\sigma + \frac{\sum_{i=1}^n(y_i-\mu)^2}{2}). \\
+\end{array}
+$
+
+\section{Analysis}
+The hierarchical model specified above was fit and the posterior distribution
+for the model parameters were obtained. The posterior distributions and trace
+plots of $\sigma^2$, $\mu$, and $\tau^2$ are shown in Figure
+\ref{fig:postparam} in the diagonals. The red line represents the posterior
+mean. The navy blue region represents the 95\% HPD. Note that the posterior
+mean for $\sigma^2$ and $\tau^2$ are small which means that the variation in
+each observation and among the means of the observations respectively are
+small. The posterior mean shared mean is 7.19. This statistic informs us of
+that the average mean inter-event time across each observation is 3 years. The
+correlations between each pair of variables are shown in the lower triangle.
+The correlations between $\sigma^2$ and $\tau^2$ are moderately negatively
+correlated. This is expected as if the variance across each observation's mean
+is increased, the variation across the observations should decrease. The trace
+plots and bivariate distributions for each pair of variables are plotted in the
+upper triangle. In this figure, we see no strong signs of non-convergence of
+the posterior distribution of the listed parameters. Shown in the figure are
+2000 posterior samples taken after 100,000 burn-in.
+
+\begin{figure}[H]
+  \includegraphics[scale=.5]{figs/postparam.pdf}
+  \caption{\small Posterior distributions and trace plots of $\sigma^2$, $\mu$, and
+    $\tau^2$ on the diagonals. The red line represents the posterior mean. The
+    navy blue region represents the 95\% HPD.  Correlation between each pair of
+    variables in lower triangle. The correlations between $\sigma^2$ and
+    $\tau^2$ are moderately negatively correlated. The trace plots and
+    bivariate distributions for each pair of variables are plotted in the upper
+    triangle. In this figure, we see no strong signs of non-convergence of the
+    posterior distribution of the listed parameters.  Shown above are 2000
+    posterior samples taken after 100,000 burn-in.}
+  \label{fig:postparam}
+\end{figure}
+
+The posterior predictive distributions are presented below in Figure
+\ref{fig:postpred}.
+\begin{figure}[H]
+  \includegraphics[scale=.5]{figs/postpred.pdf}
+  \caption{\small Posterior predictive means (blue dots) and 95\% HPD's (red lines) 
+  for each onset. The orange dots represent the data -- log inter-event 
+  times in days. The posterior predictive means follow the outline of the data. The
+  HPD's are wide, which is a result of the t-distribution model and only
+  having one data point per group in the hierarchical model. The intervals
+  contain the observations in the tails.}
+  \label{fig:postpred}
+\end{figure}
+The Posterior predictive means are represented by the blue dots and 95\% HPD's
+by the red lines for each onset. The orange dots represent the data -- log
+inter-event times in days. The posterior predictive means follow the outline of
+the data. However, the posterior predictive means (blue dots) for each
+observation tend to be closer to the global mean than the observations. The
+HPD's are wide, which is a result of the t-distribution model and only having
+one data point per group in the hierarchical model. The intervals contain the
+observations (even in the tails of the distributions). Visually, since the
+posterior predictives seem to follow the observations, it could be said that
+the model fits the data well. The computed deviance information criterion
+(DIC) was 189. We will compare this number to the simpler model later.
+
+The simplified model was fitted to the data. Figure \ref{fig:postparamsimple}
+shows the posterior distributions of the model parameters $\mu$ and $\sigma^2$.
+\begin{figure}[H]
+  \includegraphics[scale=.5]{figs/postparamsimple.pdf}
+  \caption{\small Posterior distributions and trace plots of $\sigma^2$ and $\mu$,
+    for the simple model on the diagonals. The red line represents the posterior mean. 
+    The navy blue region represents the 95\% HPD. Correlation between $\sigma^2$ and
+    $\mu$ in lower triangle. The correlations is slightly negative. The 
+    bivariate trace and contour plot is plotted in the upper triangle. 
+    In this figure, no strong signs of non-convergence of the posterior distribution 
+    of the listed parameters is observed. Shown above are 2000 posterior samples 
+    taken after 100000 burn-in.}
+  \label{fig:postparamsimple}
+\end{figure}
+The posterior mean for $\sigma^2$ is 1.58. This is larger than the $\sigma^2$
+computed in the hierarchical model (.62). However, the range of the HPD is
+about the same (about 1).  The posterior mean of $\mu$, which is the global
+mean, is 7.14, which is very close to that of the hierarchical model (7.19). In
+addition, the HPD's have the same range and shape. This indicates that the
+simplified model models the global mean in a way that is similar to the
+hierarchical model. 
+
+Last of all, we investigate the posterior predictive distribution of the
+simplified model. The deviance for this model was computed to be 206. This is
+greater than that of the hierarchical model (189) by more than 10. So the
+hierarchical model may be preferred over the simplified model. Nevertheless,
+visually, the posterior predictive (in blue) seems to follow the data (in
+orange) well.
+
+\begin{figure}[H]
+  \includegraphics[scale=.5]{figs/postpredsimple.pdf}
+  \caption{\small Posterior predictive distribution for the simple model in blue.
+  The red vertical line represents the posterior mean (7.023). The navy blue
+  region is the 95\% HPD. The trace plot for the posterior predictive is plotted
+  in grey in the top right corner. The histogram of the data (log inter-event times 
+  in days) are plotted in orange. Visually, the posterior predictive matches the 
+  data well.}
+  \label{fig:postpredsimple}
+\end{figure}
+
+\section{Conclusions}
+The hierarchical model here allowed the implementation of a Gibbs sampler to
+sample from the joint posterior of the parameters of the model of a
+$t$-distribution. By comparing the DIC of the hierarchical model to a simpler
+Normal model, it was learned that the hierarchical model is preferred as it
+decreases DIC by more than 10. Furthermore, the use of data augmentation in the
+hierarchical model leads to a natural Gibbs sampling scheme which simplifies
+computation by allowing the practitioner to avoid tuning parameters in
+traditional MCMC algorithms like Metropolis-Hastings.
+
+\begin{references}
+{\footnotesize
+\itemsep=3pt
+\item {\em Passarelli, L., Sanso, B., Sandri, L., \& Marzocchi, W. (2010). Testing forecasts of a new Bayesian time-predictable model of eruption occurrence. Journal of Volcanology and Geothermal Research, 198(1), 57-75.}
+\item {\em Gelman, A., Carlin, J. B., Stern, H. S., \& Rubin, D. B. (2014). Bayesian data analysis (Vol. 2). Boca Raton, FL, USA: Chapman \& Hall/CRC, 73.}
+}
+
+\end{references}
+\end{document}
+
+%\begin{figure*}
+%  \centering
+%  \includegraphics[scale=.55]{figs/mapDat.pdf}
+%  \vspace{-7em}
+%  \caption{\small Some Caption.}
+%  \label{fig:mapDat}
+%\end{figure*}
+
+%\begin{figure}[H]
+%  \includegraphics[scale=.5]{figs/pairsLogRate.pdf}
+%  \caption{\small Hi Motor vehicle theft is not strongly correlated with any other thefts.}
+%  \label{fig:logOdds}
+%\end{figure}
+
