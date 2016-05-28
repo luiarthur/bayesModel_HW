@@ -1,5 +1,13 @@
 using RCall
 
+# Read Data:
 R"""
-x <- read.csv('../dat/poll.dat',sep="\t",header=TRUE)
+raw_dat <- read.csv('../dat/poll.dat',sep="\t",header=TRUE)
+head(raw_dat)
 """
+
+@rget raw_dat
+
+#=
+include("poll.jl")
+=#
