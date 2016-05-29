@@ -52,16 +52,44 @@ hpd <- apply(blasso.mod$beta,2,get.hpd)
 k <- ncol(blasso.mod$beta)
 par(mar=c(5,8,1,1))
 plot(post.mean,1:k,pch=20,col="dodgerblue",cex=3,xlim=c(-1,1),yaxt="n",bty="n",
-     ylab="",fg="grey")
+     ylab="",fg="grey",xlab="Posterior Mean ")
 axis(2,at=1:k,label=colnames(sX_short),las=2,fg="grey")
 add.errbar(t(hpd),trans=TRUE,col="dodgerblue")
 abline(v=0,col="grey")
 par(mar=c(5,4,4,2)+.1)
 
-back_trans <- function(b,s=names(b)) {
-  invlogit( b*sd(X_short[,s]) * sd(y_short) + mean(y_short) )
-}
-back_trans(post.mean["Methodphone"],"Methodphone")
-back_trans(post.mean["SourceIpsos Mori"])
+# Plot the probability for a few interesting particular cases.
+# MethodPhone = 1, all else mean
+mux <- attr(scale(X_short[,-1]),"scaled:center")
+sdx <- attr(scale(X_short[,-1]),"scaled:scale")
+muy <- mean(y_short)
+sdy <- sd(y_short)
 
-#blasso.mod
+pred <- function(x,gam) {
+  invlogit( sdy * sum(-mux*gam/sdx + x*gam/sdx) + muy )
+}
+
+x00 <- c(mux[1:3],0,mux[5:9],0)
+x01 <- c(mux[1:3],0,mux[5:9],1)
+x10 <- c(mux[1:3],1,mux[5:9],0)
+x11 <- c(mux[1:3],1,mux[5:9],1)
+pred00 <- pred(x00,post.mean)
+pred01 <- pred(x01,post.mean)
+pred10 <- pred(x10,post.mean)
+pred11 <- pred(x11,post.mean)
+plot(c(0,1),c(pred00,pred01),pch=20,cex=4,bty="n",fg="grey",ylim=c(.4,.5),
+     col=c("red","purple"),xlab="",ylab="Proportion in Favor of  Leaving")
+points(c(0,1),c(pred10,pred11),pch=20,cex=4,bty="n",fg="grey",
+       col=c("black","orange"))
+lines(c(0,1),c(pred00,pred01),col="grey")
+lines(c(0,1),c(pred10,pred11),col="grey")
+legend("topright", col=c("red","purple","black","orange"),pch=20,pt.cex=2,
+       legend=c("BGM Mori, Online","BGM, Phone","Ipsos Mori, Online",
+                "Ipsos Mori, Phone"),bty="n")
+
+# Can't do this directly
+#back_trans <- function(b,s=names(b)) {
+#  invlogit( b/sd(X_short[,s]) * sd(y_short) )
+#}
+#back_trans(post.mean["Methodphone"])
+#back_trans(post.mean["SourceIpsos Mori"])
