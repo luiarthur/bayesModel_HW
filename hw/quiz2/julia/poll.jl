@@ -7,6 +7,8 @@ head(raw_dat)
 """
 
 @rget raw_dat
+leave = raw_dat[:LeavePerc]
+stay = raw_dat[:RemainPerc]
 
 #=
 include("poll.jl")

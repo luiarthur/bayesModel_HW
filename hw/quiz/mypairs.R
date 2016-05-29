@@ -1,22 +1,35 @@
-my.pairs <- function(M,digits=3) {
+my.pairs <- function(M,digits=3,customDiag=NULL,customLower=NULL) {
   cnames <- colnames(M)
   k <- ncol(M)
-  corrs <- cor(M)
+
+  corrs <- 0
+  if (is.null(customLower)) {
+    corrs <- cor(M)
+  }
+
   par(mfrow=c(k,k),mar=c(0,0,0,0)+2)
   for (i in 1:k) {
     if (i>1) {
       for (j in 1:(i-1)) { 
-        plot(1, type="n", axes=F, xlab="", ylab="",main="")
-             #main=paste0("Corr (",cnames[i],", ",cnames[j],")")) # empty plot
-        r <- round(corrs[i,j],digits)
-        cex.cor <- max(.8/strwidth(format(r)) * abs(r),1)
-        text(1,labels=r,cex=cex.cor,col="grey")
+        if (is.null(customLower)) {
+          plot(1, type="n", axes=F, xlab="", ylab="",main="")
+               #main=paste0("Corr (",cnames[i],", ",cnames[j],")")) # empty plot
+          r <- round(corrs[i,j],digits)
+          cex.cor <- max(.8/strwidth(format(r)) * abs(r),1)
+          text(1,labels=r,cex=cex.cor,col="grey")
+        } else {
+          customLower(i)
+        }
       }  
     }
     
-    hist(M[,i],prob=TRUE,bty="n",fg="grey",col="grey",border="white",xlab="",
-         main=cnames[i])
-         #main=paste("Histogram of",cnames[i]))
+    if (is.null(customDiag)) {
+      hist(M[,i],prob=TRUE,bty="n",fg="grey",col="grey",border="white",xlab="",
+           main=cnames[i])
+           #main=paste("Histogram of",cnames[i]))
+    } else {
+      customDiag(i)
+    }
 
     if (i<k) {
       for (j in (i+1):k) {
