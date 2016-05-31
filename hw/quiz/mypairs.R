@@ -75,11 +75,11 @@ simple.plot.post <- function(x,tckdig=3,cex.a=1,trace=FALSE,...) {
 #par(mfrow=c(1,1))
 
 simple.plot.posts <- function(M,digits=3,tckdig=3,trace=TRUE,tracelab=FALSE,
-                              cnames=colnames(M),...) {
+                              cnames=colnames(M),ma=2,...) {
   par.org <- par(no.readonly=TRUE)
   k <- ncol(M)
   corrs <- cor(M)
-  par(mfrow=c(k,k),mar=c(0,0,0,-2)+2)
+  par(mfrow=c(k,k),mar=c(0,0,0,-2)+ma)
   for (i in 1:k) {
     if (i>1) {
       for (j in 1:(i-1)) { 
