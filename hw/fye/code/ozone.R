@@ -16,3 +16,11 @@ colnames(dat)
 pdf("../report/figs/pairs.pdf")
   my.pairs(dat)
 dev.off()
+
+y <- log(dat$ozone)
+log_dat <- cbind(y,dat[,-1])
+colnames(log_dat)[1] <- "log_ozone"
+head(log_dat)
+pdf("../report/figs/log_ozone_pairs.pdf")
+  my.pairs(dat)
+dev.off()
