@@ -1,0 +1,91 @@
+\documentclass{/path/to/asaproc}
+\usepackage{graphicx} % \includegraphics
+\usepackage{float}    % To keep figures in right place. 
+                      % Usage: \being{figure}[H] \includegraphics{tmp.pdf} \end{figure}
+\usepackage{subfig}   % \subfloat
+\usepackage{amsmath}  % bmatrix, pmatrix, etc
+\usepackage{bm}
+\newcommand{\p}[1]{\left(#1\right)}
+\newcommand{\bk}[1]{\left[#1\right]}
+\newcommand{\bc}[1]{ \left\{#1\right\} }
+\newcommand{\abs}[1]{ \left|#1\right| }
+\newcommand{\norm}[1]{ \left|\left|#1\right|\right| }
+\newcommand{\E}{ \text{E} }
+\newcommand{\N}{ \mathcal N }
+\newcommand{\ds}{ \displaystyle }
+
+%\usepackage{times}
+%If you have times installed on your system, please
+%uncomment the line above
+
+%For figures and tables to stretch across two columns
+%use \begin{figure*} \end{figure*} and
+%\begin{table*}\end{table*}
+% please place figures & tables as close as possible
+% to text references
+
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+\newcommand{\y}{\bm y}
+\newcommand{\X}{\bm X}
+
+\title{TITLE GOES HERE!!!}
+
+%input all authors' names
+\author{
+  Arthur Lui$^1$\\
+  University California -- Santa Cruz$^1$\\
+}
+
+%input affiliations
+%{USDA Forest Service Forest Products Laboratory}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+ABSTRACT GOES HERE!!!
+\begin{keywords}
+KEYWORDS GO HERE!!!
+\end{keywords}
+\end{abstract}
+
+\section{Introduction}
+INTRODUCTION GOES HERE!!!
+%Here is Figure \ref{fig:pairs}
+%\begin{figure}[H]
+%  \includegraphics[scale=.5]{figs/pairs.pdf}
+%  \caption{\small Scatter plot matrix of ... }
+%  \label{fig:pairs}
+%\end{figure}
+
+\section{Methods}
+METHODS GO HERE!!!
+
+\section{Analysis}
+ANALYSIS GOES HERE!!!
+
+\section{Conclusions}
+CONCLUSIONS GO HERE!!!
+
+\begin{references}
+{\footnotesize
+\itemsep=3pt
+\item {\em Gelman, A., Carlin, J. B., Stern, H. S., \& Rubin, D. B. (2014). Bayesian data analysis (Vol. 2). Boca Raton, FL, USA: Chapman \& Hall/CRC, 73.}
+}
+
+\end{references}
+\end{document}
+
+%\begin{figure*}
+%  \centering
+%  \includegraphics[scale=.55]{figs/mapDat.pdf}
+%  \vspace{-7em}
+%  \caption{\small Some Caption.}
+%  \label{fig:mapDat}
+%\end{figure*}
+
+%\begin{figure}[H]
+%  \includegraphics[scale=.5]{figs/pairsLogRate.pdf}
+%  \caption{\small Hi Motor vehicle theft is not strongly correlated with any other thefts.}
+%  \label{fig:logOdds}
+%\end{figure}
