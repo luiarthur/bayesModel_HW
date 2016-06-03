@@ -55,17 +55,37 @@ INTRODUCTION GOES HERE!!!
 \subsection{Exploratory Analysis}
 Plotted in Figure \ref{fig:pairs} is a scatter plot matrix of the distribution of 
 Ozone concentration (ppb), radiation (0 for low, 1 for moderate to high levels),
-temperature (F$^\degree$), and wind speed (mph).
+temperature (F$^\circ$), and wind speed (mph). Along the diagonal are the univariate
+histograms. For each of the mentioned variables. Worthy of mention is the Ozone
+concentration, which distribution is heavy tailed.
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/pairs.pdf}
   \caption{\small Scatter plot matrix of ... }
   \label{fig:pairs}
 \end{figure}
+For modeling purposes, transforming Ozone concentration to log Ozone
+concentration may be beneficial, so it is done.  The resulting scatter plot
+matrix is shown in Figure \ref{fig:logpairs}.
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/log_ozone_pairs.pdf}
   \caption{\small Scatter plot matrix of ... }
   \label{fig:logpairs}
 \end{figure}
+Radiation level is a binary variable with approximately two thirds of the
+observations being low; the remaining being moderate to high.  Temperature and
+wind speed have roughly symmetric distributions. Relative to the other pairs of
+variables, Ozone and temperature have a large correlation of .745.  All other
+pairs of variables have at moderate correlation with the exception of radiation
+level and wind speed. Moreover, temperature exhibits a linear trend between
+all other variables.
+
+Given this preliminary analysis, a good candidate linear model is that with
+response variable $\y$ being the log Ozone concentration, and covariates being
+radiation level, temperature, and wind speed. This is a good candidate model
+because the Ozone concentration is linear with the covariates and the 
+covariates are not strongly correlated. (Independence among covariates avoids
+the problem of inflated variances of the covariates in a model with
+multicollinearity.)
 
 \section{Methods}
 METHODS GO HERE!!!

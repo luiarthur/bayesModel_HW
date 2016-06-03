@@ -21,6 +21,15 @@ y <- log(dat$ozone)
 log_dat <- cbind(y,dat[,-1])
 colnames(log_dat)[1] <- "log_ozone"
 head(log_dat)
+
 pdf("../report/figs/log_ozone_pairs.pdf")
-  my.pairs(dat)
+  my.pairs(log_dat)
 dev.off()
+
+linear.mod <- lm(log_ozone ~ ., data = log_dat)
+summary( linear.mod )
+
+# MODEL FITTING:
+# y | X, b ~ MVN(Xb, Sigma)
+#
+#
