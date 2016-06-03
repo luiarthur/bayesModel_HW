@@ -7,6 +7,7 @@ my.pairs <- function(M,digits=3,customDiag=NULL,customLower=NULL) {
     corrs <- cor(M)
   }
 
+  mar.orig <- par("mar")
   par(mfrow=c(k,k),mar=c(0,0,0,0)+2)
   for (i in 1:k) {
     if (i>1) {
@@ -39,7 +40,7 @@ my.pairs <- function(M,digits=3,customDiag=NULL,customLower=NULL) {
       }
     }  
   }
-  par(mfrow=c(1,1))
+  par(mfrow=c(1,1),mar=mar.orig)
 }
 
 #X <- matrix(rnorm(100),ncol=4)
