@@ -123,3 +123,5 @@ legend("topright",col=c("blue","red"),lwd=4,bty="n",cex=1,
 dev.off()
 
 mean(rmse2<rmse1) # P[RMSE2 < RMSE1] = .8375
+
+# Plot a heatmap of the concentration change with radiation = 0, 1
