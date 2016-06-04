@@ -29,12 +29,14 @@
 \newcommand{\y}{\bm y}
 \newcommand{\X}{\bm X}
 \newcommand{\Xb}{\bm {X\beta}}
+\newcommand{\bh}{\bm{\hat\beta}}
+\newcommand{\XXi}{(\X^T\X)^{-1}}
 
 \title{FYE--- Ozone}
 
 %input all authors' names
 \author{
-  Arthur Lui$^1$\\
+  Test ID: 701$^1$\\
   University California -- Santa Cruz$^1$\\
 }
 
@@ -125,7 +127,7 @@ covariates are not strongly correlated.
 The linear model used in this analysis is a Bayesian linear regression model
 using Zellner's g-prior for the covariates. As mentioned, this model is both
 simple to fit, and provides easy diagnostics for model comparison using 
-Bayes factors.\\
+Bayes factors. A review of the mechanics of this model is provided here.\\
 
 A regression model that uses g-priors is typically specified as follows:
 \[
@@ -138,7 +140,23 @@ where $\X$ is the matrix of covariates with a column of ones in prepended, $\y$
 is the response variable, $\phi$ is the model precision, $n$ is the number of
 observations, $k$ is the number of covariates, and $g$ is a constant to be
 determined. There are many ways to determine a good choice for $g$ but should
-typically be chosen to be large. In this study $g$ is to set be $n$. 
+typically be chosen to be large. In this study $g$ is to set be $n$. Note that
+this prior is non-informative, but yields a proper posterior. \\
+
+Given this fully specified model, the full conditional for $\bm\beta$ and
+the marginal posterior for $\phi$ can be derived in closed form. They are:
+\[
+  \begin{array}{rclcl}
+    \bm\beta &|& \y,\X,\phi &\sim& \mathcal{N}_k\p{\frac{g}{g+1}\bh, \frac{g}{(g+1)\phi} \XXi}\\
+    \phi &|& \y,\X &\sim& \mathcal{G}\p{\frac{n-1}{2},\frac{n-k}{2}\hat\sigma^2+\frac{\bh^T\X^T\X\bh}{2(1+g)}}\\
+  \end{array}
+\]
+where $\bh = \XXi\X^T\y$ and $(n-k) \hat\sigma^2 = (\y-\X\bh)^T(\y-\X\bh)$. 
+(Note that here the parameterization of the Gamma distribution is shape and
+rate.) Obtaining posterior samples for $\bm\beta$ and $\phi$ then becomes a
+matter of simply sampling from the posterior distribution of $\phi$ and then
+using the sampled values for $\phi$ to sample from the full conditional of 
+$\bm\beta$.
 
 \section{Analysis}
 ANALYSIS GOES HERE!!!
@@ -186,10 +204,11 @@ CONCLUSIONS GO HERE!!!
 \begin{references}
 {\footnotesize
 \itemsep=3pt
+\item {\em Zellner, Arnold. On assessing prior distributions and Bayesian regression analysis with g-prior distributions. Bayesian inference and decision techniques: Essays in Honor of Bruno De Finetti 6 (1986): 233-243.}
 \item {\em Gelman, A., Carlin, J. B., Stern, H. S., \& Rubin, D. B. (2014). Bayesian data analysis (Vol. 2). Boca Raton, FL, USA: Chapman \& Hall/CRC, 73.}
 }
-
 \end{references}
+
 \end{document}
 
 %\begin{figure*}
