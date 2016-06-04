@@ -77,7 +77,7 @@ c(.5,1,2) * 2.303 #=> substantial, strong, decisive
 
 
 pdf("../report/figs/posts1.pdf")
-simple.plot.posts(cbind(mod1$phi,mod1$beta),ma=2,tckdig=2,cex.a=.8,
+simple.plot.posts(cbind(mod1$phi,mod1$beta),ma=2,tckdig=2,cex.a=.7,
                   cnames=c("phi","Intercept",colnames(log_dat[,-c(1:2)])))
 dev.off()
 
@@ -125,3 +125,4 @@ dev.off()
 mean(rmse2<rmse1) # P[RMSE2 < RMSE1] = .8375
 
 # Plot a heatmap of the concentration change with radiation = 0, 1
+# 
