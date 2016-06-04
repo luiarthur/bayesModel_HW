@@ -28,6 +28,7 @@
 \newcommand{\ee}{\end{equation}}
 \newcommand{\y}{\bm y}
 \newcommand{\X}{\bm X}
+\newcommand{\Xb}{\bm {X\beta}}
 
 \title{FYE--- Ozone}
 
@@ -122,7 +123,22 @@ covariates are not strongly correlated.
 
 \section{Methods}
 The linear model used in this analysis is a Bayesian linear regression model
-using Zellner's g-prior for the covariates. 
+using Zellner's g-prior for the covariates. As mentioned, this model is both
+simple to fit, and provides easy diagnostics for model comparison using 
+Bayes factors.\\
+
+A regression model that uses g-priors is typically specified as follows:
+\[
+  \begin{array}{rclcl}
+    \y &|& \X,\bm\beta,\phi &\sim& \mathcal{N}_n\p{\Xb,\frac{1}{\phi}\bm I_n} \\
+       && p(\bm\beta,\phi) &\propto& \frac{1}{\phi} \mathcal{N}_k (\bm 0, \frac{g}{\phi} (\X^T\X)^{-1})\\
+  \end{array}
+\]
+where $\X$ is the matrix of covariates with a column of ones in prepended, $\y$
+is the response variable, $\phi$ is the model precision, $n$ is the number of
+observations, $k$ is the number of covariates, and $g$ is a constant to be
+determined. There are many ways to determine a good choice for $g$ but should
+typically be chosen to be large. In this study $g$ is to set be $n$. 
 
 \section{Analysis}
 ANALYSIS GOES HERE!!!
@@ -146,8 +162,9 @@ ANALYSIS GOES HERE!!!
 
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/rmse.pdf}
-  \caption{\small Posteriors of RMSE. The model with radiation has lower RMSE. The probability that the RMSE in the
-   model with radiation as a coavariate is lower than that of the model without radiation is 84\%.}
+  \caption{\small Posteriors of RMSE. The model with radiation has lower RMSE.
+    The probability that the RMSE in the model with radiation as a coavariate
+    is lower than that of the model without radiation is 84\%.}
   \label{fig:rmse}
 \end{figure}
 
