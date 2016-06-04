@@ -1,5 +1,6 @@
 set.seed(207)
 library(rjulia)
+source("plotmap.R")
 source("../../quiz/mypairs.R",chdir=TRUE)
 system("mkdir -p ../report/figs")
 
@@ -125,4 +126,31 @@ dev.off()
 mean(rmse2<rmse1) # P[RMSE2 < RMSE1] = .8375
 
 # Plot a heatmap of the concentration change with radiation = 0, 1
-# 
+
+constr.seq <- function(x,l=100) seq(min(x),max(x),len=l)
+temp <- constr.seq(dat$temp)
+wind <- constr.seq(dat$wind)
+s <- expand.grid(temp,wind) #x,y
+ypred1s <- t(apply(mod1$beta,1,function(b) 
+                  as.matrix(cbind(1,s)) %*% matrix(b)))
+ypred20s <- t(apply(mod2$beta,1,function(b) 
+                    as.matrix(cbind(1,0,s)) %*% matrix(b)))
+ypred21s <- t(apply(mod2$beta,1,function(b) 
+                    as.matrix(cbind(1,1,s)) %*% matrix(b)))
+
+#plotmap(y,cbind(dat$temp,dat$wind))
+pdf("../report/figs/map.pdf")
+bks <- log(c(10,50)) # chosen so that dark red is log(70) => dangerous
+par(mfrow=c(3,1))
+  plotmap(apply(ypred1s,2,mean),s,bks=bks,ylab="Wind Speed (mph)",
+          main="Model without Radiaion",col.main="grey30")
+  plotmap(apply(ypred20s,2,mean),s,bks=bks,ylab="Wind Speed (mph)",
+          main="Model with Radiation = 0",col.main="grey30")
+  plotmap(apply(ypred21s,2,mean),s,bks=bks,ylab="Wind Speed (mph)",
+          main="Model with Radiation = 1",col.main="grey30",
+          xlab="Temperature (F)")
+par(mfrow=c(1,1))
+dev.off()
+
+#my.pairs(cbind(ypred20s,0,s))
+

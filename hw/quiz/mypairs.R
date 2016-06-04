@@ -1,4 +1,4 @@
-my.pairs <- function(M,digits=3,customDiag=NULL,customLower=NULL) {
+my.pairs <- function(M,digits=3,customDiag=NULL,customLower=NULL,customUpper=NULL) {
   cnames <- colnames(M)
   k <- ncol(M)
 
@@ -19,7 +19,7 @@ my.pairs <- function(M,digits=3,customDiag=NULL,customLower=NULL) {
           cex.cor <- max(.8/strwidth(format(r)) * abs(r),1)
           text(1,labels=r,cex=cex.cor,col="grey")
         } else {
-          customLower(i)
+          customLower(i,j)
         }
       }  
     }
@@ -34,9 +34,13 @@ my.pairs <- function(M,digits=3,customDiag=NULL,customLower=NULL) {
 
     if (i<k) {
       for (j in (i+1):k) {
-        plot(M[,c(j,i)],xlab=cnames[j],ylab=cnames[i],pch=20,
-             bty="n",fg="grey",main="")
-             #main=paste(cnames[i],"-",cnames[j])_
+        if (is.null(customUpper)) {
+          plot(M[,c(j,i)],xlab=cnames[j],ylab=cnames[i],pch=20,
+               bty="n",fg="grey",main="")
+               #main=paste(cnames[i],"-",cnames[j])_
+        } else {
+          customUpper(i,j)
+        }
       }
     }  
   }
