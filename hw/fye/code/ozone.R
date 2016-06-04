@@ -27,27 +27,99 @@ pdf("../report/figs/log_ozone_pairs.pdf")
   my.pairs(log_dat)
 dev.off()
 
-linear.mod <- lm(log_ozone ~ ., data = log_dat)
-summary( linear.mod )
-
 
 # MODEL FITTING:
 
 # Julia Settings:
 julia_init()
 julia_void_eval('include("julia/g-prior.jl")')
-r2j(y,"y")
-r2j(log_dat[,-1],"X_tmp")
-julia_void_eval("X = convert(Matrix,X_tmp)")
-julia_void_eval("blas_set_num_threads(1)")
 
 # Fit Model:
-julia_void_eval("@time out = gprior(y,X,2000, add_intercept=true,
-                setseed=207)")
-post.phi <- j2r("out[:phi]")
-post.beta <- j2r("out[:beta]")
+gprior <- function(y,X,B=2000,g=nrow(X),seed=207) {
+  r2j(y,"y")
+  r2j(X,"X_tmp")
+  r2j(g,"g")
+  r2j(seed,"seed")
+  r2j(B,"B")
 
-pdf("../report/figs/posts.pdf")
-simple.plot.posts(cbind(post.phi,post.beta),ma=2,tckdig=2,
+  julia_void_eval("X = convert(Matrix,X_tmp)")
+  julia_void_eval("B = Int64(B[1])")
+  julia_void_eval("g = Int64(g[1])")
+  julia_void_eval("seed = Int64(seed[1])")
+  julia_void_eval("blas_set_num_threads(1)")
+
+  julia_void_eval("@time out = gprior(y,X,B,add_intercept=true,
+                  setseed=seed,g=g)")
+
+  post.phi <- j2r("out[:phi]")
+  post.beta <- j2r("out[:beta]")
+
+  linear.mod <- lm(y~.,data=X)
+
+  n <- nrow(X)
+  p <- ncol(X)
+  R2 <- summary(linear.mod)$r.squared
+  #BF <- (1+g)^((n-p-1)/2) * (1+g*(1-R2))^(-(n-1)/2)
+  logBF <- ((n-p-1)/2) * log(1+g) + (-(n-1)/2) * log(1+g*(1-R2))
+
+  list("phi"=post.phi,"beta"=post.beta,"lm"=linear.mod,"logBF"=logBF)
+}
+
+test <- sample(1:nrow(dat),round(nrow(dat)*.3))
+mod1 <- gprior(y[-test],log_dat[-test,-c(1:2)],B=2000)
+mod2 <- gprior(y[-test],log_dat[-test,-1],B=2000)
+
+# Larger BF is better
+mod1$logBF # 34.52
+mod2$logBF # 40.40
+(BF21 <- mod2$logBF - mod1$logBF) # 6.18 => positive => prefer mod2
+c(.5,1,2) * 2.303 #=> substantial, strong, decisive
+
+
+pdf("../report/figs/posts1.pdf")
+simple.plot.posts(cbind(mod1$phi,mod1$beta),ma=2,tckdig=2,cex.a=.8,
+                  cnames=c("phi","Intercept",colnames(log_dat[,-c(1:2)])))
+dev.off()
+
+pdf("../report/figs/posts2.pdf")
+simple.plot.posts(cbind(mod2$phi,mod2$beta),ma=2,tckdig=2,cex.a=.6,
                   cnames=c("phi","Intercept",colnames(log_dat[,-1])))
 dev.off()
+
+y_pred_1 <- t(apply(mod1$beta,1,function(b) 
+                  as.matrix(cbind(1,dat[test,-c(1:2)])) %*% matrix(b)))
+y_pred_2 <- t(apply(mod2$beta,1,function(b) 
+                  as.matrix(cbind(1,dat[test,-c(1)])) %*% matrix(b)))
+
+hpd1 <- apply(y_pred_1,2,get.hpd)
+hpd2 <- apply(y_pred_2,2,get.hpd)
+
+pdf("../report/figs/obsvsfit.pdf")
+plot(y[test],apply(y_pred_1,2,mean),ylim=c(0,5),xlim=c(0,5),
+     col=rgb(0,0,1,0),pch=20,cex=2,fg="grey",bty="n",
+     xlab="Observed",ylab="Predicted")
+points(y[test],apply(y_pred_2,2,mean),ylim=c(0,5),xlim=c(0,5),
+       col=rgb(1,0,0,0),pch=20,cex=2)
+add.errbar(t(hpd1),x=y[test],col=rgb(0,0,1,.8),lwd=4)
+add.errbar(t(hpd2),x=y[test],col=rgb(1,0,0,.8),lwd=4)
+abline(a=0,b=1,col="grey")
+legend("topleft",col=c("blue","red"),lwd=4,bty="n",
+       legend=c("Model without Radiation","Model with Radiation"))
+dev.off()
+
+rmse1 <- apply(y_pred_1,1,function(yy) sd(yy - y[test]))
+rmse2 <- apply(y_pred_2,1,function(yy) sd(yy - y[test]))
+
+pdf("../report/figs/rmse.pdf")
+plot(density(rmse1),col="transparent",ylim=c(0,15),xlim=c(.51,.8),
+     bty="n",fg="grey",main="")
+lines(density(rmse2),col="transparent")
+color.den(density(rmse2),0,10,add=TRUE,col.den=rgb(1,0,0,.6),
+          col.area=rgb(1,0,0,.6))
+color.den(density(rmse1),0,10,add=TRUE,col.den=rgb(0,0,1,.6),
+          col.area=rgb(0,0,1,.6))
+legend("topright",col=c("blue","red"),lwd=4,bty="n",cex=1,
+       legend=c("Model without Radiation","Model with Radiation"))
+dev.off()
+
+mean(rmse2<rmse1) # P[RMSE2 < RMSE1] = .8375

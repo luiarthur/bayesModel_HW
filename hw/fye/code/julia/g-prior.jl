@@ -34,3 +34,11 @@ function gprior(y, X, B; g=0, add_intercept=true, setseed=0)
 
   Dict(:phi=>new_phi, :beta=>new_beta)
 end
+
+#=
+  BF(M_γ, M₀) = (1+g)^{(n-pᵧ-1)/2} (1+g(1-R²ᵧ))^{-(n-1)/2},
+  where:
+    pᵧ  is the number of covariates (not including intercept)
+    R²ᵧ is the coefficient of determination (from lm routine).
+        It is frequentist R² and it isn't the adjusted one.
+=#
