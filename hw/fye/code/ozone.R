@@ -1,6 +1,7 @@
+set.seed(207)
+library(rjulia)
 source("../../quiz/mypairs.R",chdir=TRUE)
 system("mkdir -p ../report/figs")
-
 
 # Data:
 dat <- read.table("../dat/ozone.dat",header=TRUE)
@@ -29,7 +30,24 @@ dev.off()
 linear.mod <- lm(log_ozone ~ ., data = log_dat)
 summary( linear.mod )
 
+
 # MODEL FITTING:
-# y | X, b ~ MVN(Xb, Sigma)
-#
-#
+
+# Julia Settings:
+julia_init()
+julia_void_eval('include("julia/g-prior.jl")')
+r2j(y,"y")
+r2j(log_dat[,-1],"X_tmp")
+julia_void_eval("X = convert(Matrix,X_tmp)")
+julia_void_eval("blas_set_num_threads(1)")
+
+# Fit Model:
+julia_void_eval("@time out = gprior(y,X,2000, add_intercept=true,
+                setseed=207)")
+post.phi <- j2r("out[:phi]")
+post.beta <- j2r("out[:beta]")
+
+pdf("../report/figs/posts.pdf")
+simple.plot.posts(cbind(post.phi,post.beta),ma=2,tckdig=2,
+                  cnames=c("phi","Intercept",colnames(log_dat[,-1])))
+dev.off()
