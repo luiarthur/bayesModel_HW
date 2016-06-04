@@ -43,56 +43,86 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-ABSTRACT GOES HERE!!!
+Exposure to high ozone levels is known to be associated with the development
+of respiratory and other illnesses. Hence, modeling ozone levels is of interest
+to climatoligists and medical professionals. The effects on ozone levels by
+temperature, wind speed and radiation are explored using a g-prior in this 
+paper. The results of the analysis show that all three of these variables are
+important in predicting ozone concentrations. In addition, a model with
+radiation as a covariate substantially the Bayes factor beyond the model
+that does not include radiation.
+
 \begin{keywords}
-KEYWORDS GO HERE!!!
-Bayesian Regression, Ozone, temperature, wind speed, radiation
+Bayesian Regression, ozone, temperature, wind speed, radiation, g-priors
 \end{keywords}
 \end{abstract}
 
 \section{Introduction}
-INTRODUCTION GOES HERE!!!
-High ozone-level-exposures are known to be associated with the development of respiratory
-and other diseases.
+Exposure to high ozone levels is known to be associated with the development of
+respiratory and other illnesses. Ozone levels are typically measured in terms
+of concentration (parts per billion or simply ppb). Ozone levels of 70ppb are
+considered high or dangerous. Hence, modeling ozone levels is an area of 
+concern to medical professionals, scientists, as well as governments. In this
+study, the effects of radiation (0 for low, 1 for moderate to high levels), 
+temperature (F$^\circ$), and wind speed (mph) are explored using a Bayesian
+regression model which makes use of Zellner's g-prior as the prior for covariates
+in the model. Of particular interest in this paper is whether including the 
+radiation variable in the model improves the model that does not include it.
+Using a g-prior-based regression model, computing the Bayes factors for competing
+models becomes simple.\\
 
+This remainder of this paper is divided into 4 parts. The first part is an 
+exploratory analysis of the data. The next part outlines the methods used in
+the analysis and model fitting. This section will include a brief overview
+of Zellner's g-prior. The next section contains the results of the analysis.
+The final section contains concluding remarks and items for future studies.
 
-\subsection{Exploratory Analysis}
-Plotted in Figure \ref{fig:pairs} is a scatter plot matrix of the distribution of 
-Ozone concentration (ppb), radiation (0 for low, 1 for moderate to high levels),
-temperature (F$^\circ$), and wind speed (mph). Along the diagonal are the univariate
-histograms. For each of the mentioned variables. Worthy of mention is the Ozone
-concentration, which distribution is heavy tailed.
+\section{Exploratory Analysis}
+The data provided consists of 111 rows (observations) and 4 columns -- the
+first column being ozone concentration, and the remaining columns being the
+values corresponding to each of the aforementioned variables. The data is
+plotted as a scatter plot matrix as shown in Figure \ref{fig:pairs} Along the
+diagonal are the univariate histograms for each of the variables. Displayed in the
+lower traingle are the correlations between each pairs of covariates. (The 
+value .464 corresponds to the correlation between ozone and radiation, etc.)
+The upper triangle displays the scatter plot for each pair of variables.\\
+
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/pairs.pdf}
   \caption{\small Scatter plot matrix of ... }
   \label{fig:pairs}
 \end{figure}
-For modeling purposes, transforming Ozone concentration to log Ozone
-concentration may be beneficial, so it is done.  The resulting scatter plot
-matrix is shown in Figure \ref{fig:logpairs}.
+
+A first observation is that ozone concentrations appear non-linearly related to
+all of the variables. To exploit the simplicity of linear models, a log
+transform is imposed on ozone concentrations. The resulting data is shown in
+Figure \ref{fig:logpairs}. After the transformation, the data indeed exhibit a
+linear trend between ozone and the other variables. Another item to note is
+that the variables are at most moderately linearly correlated with one another.
+(Ozone and temperature have the largest correlation of .75.) This is a
+desireable property in regression models as high correlation between covariates
+often leads to inflated variances of the estimated coefficients. Also note that
+the range for each variable is very different. Log-ozone ranges from 0 to 5.12,
+radiation is a binary variable, temperatures range from 57 to 97 F$\circ$, and
+wind speeds range from 2.3 to 20.7 mph. Taking this variability in ranges into
+consideration, it may be appropriate to center and scale the variables while
+doing a regression analysis. For simplicity, this step is omitted.
+
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/log_ozone_pairs.pdf}
   \caption{\small Scatter plot matrix of ... }
   \label{fig:logpairs}
 \end{figure}
-Radiation level is a binary variable with approximately two thirds of the
-observations being low; the remaining being moderate to high.  Temperature and
-wind speed have roughly symmetric distributions. Relative to the other pairs of
-variables, Ozone and temperature have a large correlation of .745.  All other
-pairs of variables have at moderate correlation with the exception of radiation
-level and wind speed. Moreover, temperature exhibits a linear trend between
-all other variables.
 
 Given this preliminary analysis, a good candidate linear model is that with
-response variable $\y$ being the log Ozone concentration, and covariates being
+response variable $\y$ being the log ozone concentration, and covariates being
 radiation level, temperature, and wind speed. This is a good candidate model
-because the Ozone concentration is linear with the covariates and the 
-covariates are not strongly correlated. (Independence among covariates avoids
-the problem of inflated variances of the covariates in a model with
-multicollinearity.)
+because log-ozone concentration is linear with the covariates and the 
+covariates are not strongly correlated.
 
 \section{Methods}
-METHODS GO HERE!!!
+The linear model used in this analysis is a Bayesian linear regression model
+using Zellner's g-prior for the covariates. 
 
 \section{Analysis}
 ANALYSIS GOES HERE!!!
