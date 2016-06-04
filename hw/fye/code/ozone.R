@@ -97,10 +97,10 @@ hpd2 <- apply(y_pred_2,2,get.hpd)
 
 pdf("../report/figs/obsvsfit.pdf")
 plot(y[test],apply(y_pred_1,2,mean),ylim=c(0,5),xlim=c(0,5),
-     col=rgb(0,0,1,0),pch=20,cex=2,fg="grey",bty="n",
+     col=rgb(0,0,1,1),pch=20,cex=2,fg="grey",bty="n",
      xlab="Observed",ylab="Predicted")
 points(y[test],apply(y_pred_2,2,mean),ylim=c(0,5),xlim=c(0,5),
-       col=rgb(1,0,0,0),pch=20,cex=2)
+       col=rgb(1,0,0,1),pch=20,cex=2)
 add.errbar(t(hpd1),x=y[test],col=rgb(0,0,1,.8),lwd=4)
 add.errbar(t(hpd2),x=y[test],col=rgb(1,0,0,.8),lwd=4)
 abline(a=0,b=1,col="grey")
@@ -138,19 +138,34 @@ ypred20s <- t(apply(mod2$beta,1,function(b)
 ypred21s <- t(apply(mod2$beta,1,function(b) 
                     as.matrix(cbind(1,1,s)) %*% matrix(b)))
 
-#plotmap(y,cbind(dat$temp,dat$wind))
 pdf("../report/figs/map.pdf")
 bks <- log(c(10,50)) # chosen so that dark red is log(70) => dangerous
+rad <- which(dat$radiation==1)
 par(mfrow=c(3,1))
   plotmap(apply(ypred1s,2,mean),s,bks=bks,ylab="Wind Speed (mph)",
           main="Model without Radiaion",col.main="grey30")
+  plotmap(y,cbind(dat$temp,dat$wind),bks=bks,ylab="Wind Speed (mph)",add=T)
+
   plotmap(apply(ypred20s,2,mean),s,bks=bks,ylab="Wind Speed (mph)",
           main="Model with Radiation = 0",col.main="grey30")
+  plotmap(y[-rad],cbind(dat$temp[-rad],dat$wind[-rad]),bks=bks,ylab="Wind Speed (mph)",add=T)
+
   plotmap(apply(ypred21s,2,mean),s,bks=bks,ylab="Wind Speed (mph)",
           main="Model with Radiation = 1",col.main="grey30",
           xlab="Temperature (F)")
+  plotmap(y[rad],cbind(dat$temp[rad],dat$wind[rad]),bks=bks,ylab="Wind Speed (mph)",add=T)
 par(mfrow=c(1,1))
 dev.off()
 
-#my.pairs(cbind(ypred20s,0,s))
-
+customUpper <- function(i,j,M) {
+  plot(M[,c(j,i)],bty="n",fg="grey",pch=20)
+  n <- length(temp)
+  W <- cbind(1,sample(0:1,n,replace=TRUE),sample(temp),sample(wind))
+  yhat <- t(apply(mod2$beta,1,function(b) W %*% matrix(b)))
+  if (i==1) {
+    points(W[,j],apply(yhat,2,mean),col=rgb(0,0,1,.8),pch=20,cex=.5)
+  }
+}
+pdf("../report/figs/marginal.pdf")
+my.pairs(log_dat,customUpper=customUpper)
+dev.off()

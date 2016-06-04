@@ -19,7 +19,7 @@ my.pairs <- function(M,digits=3,customDiag=NULL,customLower=NULL,customUpper=NUL
           cex.cor <- max(.8/strwidth(format(r)) * abs(r),1)
           text(1,labels=r,cex=cex.cor,col="grey")
         } else {
-          customLower(i,j)
+          customLower(i,j,M)
         }
       }  
     }
@@ -29,7 +29,7 @@ my.pairs <- function(M,digits=3,customDiag=NULL,customLower=NULL,customUpper=NUL
            main=cnames[i])
            #main=paste("Histogram of",cnames[i]))
     } else {
-      customDiag(i)
+      customDiag(i,M)
     }
 
     if (i<k) {
@@ -39,7 +39,7 @@ my.pairs <- function(M,digits=3,customDiag=NULL,customLower=NULL,customUpper=NUL
                bty="n",fg="grey",main="")
                #main=paste(cnames[i],"-",cnames[j])_
         } else {
-          customUpper(i,j)
+          customUpper(i,j,M)
         }
       }
     }  
