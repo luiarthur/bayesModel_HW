@@ -113,6 +113,11 @@ legend("topleft",col=c("blue","red"),lwd=4,bty="n",
        legend=c("Model without Radiation","Model with Radiation"))
 dev.off()
 
+#resid1 <- apply(y_pred_1,1,function(yy) (yy - y[test]))
+#resid2 <- apply(y_pred_2,1,function(yy) (yy - y[test]))
+#plot(apply(resid1,1,mean))
+#plot(apply(resid2,1,mean))
+
 rmse1 <- apply(y_pred_1,1,function(yy) sd(yy - y[test]))
 rmse2 <- apply(y_pred_2,1,function(yy) sd(yy - y[test]))
 
