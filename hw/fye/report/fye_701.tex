@@ -93,7 +93,10 @@ The upper triangle displays the scatter plot for each pair of variables.\\
 
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/pairs.pdf}
-  \caption{\small Scatter plot matrix of ... }
+  \caption{\small Scatter plot matrix of raw data. Along the diagonal are the
+  univariate histograms for each of the variables. Lower traingle: correlations
+  between each pairs of covariates. Upper triangle: scatter plot
+  for each pair of variables.}
   \label{fig:pairs}
 \end{figure}
 
@@ -114,7 +117,10 @@ doing a regression analysis. For simplicity, this step is omitted.
 
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/log_ozone_pairs.pdf}
-  \caption{\small Scatter plot matrix of ... }
+  \caption{\small Scatter plot matrix of data with log transformed ozone. Along
+  the diagonal are the univariate histograms for each of the variables. Lower
+  traingle: correlations between each pairs of covariates. Upper triangle:
+  scatter plot for each pair of variables.}
   \label{fig:logpairs}
 \end{figure}
 
@@ -202,7 +208,9 @@ are shown in the lower triangle, and the bivariate posteriors for each
 pair of variables are plotted in the upper triangle.
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/posts1.pdf}
-  \caption{\small Posteriors of ... }
+  \caption{\small Posteriors of the model parameters for $\M_1$. Diagonal: univariate posteriors. 
+  Lower traingle: correlations. Upper triangle: bivariate distributions. Navy blue regions
+  in posterior distributions are 95\% HPD's. Red vertical lines are posterior means.}
   \label{fig:posts1}
 \end{figure}
 Shaded in navy blue are the 95\% HPD's of the univariate posteriors.
@@ -216,7 +224,9 @@ variable. Similarly to Figure \ref{fig:posts1}, Figure \ref{fig:posts2} shows
 the posterior for $\phi$ and $\bm\beta$.
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/posts2.pdf}
-  \caption{\small Posteriors of ... }
+  \caption{\small Posteriors of the model parameters for $\M_2$. Diagonal: univariate posteriors. 
+  Lower traingle: correlations. Upper triangle: bivariate distributions. Navy blue regions
+  in posterior distributions are 95\% HPD's. Red vertical lines are posterior means.}
   \label{fig:posts2}
 \end{figure}
 The posteriors for the coefficients of $\phi$, temperature, and wind speed
@@ -241,7 +251,11 @@ through the intercept having slope 1).\\
 
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/obsvsfit.pdf}
-  \caption{\small Posteriors of observed vs. fitted. }
+  \caption{\small Posteriors of predicted vs. observed. The blue markers correspond to 
+  the model without radiation; the red markers correspond to the model with radiation.
+  The vertical lines are the corresponding 95\% HPD's. Markers being close to the
+  diagonal line suggest better model fit. Coverage of $\M_1$ is 27\%; coverage 
+  of $\M_2$ is 33\%.}
   \label{fig:obsvsfit}
 \end{figure}
 
@@ -298,7 +312,16 @@ to high radiation levels.
 
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/map.pdf}
-  \caption{\small Heatmap of ...}
+  \caption{\small Heatmap of ozone varying in both wind speed and temperature. 
+    Dark red corresponds to dangerous ozone levels, white corresponds to safer
+    levels of ozone.  The top panel shows the ozone levels for $\M_1$. The
+    middle and botton panels display the ozone levels for $\M_2$. The middle
+    panel shows the predicted ozone levels when radiation is 0. The bottom
+    panel shows the predicted ozone levels when radiation is 1. The predicted
+    log ozone levels are plotted with the data superimposed.  In general, both
+    $\M_1$ and $\M_2$ appear to model the data well. Radiation compounded with
+    high temperatures and low wind speeds are associated with the greatest
+    (and most dangerous) ozone levels.}
   \label{fig:map}
 \end{figure}
 
