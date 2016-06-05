@@ -78,7 +78,7 @@ c(.5,1,2) * 2.303 #=> substantial, strong, decisive
 
 
 pdf("../report/figs/posts1.pdf")
-simple.plot.posts(cbind(mod1$phi,mod1$beta),ma=2,tckdig=2,cex.a=.7,
+simple.plot.posts(cbind(mod1$phi,mod1$beta),ma=2,tckdig=2,cex.a=.6,
                   cnames=c("phi","Intercept",colnames(log_dat[,-c(1:2)])))
 dev.off()
 
@@ -94,6 +94,11 @@ y_pred_2 <- t(apply(mod2$beta,1,function(b)
 
 hpd1 <- apply(y_pred_1,2,get.hpd)
 hpd2 <- apply(y_pred_2,2,get.hpd)
+
+'%bw%' <- function(a,b) a>b[1] && a<b[2]
+
+coverage1 <- mean(sapply(1:ncol(hpd1),function(i) y[test][i] %bw% hpd1[,i]))
+coverage2 <- mean(sapply(1:ncol(hpd2),function(i) y[test][i] %bw% hpd2[,i]))
 
 pdf("../report/figs/obsvsfit.pdf")
 plot(y[test],apply(y_pred_1,2,mean),ylim=c(0,5),xlim=c(0,5),
