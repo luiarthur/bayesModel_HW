@@ -126,9 +126,13 @@ doing a regression analysis. For simplicity, this step is omitted.
 
 Given this preliminary analysis, a good candidate linear model is that with
 response variable $\y$ being the log ozone concentration, and covariates being
-radiation level, temperature, and wind speed. This is a good candidate model
-because log-ozone concentration is linear with the covariates and the 
-covariates are not strongly correlated.
+radiation level, daily maximum temperature, and wind speed. This is a good
+candidate model because log-ozone concentration is linear with the covariates
+and the covariates are not strongly correlated. As a simplifying assumption,
+normality in the errors is also reasonable because marginally, each of the
+covariates seem to have linear trends with log ozone and constant variance,
+with the exception of wind speed. For a future analysis, more models that do
+not assume normal errors could be considered.
 
 \section{Methods}
 The linear model used in this analysis is a Bayesian linear regression model
@@ -263,7 +267,11 @@ Visually, the two models behave similarly because the red and blue markers tend
 to appear at about the same predicted value for each observation. Their HPD's
 contain one another always. Moreover, $\M_1$ has a coverage of 27\% and $\M_2$ has
 a coverage of 33\% (based on the testing set). Based on coverage, $\M_2$ is superior
-to $\M_1$ in terms of predicting.\\
+to $\M_1$ in terms of predicting. Note also that the distance between
+the markers and the diagonal line are the residuals. The residuals appear
+to have moderately constant variance. But there may be room for improvement
+by using a model which allows for heavier tails as the observations that
+have higher values seem to have slightly smaller variances.\\
 
 Since there are only 33 observations in the testing set, assessing the model
 fits using a different metric may be more suitable. The root mean squared error
@@ -307,8 +315,8 @@ moderate to high (having a value of 1). Note that the ozone levels are compounde
 when radiation is moderate to high. This can be seen from the trend that
 the red region spans more of the area of the plot in the model with radiation,
 when radiation is 1 (in the bottom plot). This suggests that the most dangerous
-combination of variables in are low wind speed, high temperatures, and moderate
-to high radiation levels.
+combination of variables in are low wind speed, high daily maximum
+temperatures, and moderate to high radiation levels.
 
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/map.pdf}
@@ -335,12 +343,15 @@ to high radiation levels.
 Zellner's g-prior is a useful tool for Bayesian linear regression. Sampling
 from the posterior distribution of the covariate coefficients is
 computationally simple and computation of the Bayes factors to compare models
-can be done in closed form. In this analysis, the model that incorporates radiation
-performs better according to several metrics, including Bayes factors. The most
-dangerous combination of weather elements are high temperatures, low wind speeds, and
-moderate to high radiation. These weather elements are associated with high ozone 
-levels. Radiation should be included in modeling ozone, along with temperature and
-wind speed. 
+can be done in closed form. In this analysis, the model that incorporates
+radiation performs better according to several metrics, including Bayes
+factors. The most dangerous combination of weather elements are high daily
+maximum temperatures, low wind speeds, and moderate to high radiation. These
+weather elements are associated with high ozone levels. Radiation should be
+included in modeling ozone, along with temperature and wind speed. For a future
+analysis, models that do not restrict the errors to be normal may be
+considered. Specifically, based on Figure \ref{fig:obsvsfit}, models with
+heavier tails may be considered.
 
 \begin{references}
 {\footnotesize
