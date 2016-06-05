@@ -49,7 +49,7 @@
 \begin{abstract}
 Exposure to high ozone levels is known to be associated with the development
 of respiratory and other illnesses. Hence, modeling ozone levels is of interest
-to climatoligists and medical professionals. The effects on ozone levels by
+to climatologists and medical professionals. The effects on ozone levels by
 temperature, wind speed and radiation are explored using a g-prior in this 
 paper. The results of the analysis show that all three of these variables are
 important in predicting ozone concentrations. In addition, a model with
@@ -87,14 +87,14 @@ first column being ozone concentration, and the remaining columns being the
 values corresponding to each of the aforementioned variables. The data is
 plotted as a scatter plot matrix as shown in Figure \ref{fig:pairs} Along the
 diagonal are the univariate histograms for each of the variables. Displayed in the
-lower traingle are the correlations between each pairs of covariates. (The 
+lower triangle are the correlations between each pairs of covariates. (The 
 value .464 corresponds to the correlation between ozone and radiation, etc.)
 The upper triangle displays the scatter plot for each pair of variables.\\
 
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/pairs.pdf}
   \caption{\small Scatter plot matrix of raw data. Along the diagonal are the
-  univariate histograms for each of the variables. Lower traingle: correlations
+  univariate histograms for each of the variables. Lower triangle: correlations
   between each pairs of covariates. Upper triangle: scatter plot
   for each pair of variables.}
   \label{fig:pairs}
@@ -107,7 +107,7 @@ Figure \ref{fig:logpairs}. After the transformation, the data indeed exhibit a
 linear trend between ozone and the other variables. Another item to note is
 that the variables are at most moderately linearly correlated with one another.
 (Ozone and temperature have the largest correlation of .75.) This is a
-desireable property in regression models as high correlation between covariates
+desirable property in regression models as high correlation between covariates
 often leads to inflated variances of the estimated coefficients. Also note that
 the range for each variable is very different. Log-ozone ranges from 0 to 5.12,
 radiation is a binary variable, temperatures range from 57 to 97 F$\circ$, and
@@ -119,7 +119,7 @@ doing a regression analysis. For simplicity, this step is omitted.
   \includegraphics[scale=.5]{figs/log_ozone_pairs.pdf}
   \caption{\small Scatter plot matrix of data with log transformed ozone. Along
   the diagonal are the univariate histograms for each of the variables. Lower
-  traingle: correlations between each pairs of covariates. Upper triangle:
+  triangle: correlations between each pairs of covariates. Upper triangle:
   scatter plot for each pair of variables.}
   \label{fig:logpairs}
 \end{figure}
@@ -165,9 +165,9 @@ matter of simply sampling from the posterior distribution of $\phi$ and then
 using the sampled values for $\phi$ to sample from the full conditional of 
 $\bm\beta$. \\
 
-Model compairson can similarly be done in a computationally efficient way using
-Bayes factors. Notationally, $\M_\gamma$ will denote model $\gamma$, and
-BF($\gamma,\gamma'$) will denote the bayes factor in facor of $\M_\gamma$ with
+Model comparison can similarly be done in a computationally efficient way using
+Bayes factors. Notation-wise, $\M_\gamma$ will denote model $\gamma$, and
+BF($\gamma,\gamma'$) will denote the Bayes factor in factor of $\M_\gamma$ with
 respect to $\M_{\gamma'}$, which is
 $\frac{p(\y|\M_\gamma)}{p(\y|\M_{\gamma'})}$. Moreover,
 the null model (with only the intercept) is denoted by $\M_{0}$. Conveniently,
@@ -184,7 +184,7 @@ is the coefficient of determination defined as
 with $P_x$ and $P_1$ being the projection matrices onto the column space
 of $\X$ and the intercept column respectively. Comparing all models
 to the null model provides a method to rank models with respect to a 
-resonable baseline model. Those with a high BF are preferred. Comparing 
+reasonable baseline model. Those with a high BF are preferred. Comparing 
 pairs of models in isolation by taking the ratio of the BF's each
 with respect to the null model. That is BF($\gamma,\gamma'$) = 
 $\frac{\text{BF}(\gamma,0)}{\text{BF}(\gamma',0)}$.\\
@@ -209,12 +209,12 @@ pair of variables are plotted in the upper triangle.
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/posts1.pdf}
   \caption{\small Posteriors of the model parameters for $\M_1$. Diagonal: univariate posteriors. 
-  Lower traingle: correlations. Upper triangle: bivariate distributions. Navy blue regions
+  Lower triangle: correlations. Upper triangle: bivariate distributions. Navy blue regions
   in posterior distributions are 95\% HPD's. Red vertical lines are posterior means.}
   \label{fig:posts1}
 \end{figure}
 Shaded in navy blue are the 95\% HPD's of the univariate posteriors.
-The red line shows their posterior means. The HPD of only the intercept
+The red line shows their posterior means. The HOD of only the intercept
 coefficient contains 0. This suggests that the model could possibly
 do without the intercept. All the other variables are probabilistically
 far from 0. \\
@@ -225,7 +225,7 @@ the posterior for $\phi$ and $\bm\beta$.
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/posts2.pdf}
   \caption{\small Posteriors of the model parameters for $\M_2$. Diagonal: univariate posteriors. 
-  Lower traingle: correlations. Upper triangle: bivariate distributions. Navy blue regions
+  Lower triangle: correlations. Upper triangle: bivariate distributions. Navy blue regions
   in posterior distributions are 95\% HPD's. Red vertical lines are posterior means.}
   \label{fig:posts2}
 \end{figure}
@@ -280,7 +280,7 @@ model 2 usually provides a better model fit.
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/rmse.pdf}
   \caption{\small Posteriors of RMSE. The model with radiation has lower RMSE.
-    The probability that the RMSE in the model with radiation as a coavariate
+    The probability that the RMSE in the model with radiation as a covariate
     is lower than that of the model without radiation is 84\%.}
   \label{fig:rmse}
 \end{figure}
@@ -315,7 +315,7 @@ to high radiation levels.
   \caption{\small Heatmap of ozone varying in both wind speed and temperature. 
     Dark red corresponds to dangerous ozone levels, white corresponds to safer
     levels of ozone.  The top panel shows the ozone levels for $\M_1$. The
-    middle and botton panels display the ozone levels for $\M_2$. The middle
+    middle and bottom panels display the ozone levels for $\M_2$. The middle
     panel shows the predicted ozone levels when radiation is 0. The bottom
     panel shows the predicted ozone levels when radiation is 1. The predicted
     log ozone levels are plotted with the data superimposed.  In general, both
