@@ -31,6 +31,7 @@
 \newcommand{\Xb}{\bm {X\beta}}
 \newcommand{\bh}{\bm{\hat\beta}}
 \newcommand{\XXi}{(\X^T\X)^{-1}}
+\newcommand{\M}{\mathcal{M}}
 
 \title{FYE--- Ozone}
 
@@ -156,21 +157,87 @@ where $\bh = \XXi\X^T\y$ and $(n-k) \hat\sigma^2 = (\y-\X\bh)^T(\y-\X\bh)$.
 rate.) Obtaining posterior samples for $\bm\beta$ and $\phi$ then becomes a
 matter of simply sampling from the posterior distribution of $\phi$ and then
 using the sampled values for $\phi$ to sample from the full conditional of 
-$\bm\beta$.
+$\bm\beta$. \\
+
+Model compairson can similarly be done in a computationally efficient way using
+Bayes factors. Notationally, $\M_\gamma$ will denote model $\gamma$, and
+BF($\gamma,\gamma'$) will denote the bayes factor in facor of $\M_\gamma$ with
+respect to $\M_{\gamma'}$, which is
+$\frac{p(\y|\M_\gamma)}{p(\y|\M_{\gamma'})}$. Moreover,
+the null model (with only the intercept) is denoted by $\M_{0}$. Conveniently,
+the Bayes factor of model $\M_\gamma$ with respect to the null model is
+computed as: \\
+\[
+  \text{BF}(\gamma,0) = (1+g)^{(n-p_\gamma-1)/2} (1+g(1-R^2_\gamma))^{-(n-1)/2},
+\]
+where $p_\gamma$ is the number of covariates in model $\gamma$, and $R^2_\gamma$
+is the coefficient of determination defined as 
+\[
+  R^2 = \frac{\y^T(\bm {P_x-P_1})\y}{\y^T(\bm {I-P_1})\y}
+\]
+with $P_x$ and $P_1$ being the projection matrices onto the column space
+of $\X$ and the intercept column respectively. Comparing all models
+to the null model provides a method to rank models with respect to a 
+resonable baseline model. Those with a high BF are preferred. Comparing 
+pairs of models in isolation by taking the ratio of the BF's each
+with respect to the null model. That is BF($\gamma,\gamma'$) = 
+$\frac{\text{BF}(\gamma,0)}{\text{BF}(\gamma',0)}$.\\
+
+This concludes the review of Zellner's g-prior. In the following 
+analysis, two models will be fit. The first model ignores the radiation
+binary variable. The second model uses all the variables. Both models
+will be fit using g-priors and the two models will be compared to
+each other. In both cases, the data were first split into a testing
+set comprising 33 observations selected at random and a training 
+set comprising the remaining 78 observations. The models are
+only fit to the training set. The testing set is used only for
+model checking.
 
 \section{Analysis}
-ANALYSIS GOES HERE!!!
+The first model is fit to the training data using only temperature and wind
+speed as covariates. This model will be referred to as $\M_1$. Figure 
+\ref{fig:posts1} shows the posterior for $\phi$ and $\bm\beta$.
+The univariate posteriors are plotted on the diagonals, the correlations
+are shown in the lower triangle, and the bivariate posteriors for each 
+pair of variables are plotted in the upper triangle.
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/posts1.pdf}
   \caption{\small Posteriors of ... }
   \label{fig:posts1}
 \end{figure}
+Shaded in navy blue are the 95\% HPD's of the univariate posteriors.
+The red line shows their posterior means. The HPD of only the intercept
+coefficient contains 0. This suggests that the model could possibly
+do without the intercept. All the other variables are probabilistically
+far from 0. \\
 
+The second model $\M_2$ presented here contains $\M_1$ and adds the radiation
+variable. Similarly to Figure \ref{fig:posts1}, Figure \ref{fig:posts2} shows
+the posterior for $\phi$ and $\bm\beta$.
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/posts2.pdf}
   \caption{\small Posteriors of ... }
   \label{fig:posts2}
 \end{figure}
+The posteriors for the coefficients of $\phi$, temperature, and wind speed
+did not change much from $\M_1$. However, the posterior for the intercept changed
+from having an mean of -1.02 in $\M_1$ to a mean of -.61 in $\M_2$. Still, the
+HPD of the intercept in $\M_2$ contains 0. Radiation, however, was probabilistically
+far from 0. The posterior mean for the coefficient for radiation is .53. \\
+
+One way to visually assess model fit is to plot the observed data vs.
+model-fitted values for log ozone levels. In Figure \ref{fig:obsvsfit}
+the fitted values of log ozone concentrations using the testing set are plot
+against the observed values of log ozone concentrations in the testing set.
+That is, for each model, the posterior predictive distributions for new observations
+$\y^*$ were produced by evaluating the model using the testing data as the covariates,
+and the posterior samples for $\bm\beta$ and $\phi$ as the coefficients and precision
+factor. The posterior predictive means are plotted as circles and the vertical lines
+are the 95\% HPD's for each predicted observation. Furthermore, the red markers 
+are associated with the model with radiation, and the blue markers are associated with
+the model without radiation. Note that if the model fits the data perfectly,
+all the circles should fall exactly on the diagonal line (the line that passes
+through the intercept having slope 1).\\
 
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/obsvsfit.pdf}
@@ -178,6 +245,24 @@ ANALYSIS GOES HERE!!!
   \label{fig:obsvsfit}
 \end{figure}
 
+Visually, the two models behave similarly because the red and blue markers tend
+to appear at about the same predicted value for each observation. Their HPD's
+contain one another always. Moreover, $\M_1$ has a coverage of 27\% and $\M_2$ has
+a coverage of 33\% (based on the testing set). Based on coverage, $\M_2$ is superior
+to $\M_1$ in terms of predicting.\\
+
+Since there are only 33 observations in the testing set, assessing the model
+fits using a different metric may be more suitable. The root mean squared error
+(RMSE) posterior distributions for each model are plotted in Figure
+\ref{fig:rmse}. The RMSE for each model is computed using the average sum of
+squared differences between the observed and predicted values. Smaller RMSE's
+imply better model fit. The blue density represents the model without
+radiation, and the red density represents the model with radiation.  The
+probability that the RMSE of $\M_2$ is less than that of $\M_1$ was
+approximated by computing the number of times the posterior samples in the RMSE
+for $\M_2$ were greater than that of $\M_1$, and was computed to be 84\%.
+This result suggests that the RMSE of $\M_2$ is usually lower, and hence, that
+model 2 usually provides a better model fit.
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/rmse.pdf}
   \caption{\small Posteriors of RMSE. The model with radiation has lower RMSE.
@@ -186,20 +271,53 @@ ANALYSIS GOES HERE!!!
   \label{fig:rmse}
 \end{figure}
 
+Finally, for completeness, the log Bayes factors for each model were computed
+as to be log(BF(1,0)) = 34.52, log(BF(2,0)) =  40.40, and log(BF(2,1)) = 6.18.
+a log$_e$ Bayes factor of 4.6 usually indicates decisive support of one model
+over another. In this case, each of the models are preferred over the null
+model. And model 2 is decisively favored over model 1. \\
+
+One more helpful visual is presented in Figure \ref{fig:map}.  The axes in each
+of these plots are wind speed against temperature. At each coordinate on the
+plots, the log ozone levels are indicated by the redness at that coordinate.
+White areas are those with less than 2.5 log ozone ppm (or 12 ozone ppm).  Dark
+red areas are those with greater than 4.2 log ozone ppm (or 70 ozone ppm which
+is considered dangerous). In the top subplot, the model without radiation is plot.
+The full data (consisting 111 observations) are superimposed on the plot.
+In general, the model is consistent with the model. Also, at high temperatures
+and low wind speeds, ozone levels are higher. The next two plots are representations
+for the model with radiation. The middle subplot plots the predicted ozone levels
+when the radiation level is low (having a value of 0), and the
+bottom subplot represents the predicted ozone levels when the radiation level is 
+moderate to high (having a value of 1). Note that the ozone levels are compounded
+when radiation is moderate to high. This can be seen from the trend that
+the red region spans more of the area of the plot in the model with radiation,
+when radiation is 1 (in the bottom plot). This suggests that the most dangerous
+combination of variables in are low wind speed, high temperatures, and moderate
+to high radiation levels.
+
 \begin{figure}[H]
   \includegraphics[scale=.5]{figs/map.pdf}
   \caption{\small Heatmap of ...}
   \label{fig:map}
 \end{figure}
 
-\begin{figure}[H]
-  \includegraphics[scale=.5]{figs/marginal.pdf}
-  \caption{\small Marginal Posterior}
-  \label{fig:marginal}
-\end{figure}
+%\begin{figure}[H]
+%  \includegraphics[scale=.5]{figs/marginal.pdf}
+%  \caption{\small Marginal Posterior}
+%  \label{fig:marginal}
+%\end{figure}
 
 \section{Conclusions}
-CONCLUSIONS GO HERE!!!
+Zellner's g-prior is a useful tool for Bayesian linear regression. Sampling
+from the posterior distribution of the covariate coefficients is
+computationally simple and computation of the Bayes factors to compare models
+can be done in closed form. In this analysis, the model that incorporates radiation
+performs better according to several metrics, including Bayes factors. The most
+dangerous combination of weather elements are high temperatures, low wind speeds, and
+moderate to high radiation. These weather elements are associated with high ozone 
+levels. Radiation should be included in modeling ozone, along with temperature and
+wind speed. 
 
 \begin{references}
 {\footnotesize
