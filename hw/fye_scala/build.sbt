@@ -1,4 +1,4 @@
-name := "Gprior"
+name := "fyeScala"
 version := "1.0"
 scalaVersion := "2.11.8"
     

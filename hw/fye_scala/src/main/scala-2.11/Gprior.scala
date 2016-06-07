@@ -1,4 +1,4 @@
-package gprior
+package fyeScala
 
 object Gprior {
   import breeze.linalg.{DenseMatrix=>Dmat, DenseVector=>Dvec, inv}
