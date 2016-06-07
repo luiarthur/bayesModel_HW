@@ -6,7 +6,7 @@ object Gprior {
   import breeze.numerics.{pow}
 
   def sample(y: Dvec[Double], X: Dmat[Double], B: Int, gSetter:Double=0, addIntcpt:Boolean=true): 
-    Map[String,Any] = {
+    (Dvec[Double], Dmat[Double]) = {
     val g = if (gSetter == 0.0) X.rows.toDouble else gSetter
 
     val (n,k) = (X.rows,X.cols)
@@ -27,6 +27,7 @@ object Gprior {
     val newPhi = sampPhi(B)
     val tmpBeta = newPhi.map(sampBeta(_))
     val newBeta = Dmat.tabulate(tmpBeta.length,tmpBeta(0).length){(i,j) => tmpBeta(i)(j)} 
-    Map("phi" -> newPhi, "beta" -> newBeta)
+    //Map("phi" -> newPhi, "beta" -> newBeta)
+    (newPhi, newBeta)
   }
 }

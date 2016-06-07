@@ -25,7 +25,11 @@ object Main extends App {
 
   println(Console.GREEN)
   R eval """mod1lm <- lm(log_ozone~.,data=logdat); print(summary(mod1lm))"""
-  println(Console.RESET)
   val mod1 = Gprior.sample(y=y,X=X,B=2000,gSetter=X.rows)
+  println()
+  println(mod1._1(1 to 10))
+  println()
+  println(mod1._2(1 to 10, ::))
 
+  println(Console.RESET)
 }
