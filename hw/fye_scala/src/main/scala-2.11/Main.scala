@@ -24,7 +24,14 @@ object Main extends App {
   val X = Dmat.tabulate(Xtmp.length,Xtmp(0).length){(i,j) => Xtmp(i)(j)}
 
   println(Console.GREEN)
-  R eval """mod1lm <- lm(log_ozone~.,data=logdat); print(summary(mod1lm))"""
+
+  //R eval """mod1lm <- lm(log_ozone~.,data=logdat); print(summary(mod1lm))"""
+  val lm1 = R evalR "lm(log_ozone~.,data=logdat)"
+  R eval s"print(summary(${lm1}))"
+  R eval "mm <- model.matrix(log_ozone~.^2,data=logdat)"
+  val mmXtmp = R evalD2 "as.matrix(mm)"
+  val mmX = Dmat.tabulate(mmXtmp.length,mmXtmp(0).length){(i,j) => mmXtmp(i)(j)}
+
   val mod1 = Gprior.sample(y=y,X=X,B=2000,gSetter=X.rows)
   println()
   println(mod1._1(1 to 10))
