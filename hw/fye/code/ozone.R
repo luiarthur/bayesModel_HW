@@ -74,6 +74,13 @@ mod2 <- gprior(y[-test],log_dat[-test,-1],B=2000)
 XInt <- model.matrix(log_ozone~.^2-1,data=log_dat)
 attr(XInt,"assign") <- NULL
 modIntFull <- gprior(y[-test], as.data.frame(XInt[-test,]),B=2000)
+modIntRT<- gprior(y[-test], as.data.frame(XInt[-test,-c(5:6)]),B=2000)
+modIntRW<- gprior(y[-test], as.data.frame(XInt[-test,-c(4,6)]),B=2000)
+modIntTW<- gprior(y[-test], as.data.frame(XInt[-test,-c(4,5)]),B=2000)
+modIntFull$logBF
+modIntRT$logBF
+modIntRW$logBF
+modIntTW$logBF
 # END OF INTERACTIONS
 
 
