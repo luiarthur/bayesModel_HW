@@ -70,6 +70,13 @@ test <- sample(1:nrow(dat),round(nrow(dat)*.3))
 mod1 <- gprior(y[-test],log_dat[-test,-c(1:2)],B=2000)
 mod2 <- gprior(y[-test],log_dat[-test,-1],B=2000)
 
+# INTERACTION
+XInt <- model.matrix(log_ozone~.^2-1,data=log_dat)
+attr(XInt,"assign") <- NULL
+modIntFull <- gprior(y[-test], as.data.frame(XInt[-test,]),B=2000)
+# END OF INTERACTIONS
+
+
 # Larger BF is better
 mod1$logBF # 34.52
 mod2$logBF # 40.40
