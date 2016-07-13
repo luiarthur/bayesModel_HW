@@ -81,6 +81,8 @@ modIntFull$logBF
 modIntRT$logBF
 modIntRW$logBF
 modIntTW$logBF
+
+anova( mod2$lm,modIntTW$lm ) # in fact, the interaction model is better, but not by much
 # END OF INTERACTIONS
 
 
