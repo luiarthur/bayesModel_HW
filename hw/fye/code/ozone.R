@@ -102,9 +102,11 @@ simple.plot.posts(cbind(mod2$phi,mod2$beta),ma=2,tckdig=2,cex.a=.6,
 dev.off()
 
 y_pred_1 <- t(apply(mod1$beta,1,function(b) 
-                  as.matrix(cbind(1,dat[test,-c(1:2)])) %*% matrix(b)))
+                  as.matrix(cbind(1,log_dat[test,-c(1:2)])) %*% matrix(b)))
 y_pred_2 <- t(apply(mod2$beta,1,function(b) 
-                  as.matrix(cbind(1,dat[test,-c(1)])) %*% matrix(b)))
+                  as.matrix(cbind(1,log_dat[test,-c(1)])) %*% matrix(b)))
+#y_pred_TW <- t(apply(modIntTW$beta,1,function(b) 
+#                  as.matrix(cbind(1,dat[test,-c(1)])) %*% matrix(b)))
 
 hpd1 <- apply(y_pred_1,2,get.hpd)
 hpd2 <- apply(y_pred_2,2,get.hpd)
