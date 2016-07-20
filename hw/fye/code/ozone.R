@@ -1,3 +1,8 @@
+# THE WAY I DID G-priors is wrong:
+# THIS IS THE CORRECT WAY: Look at Mickey's take home
+# beta | y,X,phi ~ N(m, g/phi (X'X)^{-1})
+# [phi | y,X,beta] \propto [phi|beta]* [y|X,beta,phi] \propto [phi][beta|phi] * [y|X,beta,phi] ~ Gamma((n+p)/2, (y-Xbeta)'(y-Xbeta)/2 + (beta'(X'X)^{-1}beta)/(2g))
+
 set.seed(207)
 library(rjulia)
 source("plotmap.R")
