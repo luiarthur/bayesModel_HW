@@ -4,6 +4,7 @@
                       % Usage: \being{figure}[H] \includegraphics{tmp.pdf} \end{figure}
 \usepackage{subfig}   % \subfloat
 \usepackage{amsmath}  % bmatrix, pmatrix, etc
+\usepackage{amsfonts} % \mathbb{Q}, etc.
 \usepackage{bm}
 \newcommand{\p}[1]{\left(#1\right)}
 \newcommand{\bk}[1]{\left[#1\right]}
@@ -29,6 +30,7 @@
 \newcommand{\y}{\bm y}
 \newcommand{\M}{\mathcal{M}}
 \usepackage{verbatim}
+\newcommand{\Q}{\mathbb{Q}}
 
 \title{FYE--- Ozone}
 
@@ -44,7 +46,30 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-This should contain a summary of all my work
+$\Q$: \textbf{Can mortality following a heart attach be reduced by taking a low
+dose of aspirin daily?} Using the data from six randomized controlled trials
+(RCTs), and two models ($\M_1$ -- fixed effects model and $\M_2$ --
+random-effects model) the question ($\Q$) was studied. The following is a
+summary of the findings. (a) Visually, it seems that aspirin had a consistent
+effect in most of the RCTs (see Figure \ref{fig:tcy}). But more investigation
+is needed to determine whether the effect is large in clinical terms. (b) The
+probability that the control groups' mortality rate is higher than that of the
+treatment groups across all six studies computed using a fixed effects model
+and given the provided data = $P\bk{\mu > 0 | y, \M_1} = 95.46\%$. This
+suggests that under $\M_1$, the mortality for patients (in the six RCTs) who
+take low doses of aspirin following a heart attack is reduced in most cases
+(95\% of the time). (c)(i) $\M_1$ is a special case of $\M_2$. Specifically,
+when $\mu$ has the same prior in both models and $\sigma^2 \rightarrow 0$ in
+$\M_2$, $\M_2$ becomes $\M_1$. (i.e. if the $\theta_i$'s are all the same in
+$\M_2$, then $\M_1$ is retrieved.) A simple way to decide if $\M_2$ is better
+than $\M_1$ is to compare the DIC's of the two models. The model with the
+smaller DIC is preferred. (c)(ii) The probability that the control groups'
+mortality rate is higher than that of the treatment groups across all six
+studies computed using a random effects model and given the provided data =
+$P\bk{\mu > 0 | y, \M_2} = 57.49\%$. This suggests that under $\M_2$, the
+mortality for patients (in the six RCTs) who take low doses of aspirin
+following a heart attack is reduced in 57.49\% of the cases. (The full
+conditionals for each parameter in $\M_2$ are included in this paper.)
 
 \begin{keywords}
 Add some key words,
@@ -102,7 +127,7 @@ Some methods...
 $$
 \begin{array}{lrcl}
   \M_1: \\
-  & y_i | \mu &\sim& N(\mu_i,V_i)\\
+  & y_i | \mu &\sim& N(\mu,V_i)\\
   & p(\mu) &\propto& 1\\
   \\
   \M_2: \\
@@ -114,7 +139,7 @@ $$
 $$
 
 $\M_2$ \textbf{is a special case of} $\M_1$. Note that $\M_2$ is
-obtained when 
+obtained as $\sigma^2 \rightarrow 0$.
 
 \begin{figure}[H]
   \includegraphics[scale=.5]{img/m2MuS2Post.pdf}
@@ -128,6 +153,11 @@ obtained when
   \label{fig:thetaPost}
 \end{figure}
 
+\begin{figure}[H]
+  \includegraphics[scale=.5]{img/m2MuPost.pdf}
+  \caption{say...}
+  \label{fig:m2MuPost}
+\end{figure}
 
 \section{Analysis}
 Some analysis
