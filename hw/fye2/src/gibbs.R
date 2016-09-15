@@ -1,3 +1,4 @@
+# gibbs.R
 gibbs <- function(y, V, params=list(siga=3, sigb=1), 
                   init=list(mu=.5, th=rep(.5,length(y)), sig2=1),
                   B=1000, burn=1000) {

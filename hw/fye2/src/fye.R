@@ -1,4 +1,4 @@
-source("c_gibbs.R")
+source("gibbs.R")
 source("../../quiz/mypairs.R",chdir=TRUE)
 dat <- read.csv("../dat/fye.dat",header=TRUE)
 
