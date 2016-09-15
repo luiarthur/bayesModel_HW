@@ -103,7 +103,9 @@ simple.plot.posts <- function(M,digits=3,tckdig=3,trace=TRUE,tracelab=FALSE,
     if (i<k) {
       for (j in (i+1):k) {
         plot(M[,c(j,i)],xlab=cnames[j],ylab=cnames[i],pch=20,
+             xaxt='n',yaxt="n",
              bty="n",fg="grey",main="",col="grey",type='l',lwd=.5)
+        #axis(1,fg='grey')
         plot.contour(M[,c(j,i)],col=col.mult("cornflowerblue"),add=TRUE)
       }
     }  

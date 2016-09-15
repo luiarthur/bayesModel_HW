@@ -68,7 +68,14 @@ q.post(c(.025,.975))
 # IG(3,1) => mean=.5, sd=.5
 
 out <- gibbs(y=y,V=V,B=5000,burn=5000)
-plot.posts(out[,1:2],names=colnames(out)[1:2])
-simple.plot.posts(out[,-c(1:2)])
+
+pdf("../tex/img/m2MuS2Post.pdf")
+plot.posts(out[,1:2],names=colnames(out)[1:2],cex.a=1,rng.x=c(0,.999))
+dev.off()
+
+pdf("../tex/img/thetaPost.pdf")
+simple.plot.posts(out[,-c(1:2)],cex.a=.7)
+dev.off()
+
 mu.post <- out[,"mu"]
-(M2.mu.p <- mean(mu.post > 0))
+(M2.mu.p <- mean(mu.post > 0)) # 5.27
