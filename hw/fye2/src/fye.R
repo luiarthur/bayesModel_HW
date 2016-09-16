@@ -198,8 +198,7 @@ den.M2 <- function(post.th) {
 }
 
 P.M1.given.y <- 1 / (exp(den.M2(out[,-c(1:2)])-den.M1(r.post(nrow(out)))) + 1)
-P.M2.given.y <- 1 - BF.M1
-hist(BF.M1,prob=TRUE)
-hist(BF.M2,prob=TRUE)
-mean(BF.M1)
-mean(BF.M2)
+P.M2.given.y <- 1 - P.M1.given.y
+hist(P.M1.given.y,prob=TRUE)
+mean(P.M1.given.y)
+mean(P.M2.given.y)
