@@ -20,6 +20,8 @@ rownames(a_out) <- dat$study
 plotTCY <- function() {
   plot(a_out[,1]*100,pch=16,type='o',cex=1.5,lwd=3,col="red",
        ylim=range(a_out*100),fg='grey',bty='n',
+       main="Mortality Rates for various RCTs",
+       cex.main=1.5,
        ylab="Mortality Rate (%)", xlab="Study",
        xaxt="n")
   abline(h=0,col="grey",lwd=1)
@@ -41,6 +43,7 @@ stopifnot(length(V) == length(y) && length(y) == 6)
 
 mu.post.mean.M1 <- sum(y/V) / sum(1/V)
 mu.post.var.M1 <- 1/sum(1/V)
+
 #simple.plot.post(mu.post.M1.samps)
 
 f.post <- function(x) dnorm(x,mu.post.mean.M1,sd=sqrt(mu.post.var.M1))
@@ -50,7 +53,9 @@ F.post <- function(x) pnorm(x,mu.post.mean.M1,sd=sqrt(mu.post.var.M1))
 
 M1.plot.post <- function() {
   curve(f.post,from=q.post(1e-5), to=q.post(1-1e-5), cex.lab=1.3,
-        col='white',bty="n",fg="grey", ylab="Density",xlab=expression(mu))
+        col='white',bty="n",fg="grey", ylab="Density",
+        main=expression(paste("M1: Posterior Distribution of ",mu)),
+        xlab=expression(mu),cex.main=1.5)
   color.fn(f.post,from=q.post(1e-5), to=q.post(1-1e-5),
            col=col.mult('dodgerblue','darkgrey'))
   color.fn(f.post,from=0, to=1,col.mult('navy'))
@@ -76,7 +81,6 @@ q.post(c(.025,.975))
 ### M2
 # rig(n,a,b) <- 1/rgamma(n,a,b)
 # IG(3,1) => mean=.5, sd=.5
-source("gibbs.R")
 # This is when M2 -> M1
 #out <- gibbs(y=y,V=V,B=10000,burn=50000,params=list(siga=100,sigb=.001))
 # This understates the certainty of mu
@@ -97,7 +101,9 @@ dev.off()
 mu.post <- out[,"mu"]
 
 pdf("../tex/img/m2MuPost.pdf")
-  simple.plot.post(mu.post,trace=TRUE,main="",xlab=expression(mu),cex.lab=1.3)
+  simple.plot.post(mu.post,trace=TRUE,xlab=expression(mu),
+                   cex.lab=1.3,cex.main=1.5,
+                   main=expression(paste("M2: Posterior Distribution of ", mu)))
   color.den(density(mu.post),from=-1,to=1,col.a=col.mult("navy"),
             col.d='white',add=TRUE)
   color.den(density(mu.post),from=-1,to=0,col.a="dodgerblue",
@@ -114,8 +120,7 @@ pdf("../tex/img/m2MuPost.pdf")
 dev.off()
 #(M2.mu.p <- mean(mu.post > 0)) # .572
 # mean(rep(cMR - tMR,(cN+tN)) > 0) # .5817 # THIS IS WHAT I SHOULD EXPECT!!!
-
-apply(out[,-c(1:2)],2,mean)
+#apply(out[,-c(1:2)],2,mean)
 
 #########
 #x <- rig(1000000,100,.001); mean(x); sd(x)
@@ -149,7 +154,9 @@ DIC.M2 <- function(post.th) {
   mean(ds) + var(ds)/2
 }
 
-dic.m1 <- DIC.M1(r.post(10000))
+dic.m1 <- DIC.M1(r.post(nrow(out)))
 dic.m2 <- DIC.M2(out[,-c(1:2)])
 
-dic.m2 - dic.m1
+print(dic.m2 - dic.m1)
+#dic.m2 - dic.m1 # .576 => exp(dic.m2 - dic.m1) = 1.78 < 2: like ratio < 2. 
+#                # Not substantial

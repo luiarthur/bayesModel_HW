@@ -31,6 +31,8 @@
 \newcommand{\M}{\mathcal{M}}
 \usepackage{verbatim}
 \newcommand{\Q}{\mathbb{Q}}
+\newcommand{\simi}{\overset{ind.}{\sim}}
+\newcommand{\iid}{\overset{iid}{\sim}}
 
 \title{FYE--- Ozone}
 
@@ -72,27 +74,43 @@ following a heart attack is reduced in 57.49\% of the cases. (The full
 conditionals for each parameter in $\M_2$ are included in this paper.)
 
 \begin{keywords}
-Add some key words,
-Bayesian Regression, ozone, temperature, wind speed, radiation, g-priors
+Random effects vs fixed effects models, aspirin, heart attack.
 \end{keywords}
 \end{abstract}
 
 \section{Introduction}
-An intro...
+People with heart problems commonly use aspirin to reduce blood pressure and
+the chances of a heart attack. In the early 1990's when aspirin was known to
+have a blood-thinning effect. But it was not known if the drug saved lives.  A
+dataset containing the data of 6 randomized controlled trials (RCTs) were used
+to analyze the effectiveness of aspirin in reducing mortality after a heart
+attack. The 6 studies included were UK-1, CDPA, GAMS, UK-2, PARIS, and AMIS.
+The data included the number patients in the studies (both control and
+treatment groups), as well as the all-cuase mortality rates for both groups.
+The control and treatment groups were divided farily evenly. But the number
+of patients were not all equal. Particularly, the number of patients in the AMIS 
+is more than double that of any other study. Care should be taken to make
+use of such information. \textbf{Write order of material presented}\\
 
 \section{Exploratory Analysis}
-Figure \ref{fig:tcy} shows, for each of the six studies, the mortality rates of
-the control groups (red) and treatment (blue) groups along with the difference
-in mortality rates $y_i = C_i-T_i$ (green). \textbf{Across five of the six studies
-(i.e. most of the studies), the mortality rates of the control group are higher
-than that of the treatment group.} (Notice how the red line is usually higher
-than the blue line, and the green line is usually above 0.) The only exception
-is the AMIS study group -- the control group has a mortality rate 9.7, which is
-slightly less than that of the treatment group (10.85). It certainly \textbf{seems
-that aspirin had an effect on most of the RCTs}. More investigation will be
-required to understand why the mortality rates of the control group were lower
-than that of the treatment group in the AMIS study. Especially since the AMIS
-study had the most participant -- at least double that of any other study.
+To better understand the data, I first visualized it.  Figure \ref{fig:tcy}
+shows, for each of the six studies, the mortality rates of the control groups
+(red) and treatment (blue) groups along with the difference in mortality rates
+$y_i = C_i-T_i$ (green).  \textbf{Across five of the six studies (i.e. most of
+the studies), the mortality rates of the control group are higher than that of
+the treatment group.} (Notice how the red line is usually higher than the blue
+line, and the green line is usually above 0.) The only exception is the AMIS
+study group -- the control group has a mortality rate 9.7, which is slightly
+less than that of the treatment group (10.85).  It certainly \textbf{seems that
+aspirin had an effect on most of the RCTs}. More investigation will be required
+to understand why the mortality rates of the control group were lower than that
+of the treatment group in the AMIS study. Especially since the AMIS study had
+the most participant -- at least double that of any other study. I would 
+say the \textbf{effect of aspirin appears to be great in clinical terms}
+because for the studies where aspirin seemed to have a positive effect, the
+mortality rates of the treatment group were 2.4\% lower than that of the
+control group on average. While 2.4\% may not seem like a large number, 
+the life of every person is of great value.\\
 
 \begin{figure}[H]
   \includegraphics[scale=.5]{img/tcy.pdf}
@@ -103,24 +121,92 @@ study had the most participant -- at least double that of any other study.
   \label{fig:tcy}
 \end{figure}
 
-Figure \ref{fig:m1Post} shows the posterior distribution of the mean parameter
-$\mu$ in $\M_1$. $p=P\bk{\mu>0|\bm{y},\M_1}$ = .9546. A large
+It should be expected that different study groups will have different mortality
+rates, due to different demographics. But the fact that the mortality rates are
+lower than that of the treatment group by a more-or-less constant amount may be
+indicating that aspirin has a constant or fixed effect on mortality rates.
+More formal statistical analysis will be needed to make more informative
+statements.\\
+
+This concludes the exploratory analysis. In the next section, I describe the
+statisical models used to study the data further.\\
+
+\section{Models} 
+To answer the question ($\Q$) of interest, two models were fit to the data --
+(1) a fixed-effects model and (2) a random-effects model. I will describe each
+of them in the two following subsections.\\
+
+\subsection{Fixed-effects Model}
+First, a fixed-effects model was used to combine the information from the six
+(similar but different) studies. This model assumes no between-experiment
+heterogeneity. (i.e. effects are assumed to be constant across trials.) From
+Figure \ref{fig:tcy}, we can reason that homogeneity between experiments is not
+a good assumption. We will address the difference in study groups with
+random-effects models in the next section. I have named the fixed-effects
+model $\M_1$ and given it the following form:
+
+$$
+\begin{array}{lrcl}
+  \M_1: \\
+  & y_i | \mu &\simi& N(\mu,V_i),~\text{for$~i = 1,...6$}\\
+  & p(\mu) &\propto& 1\\
+\end{array}
+$$
+
+where $y_i = (C_i - T_i)$, $C_i$ is the mortality rate in the control group for
+study $i$, and $T_i$ is the mortality rate in the treatment group for study
+$i$. Note that if $y_i > 0$ then the mortality rate of study $i$ is higher
+for the control group, suggesting that the treatment is reducing the
+mortality rates of subjects in the study.\\
+
+In this model, the sampling distribution for each difference ($y_i$) is assumed
+to be normal with mean $\mu$ (shared across all RCTs -- hence fixed-effects)
+and individual (binomial) variances $V_i$. The variances are treated as known
+since the sample sizes in each RCT are large enough. Specifically,
+
+$$
+V_i = \frac{C_i(1-C_i)}{n_{C_i}} + \frac{T_i(1-T_i)}{n_{T_i}}
+$$
+
+where $n_{C_i}$ and $n_{T_i}$ are the number of subjects in RCT $i$ in the
+control and treatment groups respectively.\\
+
+The mean parameter $\mu$ was given a non-informitive prior $p(\mu) \propto 1$.
+This is also the jeffreys prior for the parameter for this sampling
+distribution. A non-informative prior was used so as to not influence the
+result of the posterior strongly. Though, with a proper prior for $\mu$ with
+mean = 0 (a reasonable assumption apriori in a clinical trial) and a variance
+of 1 (or smaller, which may still be large for percentages) a similar effect may
+be achieved.\\
+
+\subsection{Posterior Distribution for Parameter in $\M_1$}
+There is only one unknown quantity in $\M_1$, the mean parameter $\mu$. 
+The posterior distribution can be obtained analytically as
+
+$$
+\mu | \bm{y} \sim N\p{\frac{\sum_{i=1}^6 y_iV_i^{-1}}{\sum_{i=1}^6V_i^{-1}},
+                      \frac{1}{\sum_{i=1}^6V_i^{-1}}}
+$$
+
+Figure \ref{fig:m1Post} shows the posterior distribution of $\mu$ in $\M_1$.
+Some common statistics are included in the top left corner of the plot. To
+answer $\Q$, $p=P\bk{\mu>0|\bm{y},\M_1}$ was computed to be 95.46\%.  A large
 value for $p$ favors the aspirin treatment over the control. So, we would
 conclude that mortality following a heart attack can be reduced by taking a low
-does of aspirin daily.
+dose of aspirin daily. One could also say that in 95\% of cases, using aspirin
+prolonged the lives of post-hear-attack subjects for at least 1 year. (However,
+these statements can only be made for people within the demographics of the 6
+RCTs.)
 
 \begin{figure}[H]
   \includegraphics[scale=.5]{img/m1Post.pdf}
-  \caption{\small Posterior distribution for $\mu$ in $\M_1$.
-  Posterior mean = .0098. Posterior standard deviation = .0058.
-  95\% HPD = (-.00156,.0212). $P\bk{\mu>0|\bm{y},\M_1}$ = .9546.}
+  \caption{\small Posterior distribution for $\mu$ in $\M_1$.  Posterior mean =
+  .0098 (red line). Posterior standard deviation = .0058.  95\% HPD =
+  (-.0016,.0212). The darker (navy blue) region is the area of the  distribution
+  that is greater than 0, computed to as $P\bk{\mu>0|\bm{y},\M_1}$ = 95.46\%.}
   \label{fig:m1Post}
 \end{figure}
 
-
-
-\section{Methods}
-Some methods...
 
 \subsection{Models}
 
@@ -134,7 +220,7 @@ $$
   & y_i | \theta_i &\sim& N(\theta_i,V_i)\\
   & \theta_i | \mu &\sim& N(\mu,\sigma^2)\\
   & p(\mu) &\propto& 1\\
-  & \sigma^2 &\sim& IG(3,1)\\
+  & \sigma^2 &\sim& IG(3,.3)\\
 \end{array}
 $$
 
@@ -160,6 +246,7 @@ obtained as $\sigma^2 \rightarrow 0$.
 \end{figure}
 
 \section{Analysis}
+DIC($\M_2$) - DIC($\M_1$) = .577.
 Some analysis
 
 \section{Conclusions}
