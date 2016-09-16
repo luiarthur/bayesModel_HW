@@ -64,7 +64,7 @@ in most cases (95\% of the time). (c)(i) $\M_1$ is a special case of $\M_2$.
 Specifically, when $\mu$ has the same prior in both models and $\sigma^2
 \rightarrow 0$ in $\M_2$, $\M_2$ becomes $\M_1$. (i.e. if the $\theta_i$'s are
 all the same in $\M_2$, then $\M_1$ is retrieved.) A simple way to decide if
-$\M_2$ is better than $\M_1$ is to compare the DIC's of the two models. The
+$\M_2$ is better than $\M_1$ is to compare the DICs of the two models. The
 model with the smaller DIC is preferred. Another way to determine which model
 is better is to compute the posterior probability of each model.  $\M_2$ is
 favored as it has a larger model posterior probability. (c)(ii) The probability
@@ -89,31 +89,43 @@ dataset containing the data of 6 randomized controlled trials (RCTs) were used
 to analyze the effectiveness of aspirin in reducing mortality after a heart
 attack. The 6 studies included were UK-1, CDPA, GAMS, UK-2, PARIS, and AMIS.
 The data included the number patients in the studies (both control and
-treatment groups), as well as the all-cuase mortality rates for both groups.
-The control and treatment groups were divided farily evenly. But the number
-of patients were not all equal. Particularly, the number of patients in the AMIS 
-is more than double that of any other study. Care should be taken to make
-use of such information. \textbf{Write order of material presented}\\
+treatment groups), as well as the all-cause mortality rates for both groups.
+The control and treatment groups were divided fairly evenly. But the number of
+patients were not all equal. Particularly, the number of patients in the AMIS
+is more than double that of any other study. This potentially could affect the
+results of any meta-analysis if not accounted for appropriately. Two models
+will be used to do meta-analysis on the 6 studies: (1) a fixed-effects model
+and (2) a random-effects model. The order of the material in this paper will
+proceed as follows. First, an exploratory analysis of the data will be done to
+show obvious trends and patterns in the data, as well as motivate the need for
+two different models. Second, the two models will be presented. The priors,
+posterior distributions and complete conditionals for all parameters will also
+be presented. Finally, some concluding remarks will be made.
 
 \section{Exploratory Analysis}
 To better understand the data, I first visualized it.  Figure \ref{fig:tcy}
 shows, for each of the six studies, the mortality rates of the control groups
-(red) and treatment (blue) groups along with the difference in mortality rates
+(red) and treatment (blue) groups, along with the difference in mortality rates
 $y_i = C_i-T_i$ (green).  \textbf{Across five of the six studies (i.e. most of
 the studies), the mortality rates of the control group are higher than that of
 the treatment group.} (Notice how the red line is usually higher than the blue
-line, and the green line is usually above 0.) The only exception is the AMIS
-study group -- the control group has a mortality rate 9.7, which is slightly
-less than that of the treatment group (10.85).  It certainly \textbf{seems that
-aspirin had an effect on most of the RCTs}. More investigation will be required
-to understand why the mortality rates of the control group were lower than that
-of the treatment group in the AMIS study. Especially since the AMIS study had
-the most participant -- at least double that of any other study. I would 
-say the \textbf{effect of aspirin appears to be great in clinical terms}
-because for the studies where aspirin seemed to have a positive effect, the
-mortality rates of the treatment group were 2.4\% lower than that of the
-control group on average. While 2.4\% may not seem like a large number, 
-the life of every person is of great value.\\
+line by an approximately constant offset, and the green line is usually above
+0.) The only exception is the AMIS study group -- the control group has a
+mortality rate 9.7, which is slightly less than that of the treatment group
+(10.85).  It certainly \textbf{seems that aspirin had an effect on most of the
+RCTs}. More investigation will be required to understand why the mortality
+rates of the control group were lower than that of the treatment group in the
+AMIS study, especially since the AMIS study had the most participants -- at
+least double that of any other study. It may be of worth to researchers to
+investigate the reasons for such a difference. Possible reasons could be
+related to the demography and environment of the location where the AMIS study
+was conducted.  I would say the \textbf{effect of aspirin appears to be great
+in clinical terms in most of the RCTs} because for the studies where aspirin
+seemed to have a positive effect, the mortality rates of the treatment group
+were 2.4\% lower than that of the control group on average. While 2.4\% may not
+seem like a large portion in other fields, it should be kept in mind that the
+proportion refers to proportion of lives saved. And the life of every person is
+of great value.\\
 
 \begin{figure}%[H]
   \includegraphics[scale=.5]{img/tcy.pdf}
@@ -125,28 +137,29 @@ the life of every person is of great value.\\
 \end{figure}
 
 It should be expected that different study groups will have different mortality
-rates, due to different demographics. But the fact that the mortality rates are
-lower than that of the treatment group by a more-or-less constant amount may be
-indicating that aspirin has a constant or fixed effect on mortality rates.
-More formal statistical analysis will be needed to make more informative
-statements.\\
+rates, due to the different demographics of participants in each study. But the
+fact that the mortality rates are lower than that of the treatment group by a
+more-or-less constant amount may be indicating that aspirin has a constant or
+fixed effect on mortality rates.  More formal statistical analysis will be
+needed to make more informative statements.\\
 
 This concludes the exploratory analysis. In the next section, I describe the
-statisical models used to study the data further.\\
+statistical models used to study the data further.\\
 
 \section{Models} 
 To answer the question ($\Q$) of interest, two models were fit to the data --
-(1) a fixed-effects model and (2) a random-effects model. I will describe each
-of them in the two following subsections.\\
+(1) a fixed-effects model and (2) a random-effects model. I will provide the
+model and prior specifications, as wells as the full conditionals and posterior
+distributions for each parameter in this section.\\
 
 \subsection{Fixed-effects Model}
 First, a fixed-effects model was used to combine the information from the six
 (similar but different) studies. This model assumes no between-experiment
 heterogeneity. (i.e. effects are assumed to be constant across trials.) From
-Figure \ref{fig:tcy}, we can reason that homogeneity between experiments is not
-a good assumption. We will address the difference in study groups with
-random-effects models in the next section. I have named the fixed-effects
-model $\M_1$ and given it the following form:
+Figure \ref{fig:tcy}, one could reason that homogeneity between experiments is not
+a good assumption.  The difference in study groups will be addressed with
+random-effects models in the next section. I will refer to the fixed-effects
+model as $\M_1$, which has the following form:
 
 $$
 \begin{array}{lrcl}
@@ -174,8 +187,8 @@ $$
 where $n_{C_i}$ and $n_{T_i}$ are the number of subjects in RCT $i$ in the
 control and treatment groups respectively.\\
 
-The mean parameter $\mu$ was given a non-informitive prior $p(\mu) \propto 1$.
-This is also the jeffreys prior for the parameter for this sampling
+The mean parameter $\mu$ was given a non-informative prior $p(\mu) \propto 1$.
+This is also the Jeffreys prior for the parameter for this sampling
 distribution. A non-informative prior was used so as to not influence the
 result of the posterior strongly. Though, with a proper prior for $\mu$ with
 mean = 0 (a reasonable assumption apriori in a clinical trial) and a variance
@@ -192,14 +205,16 @@ $$
 $$
 
 Figure \ref{fig:m1Post} shows the posterior distribution of $\mu$ in $\M_1$.
-Some common statistics are included in the top left corner of the plot. To
-answer $\Q$, $p=P\bk{\mu>0|\bm{y},\M_1}$ was computed to be 95.46\%.  A large
-value for $p$ favors the aspirin treatment over the control. So, we would
-conclude that mortality following a heart attack can be reduced by taking a low
-dose of aspirin daily. One could also say that in 95\% of cases, using aspirin
-prolonged the lives of post-heart-attack subjects for at least 1 year. (However,
-these statements can only be made for people within the demographics of the 6
-RCTs.)
+The posterior mean is 0.0098, the standard deviation is 0.0058, and the 95\%
+HPD is (-.0016,.0212).  To answer $\Q$, $p=P\bk{\mu>0|\bm{y},\M_1}$ was
+computed to be 95.46\%.  (These statistics are included in the top left corner
+Figure \ref{fig:m1Post}.) A large value for $p$ favors the aspirin treatment
+over the control.  So, we would conclude that mortality following a heart
+attack can be reduced by taking a low dose of aspirin daily. One could also say
+that in 95\% of cases, using aspirin prolonged the lives of post-heart-attack
+subjects for at least 1 year.
+%(However, care must be taken when attempting to extrapolate the results to a
+%more general population.)
 
 \begin{figure}%[H]
   \includegraphics[scale=.5]{img/m1Post.pdf}
@@ -212,10 +227,10 @@ RCTs.)
 
 \subsection{Random-effects Model}
 As mentioned in the previous section. The fixed-effects model assumes no
-between-experiment heterogeneity. This assumption may be to strong for this
+between-experiment heterogeneity. This assumption may be too strong for this
 analysis since the AMIS study yielded different results than the other 5
 studies. The random-effects model allows for between-experiment heterogeneity
-while still combining information from different studies. A Guassian version
+while still combining information from different studies. A Gaussian version
 of such a model, which will be called $\M_2$, is as follow:
 
 $$
@@ -233,25 +248,24 @@ In this model, each $y_i$ is modelled by a normal distribution with a unique
 mean $\theta_i$ and variance $V_i$. The $\theta_i$'s are independently and
 identically distributed as normal distributions with mean $\mu$ and variance
 $\sigma^2$. Both of these unknown quantities are further modelled with
-independent prior distributions $p(\mu)\propto 1$ (jeffreys prior) and an
-Inverse-Gamma distribution. A jeffreys prior was used for $\mu$ for similar
-reasons in the subsection above -- so as to remain objective. The prior for
+\textbf{independent prior distributions} $p(\mu)\propto 1$ (Jeffreys prior) and
+an Inverse-Gamma distribution. A Jeffreys prior was used for $\mu$ for similar
+reasons to the subsection above -- so as to remain objective. The prior for
 $\sigma^2$ was chosen so that the prior mean is 1/3 and the prior variance is
-$\infty$. The prior mean of 1/3 is approximately the variance of a (and, hence,
-6 independent) random Uniform(-1,1) variable(s). That is apriori, I 
-expect the the variance of each $\theta_i$ to be the variance of a random
-Uniform(-1,1) variable. Note that the priors used are \textbf{conjugate},
-and that the priors for $\mu$ and $\sigma^2$ are independent of one
-another.\\
+$\infty$. The prior mean of 1/3 is approximately the variance of one random
+Uniform(-1,1) variable. That is apriori, I expect the variance of each
+$\theta_i$ to be the variance of a random Uniform(-1,1) variable. \\
+
+Note that the priors used are \textbf{conjugate}.\\
 
 Also, note that $\M_2$ \textbf{is a special case of} $\M_1$. $\M_2$ is
 obtained as $\sigma^2 \rightarrow 0$. As $\sigma^2 \rightarrow 0$, 
 the $\theta_i$'s will be centered at $\mu$ with 0 variance. This
-is simply the fixed-effects model.
+is simply the fixed-effects model.\\
 
 \subsection{Posterior Distribution for Parameters in $\M_2$}
 There are 8 parameters in $\M_2$. While the posterior distribution of the
-parameters cannot be jointly and analytically computed, each of their complete
+parameters cannot be analytically computed jointly, each of their complete
 conditionals can be computed in closed form. They are as follows:
 
 \newcommand{\ivy}{\sumk V_i^{-1}}
@@ -268,35 +282,36 @@ $$
 $$
 
 The complete conditionals were used in a Gibbs sampler to efficiently update
-each parameter. The posterior distributions for each of the parameters are
-shown below. Figure \ref{fig:m2MuS2Post} shows the univariate and bivariate
-posterior distributions for $\mu$ and $\sigma^2$. Figure \ref{fig:thetaPost}
-shows the posterior distribution for $\bm\theta$. To supplement the busy
-figure, Table \ref{tab:thetaPost} lists the posterior means, standard
-deviations and 95\% HPD's for each $\theta_i$. I will only discuss the
-posterior distributions for $\mu$ and $\sigma^2$. Refer to the figures and
-table for more information about the posterior distributions.\\
+each parameter. For each parameter, 10,000 samples were obtained after a
+burn-in period of 5000.  The posterior distribution for each parameter are
+shown below. Figure \ref{fig:m2MuS2Post} shows the posterior distributions for
+$\mu$ and $\sigma^2$. Figure \ref{fig:thetaPost} shows the posterior
+distribution for $\bm\theta$. To supplement the busy figure, Table
+\ref{tab:thetaPost} lists the posterior means, standard deviations and 95\%
+HPDs for each $\theta_i$. I will only discuss the posterior distributions for
+$\mu$ and $\sigma^2$. Refer to the figures and table for more information about
+the posterior distributions.\\
 
 The posterior distribution for $\mu$ has mean = 0.02056, standard deviation
 = 0.128, and 95\% HPD = $(-0.226,0.2774)$. In addition, the trace plots
 do not show evidence of non-convergence.\\
 
 The posterior distribution for $\sigma^2$ has mean = 0.09628, standard deviation
-= 0.059, and 95\% HPD = $(0.0241,0.2027)$. In addition, the trace plots
-seem to show that the gibbs sampler has converged.\\
+= 0.059, and 95\% HPD = $(0.0241,0.2027)$. Again, the trace plots
+do not show evidence of non-convergence.\\
 
-\begin{figure}%[H]
+\begin{figure}[H]
   \includegraphics[scale=.5]{img/m2MuS2Post.pdf}
   \caption{Posterior distributions for $\mu$ and $\sigma^2$. Posterior
   mean, SD, and 95\% HPDs are included in the top left corner of the
   univariate plots. Trace plots on top right corner of univariate plots. The
   bottom-left plot shows the correlation between the two random variables. The
-  upper corner shows the bivariate trace plot and joint posterior distribution
+  upper corner shows the bivariate trace plot and posterior distribution
   for ($\mu,\sigma^2$).}
   \label{fig:m2MuS2Post}
 \end{figure}
 
-\begin{figure}%[H]
+\begin{figure}[H]
   \includegraphics[scale=.5]{img/thetaPost.pdf}
   \caption{Posterior distributions for $\bm\theta$. Correlation of each pair of
   variables in lower triangle subplots. Bivariate distribution on upper triangle
@@ -327,17 +342,21 @@ $\theta_1,...\theta_6$.}
 We again answer $\Q$ with the posterior distribution of $\mu$ in $\M_2$.  The
 posterior distribution of $\mu$ is again plotted in Figure \ref{fig:m2MuPost}.
 The figure highlights the area under the density which is greater than 0, in
-navy blue. $P\bk{\mu>0|\bm{y},\M_2}$ was computed to be 56.78\%. One could
-say that in 56\% of cases (for people in the demographics of the RCTs), using
-aspirin prolonged the lives of post-heart-attack subjects for at least 1 year.
-We conclude that mortality following a heart attack is reduced \textbf{only
-56\%} of the time by taking a low dose of aspirin daily. In otherwords,
+navy blue. $P\bk{\mu>0|\bm{y},\M_2}$ \textbf{was computed to be 56.78\%}. (This
+is much smaller than 95\% in the fixed-effects model.) One could say that in
+56\% of cases (for people in the demographics of the RCTs), using aspirin
+prolonged the lives of post-heart-attack subjects for at least 1 year.  We
+conclude that mortality following a heart attack is reduced \textbf{only 56\%}
+of the time by taking a low dose of aspirin daily. In other words,
 \textbf{mortality is not significantly reduced by taking a low dose of
 aspirin daily, under} $\M_2$.
 
-\begin{figure}%[H]
+\begin{figure}[H]
   \includegraphics[scale=.5]{img/m2MuPost.pdf}
-  \caption{say...}
+  \caption{ Posterior distribution for $\mu$ in $\M_2$. Posterior mean = 0.0266
+    (red line). SD = 0.1277. 95\% HPD = (-0.226,0.2774). The darker (navy
+    blue) region is the area of the distribution that is greater than 0,
+    computed to as $P\bk{\mu>0|\bm{y},\M_2}$ = 56.78\%.}
   \label{fig:m2MuPost}
 \end{figure}
 
@@ -375,15 +394,18 @@ was computed to be 82\%. So, $\M_2$ \textbf{is favored using this method}.\\
 
 
 \section{Conclusions}
-To conclude, while in an exploratory analysis, it may appear that aspirin has a
+To conclude, though in an exploratory analysis it may appear that aspirin has a
 consistent effect in most of the RCTs, a formal statistical analysis may say
 otherwise. The fixed-effects model yielded $P\bk{\mu > 0 | y, \M_1} = 95.46\%$
 -- which leads one to believe that taking aspirin after a heart attack reduces
-mortality. The random-effets model yielded $P\bk{\mu > 0 | y, \M_1} = 56.78\%$
+mortality rate. The random-effects model yielded $P\bk{\mu > 0 | y, \M_2} = 56.78\%$
 -- which leads one to believe that taking aspirin after a heart attack does
 not significantly reduce mortality. The random-effects model is preferred here
 based on its model posterior probability. However, when using DIC as a
-modelling criterion, the fixed effects model is preferred.
+modelling criterion, the fixed effects model is preferred. Furthermore,
+investigating why the results of the AMIS study varied so much from the
+that of the other studies may be of interest to health-care professional
+and those interested in the effects of aspirin.
 
 %\begin{references}
 %{\footnotesize
