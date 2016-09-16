@@ -33,8 +33,9 @@
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\simi}{\overset{ind.}{\sim}}
 \newcommand{\iid}{\overset{iid}{\sim}}
+\newcommand{\sumk}{\sum_{i=1}^6}
 
-\title{FYE--- Ozone}
+\title{FYE--- Aspirin}
 
 %input all authors' names
 \author{
@@ -48,30 +49,32 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-$\Q$: \textbf{Can mortality following a heart attach be reduced by taking a low
+$\Q$: \textbf{Can mortality following a heart attack be reduced by taking a low
 dose of aspirin daily?} Using the data from six randomized controlled trials
-(RCTs), and two models ($\M_1$ -- fixed effects model and $\M_2$ --
+(RCTs), and two models ($\M_1$ -- fixed-effects model and $\M_2$ --
 random-effects model) the question ($\Q$) was studied. The following is a
 summary of the findings. (a) Visually, it seems that aspirin had a consistent
-effect in most of the RCTs (see Figure \ref{fig:tcy}). But more investigation
-is needed to determine whether the effect is large in clinical terms. (b) The
-probability that the control groups' mortality rate is higher than that of the
-treatment groups across all six studies computed using a fixed effects model
-and given the provided data = $P\bk{\mu > 0 | y, \M_1} = 95.46\%$. This
-suggests that under $\M_1$, the mortality for patients (in the six RCTs) who
-take low doses of aspirin following a heart attack is reduced in most cases
-(95\% of the time). (c)(i) $\M_1$ is a special case of $\M_2$. Specifically,
-when $\mu$ has the same prior in both models and $\sigma^2 \rightarrow 0$ in
-$\M_2$, $\M_2$ becomes $\M_1$. (i.e. if the $\theta_i$'s are all the same in
-$\M_2$, then $\M_1$ is retrieved.) A simple way to decide if $\M_2$ is better
-than $\M_1$ is to compare the DIC's of the two models. The model with the
-smaller DIC is preferred. (c)(ii) The probability that the control groups'
-mortality rate is higher than that of the treatment groups across all six
-studies computed using a random effects model and given the provided data =
-$P\bk{\mu > 0 | y, \M_2} = 57.49\%$. This suggests that under $\M_2$, the
-mortality for patients (in the six RCTs) who take low doses of aspirin
-following a heart attack is reduced in 57.49\% of the cases. (The full
-conditionals for each parameter in $\M_2$ are included in this paper.)
+effect that is large in clinical terms in most of the RCTs (see Figure
+\ref{fig:tcy}).  (b) The probability that the control groups' mortality rate is
+higher than that of the treatment groups across all six studies computed using
+a fixed effects model and given the provided data to be $P\bk{\mu > 0 | y, \M_1} =
+95.46\%$. This suggests that under $\M_1$, the mortality rate for patients (in
+the six RCTs) who take low doses of aspirin following a heart attack is reduced
+in most cases (95\% of the time). (c)(i) $\M_1$ is a special case of $\M_2$.
+Specifically, when $\mu$ has the same prior in both models and $\sigma^2
+\rightarrow 0$ in $\M_2$, $\M_2$ becomes $\M_1$. (i.e. if the $\theta_i$'s are
+all the same in $\M_2$, then $\M_1$ is retrieved.) A simple way to decide if
+$\M_2$ is better than $\M_1$ is to compare the DIC's of the two models. The
+model with the smaller DIC is preferred. Another way to determine which model
+is better is to compute the posterior probability of each model.  $\M_2$ is
+favored as it has a larger model posterior probability. (c)(ii) The probability
+that the control groups' mortality rate is higher than that of the treatment
+groups across all six studies computed using a random effects model and given
+the provided data to be $P\bk{\mu > 0 | y, \M_2} = 56.78\%$. This suggests that
+under $\M_2$, the mortality rate for patients (in the six RCTs) who take low
+doses of aspirin following a heart attack is reduced in 56.78\% of the cases.
+(The full conditionals for each parameter in $\M_2$ are included in this
+paper.)
 
 \begin{keywords}
 Random effects vs fixed effects models, aspirin, heart attack.
@@ -112,7 +115,7 @@ mortality rates of the treatment group were 2.4\% lower than that of the
 control group on average. While 2.4\% may not seem like a large number, 
 the life of every person is of great value.\\
 
-\begin{figure}[H]
+\begin{figure}%[H]
   \includegraphics[scale=.5]{img/tcy.pdf}
   \caption{\small Mortality rates for control (red) and treatment (blue) groups
   for different randomized control trials. The green line shows the difference
@@ -194,11 +197,11 @@ answer $\Q$, $p=P\bk{\mu>0|\bm{y},\M_1}$ was computed to be 95.46\%.  A large
 value for $p$ favors the aspirin treatment over the control. So, we would
 conclude that mortality following a heart attack can be reduced by taking a low
 dose of aspirin daily. One could also say that in 95\% of cases, using aspirin
-prolonged the lives of post-hear-attack subjects for at least 1 year. (However,
+prolonged the lives of post-heart-attack subjects for at least 1 year. (However,
 these statements can only be made for people within the demographics of the 6
 RCTs.)
 
-\begin{figure}[H]
+\begin{figure}%[H]
   \includegraphics[scale=.5]{img/m1Post.pdf}
   \caption{\small Posterior distribution for $\mu$ in $\M_1$.  Posterior mean =
   .0098 (red line). Posterior standard deviation = .0058.  95\% HPD =
@@ -207,58 +210,188 @@ RCTs.)
   \label{fig:m1Post}
 \end{figure}
 
-
-\subsection{Models}
+\subsection{Random-effects Model}
+As mentioned in the previous section. The fixed-effects model assumes no
+between-experiment heterogeneity. This assumption may be to strong for this
+analysis since the AMIS study yielded different results than the other 5
+studies. The random-effects model allows for between-experiment heterogeneity
+while still combining information from different studies. A Guassian version
+of such a model, which will be called $\M_2$, is as follow:
 
 $$
 \begin{array}{lrcl}
-  \M_1: \\
-  & y_i | \mu &\sim& N(\mu,V_i)\\
-  & p(\mu) &\propto& 1\\
-  \\
   \M_2: \\
-  & y_i | \theta_i &\sim& N(\theta_i,V_i)\\
-  & \theta_i | \mu &\sim& N(\mu,\sigma^2)\\
+  & y_i | \theta_i &\simi& N(\theta_i,V_i)\\
+  & \theta_i | \mu &\iid& N(\mu,\sigma^2)\\
   & p(\mu) &\propto& 1\\
-  & \sigma^2 &\sim& IG(3,.3)\\
+  & \sigma^2 &\sim& IG(a,b)\\
+\end{array}
+$$
+where $a = 2$, and $b = 1/3$.\\
+
+In this model, each $y_i$ is modelled by a normal distribution with a unique
+mean $\theta_i$ and variance $V_i$. The $\theta_i$'s are independently and
+identically distributed as normal distributions with mean $\mu$ and variance
+$\sigma^2$. Both of these unknown quantities are further modelled with
+independent prior distributions $p(\mu)\propto 1$ (jeffreys prior) and an
+Inverse-Gamma distribution. A jeffreys prior was used for $\mu$ for similar
+reasons in the subsection above -- so as to remain objective. The prior for
+$\sigma^2$ was chosen so that the prior mean is 1/3 and the prior variance is
+$\infty$. The prior mean of 1/3 is approximately the variance of a (and, hence,
+6 independent) random Uniform(-1,1) variable(s). That is apriori, I 
+expect the the variance of each $\theta_i$ to be the variance of a random
+Uniform(-1,1) variable. Note that the priors used are \textbf{conjugate},
+and that the priors for $\mu$ and $\sigma^2$ are independent of one
+another.\\
+
+Also, note that $\M_2$ \textbf{is a special case of} $\M_1$. $\M_2$ is
+obtained as $\sigma^2 \rightarrow 0$. As $\sigma^2 \rightarrow 0$, 
+the $\theta_i$'s will be centered at $\mu$ with 0 variance. This
+is simply the fixed-effects model.
+
+\subsection{Posterior Distribution for Parameters in $\M_2$}
+There are 8 parameters in $\M_2$. While the posterior distribution of the
+parameters cannot be jointly and analytically computed, each of their complete
+conditionals can be computed in closed form. They are as follows:
+
+\newcommand{\ivy}{\sumk V_i^{-1}}
+$$
+\begin{array}{rcl}
+  \mu | \bm y,\bm\theta,\sigma^2  &\sim& 
+  N\p{\ds\frac{\sumk \theta_i}{6},\ds\frac{\sigma^2}{6}}\\
+  \sigma^2 | \bm y,\bm\theta , \mu &\sim& 
+  IG\p{a+6/2,\ds\frac{\sumk(\theta_i-\mu)^2}{2\sigma^2}+b}\\
+  \theta_i | \mu, \sigma^2, \bm y &\sim& 
+  N\p{\ds\frac{y_iV_i^{-1}+\mu/\sigma^2}{V_i^{-1}+1/\sigma^2},\p{V_i^{-1}+1/\sigma^2}^{-1}},\\
+  &&\hspace{10em} \text{~for~} i=1,...,6\\
 \end{array}
 $$
 
-$\M_2$ \textbf{is a special case of} $\M_1$. Note that $\M_2$ is
-obtained as $\sigma^2 \rightarrow 0$.
+The complete conditionals were used in a Gibbs sampler to efficiently update
+each parameter. The posterior distributions for each of the parameters are
+shown below. Figure \ref{fig:m2MuS2Post} shows the univariate and bivariate
+posterior distributions for $\mu$ and $\sigma^2$. Figure \ref{fig:thetaPost}
+shows the posterior distribution for $\bm\theta$. To supplement the busy
+figure, Table \ref{tab:thetaPost} lists the posterior means, standard
+deviations and 95\% HPD's for each $\theta_i$. I will only discuss the
+posterior distributions for $\mu$ and $\sigma^2$. Refer to the figures and
+table for more information about the posterior distributions.\\
 
-\begin{figure}[H]
+The posterior distribution for $\mu$ has mean = 0.02056, standard deviation
+= 0.128, and 95\% HPD = $(-0.226,0.2774)$. In addition, the trace plots
+do not show evidence of non-convergence.\\
+
+The posterior distribution for $\sigma^2$ has mean = 0.09628, standard deviation
+= 0.059, and 95\% HPD = $(0.0241,0.2027)$. In addition, the trace plots
+seem to show that the gibbs sampler has converged.\\
+
+\begin{figure}%[H]
   \includegraphics[scale=.5]{img/m2MuS2Post.pdf}
-  \caption{say...}
+  \caption{Posterior distributions for $\mu$ and $\sigma^2$. Posterior
+  mean, SD, and 95\% HPDs are included in the top left corner of the
+  univariate plots. Trace plots on top right corner of univariate plots. The
+  bottom-left plot shows the correlation between the two random variables. The
+  upper corner shows the bivariate trace plot and joint posterior distribution
+  for ($\mu,\sigma^2$).}
   \label{fig:m2MuS2Post}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}%[H]
   \includegraphics[scale=.5]{img/thetaPost.pdf}
-  \caption{say...}
+  \caption{Posterior distributions for $\bm\theta$. Correlation of each pair of
+  variables in lower triangle subplots. Bivariate distribution on upper triangle
+  subplots. The posteriors appear to be independent and appear to have converged.}
   \label{fig:thetaPost}
 \end{figure}
 
-\begin{figure}[H]
+%\input{img/thPost.tex}
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrr}
+  \hline
+ & Mean & SD & 95\% HPD \\ 
+  \hline
+  $\theta_1$ & 0.027 & 0.017 & (-0.005,~ 0.059) \\ 
+  $\theta_2$ & 0.025 & 0.013 & (-0.001,~ 0.051) \\ 
+  $\theta_3$ & 0.019 & 0.024 & (-0.029,~ 0.063) \\ 
+  $\theta_4$ & 0.025 & 0.017 & (-0.007,~ 0.060) \\ 
+  $\theta_5$ & 0.023 & 0.020 & (-0.017,~ 0.059) \\ 
+  $\theta_6$ &-0.011 & 0.009 & (-0.029,~ 0.006) \\ 
+   \hline
+\end{tabular}
+\caption{Posterior mean, standard deviation, and 95\% HPD for
+$\theta_1,...\theta_6$.}
+\label{tab:thetaPost}
+\end{table}
+
+We again answer $\Q$ with the posterior distribution of $\mu$ in $\M_2$.  The
+posterior distribution of $\mu$ is again plotted in Figure \ref{fig:m2MuPost}.
+The figure highlights the area under the density which is greater than 0, in
+navy blue. $P\bk{\mu>0|\bm{y},\M_2}$ was computed to be 56.78\%. One could
+say that in 56\% of cases (for people in the demographics of the RCTs), using
+aspirin prolonged the lives of post-heart-attack subjects for at least 1 year.
+We conclude that mortality following a heart attack is reduced \textbf{only
+56\%} of the time by taking a low dose of aspirin daily. In otherwords,
+\textbf{mortality is not significantly reduced by taking a low dose of
+aspirin daily, under} $\M_2$.
+
+\begin{figure}%[H]
   \includegraphics[scale=.5]{img/m2MuPost.pdf}
   \caption{say...}
   \label{fig:m2MuPost}
 \end{figure}
 
-\section{Analysis}
-DIC($\M_2$) - DIC($\M_1$) = .577.
-Some analysis
+\subsection{How to Compare $\M_1$ and $\M_2$}
+The two models can be compared using deviance information criterion (DIC).
+DIC is defined as 
+
+$$
+DIC = \bar{D}(\theta) + \widehat{\text{var}}\p{D(\theta)} / 2
+$$
+
+where $D(\theta)= -2\log p(\bm y|\theta)$, $\bar{D}(\theta)$ is the average of
+$D(\theta)$ over all posterior samples $\theta$, and
+$\widehat{\text{var}}(D(\theta))$ is the sample variance of $D(\theta)$. DIC
+measures goodness-of-fit and penalizes model complexity; a lower DIC is
+preferred. \\
+
+DIC($\M_2$) - DIC($\M_1$) = 0.5632. This suggests that $\M_1$ is slightly
+``better" than $\M_2$. i.e. $\M_1$ models the data well and uses fewer
+parameters.\\
+
+DIC is a simple tool for model selection. Other methods may be preferred 
+in this case to determine which model is more fitting. In particular,
+to answer the question $\Q$, computing the posterior probability
+for $\M_i$
+
+$$
+P\bk{\M_i|\bm y} = \ds\frac{p(\bm y|\M_i)}{p(\bm y|\M_1)+p(\bm y|\M_2)}
+$$
+
+may be more useful as it tells us which model is more likely given that the
+models are evenly weighted apriori. A larger posterior probability is
+preferred. $P\bk{\M_1|\bm y}$ was computed to be 17\% and $P\bk{\M_2|\bm y}$
+was computed to be 82\%. So, $\M_2$ \textbf{is favored using this method}.\\
+
 
 \section{Conclusions}
-Some conclusion...
+To conclude, while in an exploratory analysis, it may appear that aspirin has a
+consistent effect in most of the RCTs, a formal statistical analysis may say
+otherwise. The fixed-effects model yielded $P\bk{\mu > 0 | y, \M_1} = 95.46\%$
+-- which leads one to believe that taking aspirin after a heart attack reduces
+mortality. The random-effets model yielded $P\bk{\mu > 0 | y, \M_1} = 56.78\%$
+-- which leads one to believe that taking aspirin after a heart attack does
+not significantly reduce mortality. The random-effects model is preferred here
+based on its model posterior probability. However, when using DIC as a
+modelling criterion, the fixed effects model is preferred.
 
-\begin{references}
-{\footnotesize
-\itemsep=3pt
-\item {\em Zellner, Arnold. On assessing prior distributions and Bayesian regression analysis with g-prior distributions. Bayesian inference and decision techniques: Essays in Honor of Bruno De Finetti 6 (1986): 233-243.}
-\item {\em Gelman, A., Carlin, J. B., Stern, H. S., \& Rubin, D. B. (2014). Bayesian data analysis (Vol. 2). Boca Raton, FL, USA: Chapman \& Hall/CRC, 73.}
-}
-\end{references}
+%\begin{references}
+%{\footnotesize
+%\itemsep=3pt
+%\item {\em Zellner, Arnold. On assessing prior distributions and Bayesian regression analysis with g-prior distributions. Bayesian inference and decision techniques: Essays in Honor of Bruno De Finetti 6 (1986): 233-243.}
+%\item {\em Gelman, A., Carlin, J. B., Stern, H. S., \& Rubin, D. B. (2014). Bayesian data analysis (Vol. 2). Boca Raton, FL, USA: Chapman \& Hall/CRC, 73.}
+%}
+%\end{references}
 
 \newpage
 \section{Source Code for Gibbs Sampler used in $\M_2$}

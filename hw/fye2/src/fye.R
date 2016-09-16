@@ -1,6 +1,7 @@
 set.seed(1)
 source("gibbs.R")
 source("../../quiz/mypairs.R",chdir=TRUE)
+library(xtable)
 dat <- read.csv("../dat/fye.dat",header=TRUE)
 rig <- function(n,shape,rate) 1/rgamma(n,shape=shape,rate=rate)
 
@@ -88,7 +89,11 @@ q.post(c(.025,.975))
 # This also, this has variance of infty
 #out <- gibbs(y=y,V=V,B=10000,burn=5000,params=list(siga=1,sigb=1))
 # This maybe: because variance can't go above .16
-out <- gibbs(y=y,V=V,B=10000,burn=5000,params=list(siga=3,sigb=.3))
+#out <- gibbs(y=y,V=V,B=10000,burn=5000,params=list(siga=3,sigb=.3))
+# Jeffreys'
+#out <- gibbs(y=y,V=V,B=10000,burn=5000,params=list(siga=0,sigb=0))
+# mean: .5, infinite variance
+out <- gibbs(y=y,V=V,B=10000,burn=5000,params=list(siga=2,sigb=1/3))
 
 pdf("../tex/img/m2MuS2Post.pdf")
 plot.posts(out[,1:2],names=colnames(out)[1:2],cex.a=1,rng.x=c(0,.999))
@@ -97,6 +102,14 @@ dev.off()
 pdf("../tex/img/thetaPost.pdf")
 simple.plot.posts(out[,-c(1:2)],cex.a=.7)
 dev.off()
+
+th.post <- out[,-c(1:2)]
+stats <- function(x) c(mean(x),sd(x),get.hpd(x))
+th.table <- t(apply(th.post,2,stats))
+colnames(th.table) <- c("Mean","SD","95% Lower HPD"," 95% Upper HPD")
+#sink("../tex/img/thPost.tex")
+xtable(th.table,digits = 3)
+#sink()
 
 mu.post <- out[,"mu"]
 
@@ -114,20 +127,25 @@ pdf("../tex/img/m2MuPost.pdf")
                        "HPD Lower =", "HPD Upper =",
                        "P(mu > 0 | y, M1) ="),
                       round(c(mean(mu.post),sd(mu.post),
-                              quantile(mu.post,c(.025,.975)),
+                              #quantile(mu.post,c(.025,.975)),
+                              get.hpd(mu.post),
                               mean(mu.post>0) ),4)))
   abline(v=mean(mu.post),col='red',lwd=2)
 dev.off()
-#(M2.mu.p <- mean(mu.post > 0)) # .572
+(M2.mu.p <- mean(mu.post > 0)) # .5678
 # mean(rep(cMR - tMR,(cN+tN)) > 0) # .5817 # THIS IS WHAT I SHOULD EXPECT!!!
 #apply(out[,-c(1:2)],2,mean)
 
 #########
-#x <- rig(1000000,100,.001); mean(x); sd(x)
-#x <- rig(1000000,3,1); mean(x); sd(x)
-#x <- rig(1000000,3,.3); mean(x); sd(x)
-
-#sd(sapply(1:10000,function(x) sd(runif(5,-1,1))))
+#x <- rig(1000000,100,.001); mean(x); var(x)
+#x <- rig(1000000,3,1); mean(x); var(x)
+#x <- rig(1000000,3,.3); mean(x); var(x)
+#
+#sd(sapply(1:10000,function(x) var(runif(5,-1,1))))
+#summary(sapply(1:10000,function(x) var(runif(5,-1,1))))
+#x <- rig(1000000,.1,.1); mean(x); var(x)
+mean(sapply(1:10000,function(x) var(runif(6,-1,1))))
+x <- rig(1000000,2,1/3); mean(x); var(x)
 
 ### DIC
 DIC.M1 <- function(post.samps) {
@@ -157,6 +175,31 @@ DIC.M2 <- function(post.th) {
 dic.m1 <- DIC.M1(r.post(nrow(out)))
 dic.m2 <- DIC.M2(out[,-c(1:2)])
 
-print(dic.m2 - dic.m1)
-#dic.m2 - dic.m1 # .576 => exp(dic.m2 - dic.m1) = 1.78 < 2: like ratio < 2. 
+print(dic.m2 - dic.m1) # .5632
+#dic.m2 - dic.m1 # .5408 => exp(dic.m2 - dic.m1) = 1.78 < 2: like ratio < 2. 
 #                # Not substantial
+
+### BF
+den.M1 <- function(post.samps) {
+  d <- function(mu) {
+    stopifnot(length(y) == length(V))
+    sum(dnorm(y,mu,sqrt(V),log=TRUE))
+  }
+  sapply(post.samps,d)
+}
+den.M2 <- function(post.th) {
+  stopifnot(ncol(post.th) == length(y))
+  d <- function(th) {
+    stopifnot(length(y) == length(V))
+    stopifnot(length(y) == length(th))
+    sum(dnorm(y,th,sqrt(V),log=TRUE))
+  }
+  apply(post.th,1,d)
+}
+
+P.M1.given.y <- 1 / (exp(den.M2(out[,-c(1:2)])-den.M1(r.post(nrow(out)))) + 1)
+P.M2.given.y <- 1 - BF.M1
+hist(BF.M1,prob=TRUE)
+hist(BF.M2,prob=TRUE)
+mean(BF.M1)
+mean(BF.M2)
